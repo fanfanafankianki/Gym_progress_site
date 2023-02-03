@@ -45,10 +45,10 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
       Historia
     </a>
     <div id="object_three_items" class="css-bar-block css-hide css-padding-large css-medium">
-      <a href="#" class="css-bar-item css-button">Historia</a>
-      <a href="#" class="css-bar-item css-button">Wykresy</a>
+      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Historia</a>
+      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Wykresy</a>
     </div>
-    <a href="#" class="css-bar-item css-button">Stwórz trening</a>
+    <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Stwórz trening</a>
 </nav>
 
 <!-- Top menu on small screens -->
@@ -67,7 +67,7 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
   <div class="css-hide-large" style="margin-top:83px"></div>
   
   <!-- Top header -->
-  <header class="css-container css-xlarge">
+  <header class="css-container css-xlarge css-sand">
     <p class="css-left">Trening</p>
     <p class="css-right">
       <i class="fa fa-shopping-cart css-margin-right"></i>
@@ -77,13 +77,14 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
 
 
 
-  <div class="css-container css-text-grey" id="jeans">
-    <p>8 items</p>
+  <div class="css-container css-text-grey" id="number_of_items">
+    <p>6 items</p>
   </div>
 
   <!-- Product grid -->
   <div class="parent">
     <div id="empty_place_for_divs">
+      Welcome to Gym Site! Here you can configure your training routine, track your trainings and your progress! 
     </div>
   </div> 
 
@@ -250,7 +251,7 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
   </div>
   
   <!-- Footer -->
-  <footer class="css-padding-16 css-light-grey css-small css-center" id="footer">
+  <footer class="css-padding-16 css-teal css-small css-center" id="footer">
     <div class="css-row-padding">
       <div class="css-col s4">
         <h4>Kontakt</h4>
@@ -260,7 +261,7 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
           <p><input class="css-input css-border" type="text" placeholder="Email" name="Email" required></p>
           <p><input class="css-input css-border" type="text" placeholder="Temat" name="Subject" required></p>
           <p><input class="css-input css-border" type="text" placeholder="Wiadomość" name="Message" required></p>
-          <button type="submit" class="css-button css-block css-black">Wyślij</button>
+          <button onclick="reloadSite()" type="submit" class="css-button css-block css-black">Wyślij</button>
         </form>
       </div>
     </div>
@@ -291,6 +292,22 @@ function loadDiv(klasa) {
 function reloadSite() {
   location.reload();
 }
+
+function addClassOnClick(event) {
+  const allElements = document.querySelectorAll('*');
+  allElements.forEach((element) => {
+    element.classList.remove('css-light-grey');
+  });
+
+  if (event.target.classList.contains("css-button")) {
+    event.target.classList.add("css-light-grey");
+  }   
+}
+
+document.querySelectorAll("div").forEach(function(element) {
+  element.addEventListener("click", addClassOnClick);
+});
+
 
 document.getElementById("object_one").click();
 
