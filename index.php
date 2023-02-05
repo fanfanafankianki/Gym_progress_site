@@ -87,7 +87,7 @@ if (isset($_POST['submit2'])) {
   }
 
   $sql3 = "INSERT INTO TrainingWithExercises (training_id, exercise_1, exercise_2, exercise_3)
-  VALUES (3, 
+  VALUES (10, 
         (SELECT exercise_id FROM Exercises WHERE exercise_name = '$text2'), 
         (SELECT exercise_id FROM Exercises WHERE exercise_name = '$text3'), 
         (SELECT exercise_id FROM Exercises WHERE exercise_name = '$text4')
@@ -120,23 +120,23 @@ if (isset($_POST['submit2'])) {
       <a onclick="loadDiv('klasa2')" href="#" class="css-bar-item css-button">Trening 2</a>
       <a onclick="loadDiv('klasa3')" href="#" class="css-bar-item css-button">Trening 3</a>
       <a onclick="loadDiv('klasa4')" href="#" class="css-bar-item css-button">Trening 4</a>
-      <a onclick="loadDiv('klasa10')" href="#" class="css-bar-item css-button">Dodaj trening</a>
-      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Historia treningów</a>
-      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Wykresy</a>
+      <a onclick="loadDiv('klasa5')" href="#" class="css-bar-item css-button">Dodaj trening</a>
+      <a onclick="loadDiv('klasa6')" href="#" class="css-bar-item css-button">Historia treningów</a>
+      <a onclick="loadDiv('klasa7')" href="#" class="css-bar-item css-button">Wykresy</a>
     </div>
     <a onclick="myAccFunc('object_two_items')" href="javascript:void(0)" class="css-button css-block2 css-white css-left-align" id="object_two">
       Bartek
     </a>
     <div id="object_two_items" class="css-bar-block css-hide css-padding-large css-medium">
-      <a onclick="loadDiv('klasa5')" href="#" class="css-bar-item css-button css-light-grey">Trening 1</a>
-      <a onclick="loadDiv('klasa6')" href="#" class="css-bar-item css-button">Trening 2</a>
-      <a onclick="loadDiv('klasa7')" href="#" class="css-bar-item css-button">Trening 3</a>
-      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Trening 4</a>
-      <a onclick="loadDiv('klasa10')" href="#" class="css-bar-item css-button">Dodaj trening</a>
-      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Historia treningów</a>
-      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Wykresy</a>
+      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button css-light-grey">Trening 1</a>
+      <a onclick="loadDiv('klasa9')" href="#" class="css-bar-item css-button">Trening 2</a>
+      <a onclick="loadDiv('klasa10')" href="#" class="css-bar-item css-button">Trening 3</a>
+      <a onclick="loadDiv('klasa11')" href="#" class="css-bar-item css-button">Trening 4</a>
+      <a onclick="loadDiv('klasa5')" href="#" class="css-bar-item css-button">Dodaj trening</a>
+      <a onclick="loadDiv('klasa6')" href="#" class="css-bar-item css-button">Historia treningów</a>
+      <a onclick="loadDiv('klasa7')" href="#" class="css-bar-item css-button">Wykresy</a>
     </div>
-    <a onclick="loadDiv('klasa9')" href="javascript:void(0)" class="css-button css-block2 css-white css-left-align" id="object_one">
+    <a onclick="loadDiv('klasa12')" href="javascript:void(0)" class="css-button css-block2 css-white css-left-align" id="object_one">
       Dodaj nową osobę
     </a>
 </nav>
@@ -180,63 +180,71 @@ if (isset($_POST['submit2'])) {
 
 
   <div id="klasa1" class="klasa1">
-    <div class="div1">
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 1" name="Name" required></p>  
-      </div>
-      <div class="div2"> 
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 2" name="Name" required></p>
-      </div>
-      <div class="div3">
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 3" name="Name" required></p>
-      </div>
-      <div class="div4"> 
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 4" name="Name" required></p>
-      </div>
-      <div class="div5"> 
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 5" name="Name" required></p>
-      </div>
-      <div class="div6"> 
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 6" name="Name" required></p>
-      </div>
+    <div id="recordContainer">
+      <?php
+      function select_training_with_exercise($training_with_exercises_id) {
+
+        // Połączenie z bazą danych
+        $servername = "127.0.0.1";
+        $username = "bartek";
+        $password = "gymsitedb321";
+        $dbname = "gym site database";
+
+        // Tworzenie połączenia
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
+        $query = "SELECT TrainingWithExercises.*, Trainings.training_name, Exercises1.exercise_name AS exercise_name1, Exercises2.exercise_name AS exercise_name2, Exercises3.exercise_name AS exercise_name3, Exercises4.exercise_name AS exercise_name4, Exercises5.exercise_name AS exercise_name5, Exercises6.exercise_name AS exercise_name6, Exercises7.exercise_name AS exercise_name7, Exercises8.exercise_name AS exercise_name8, Exercises9.exercise_name AS exercise_name9
+        FROM TrainingWithExercises
+        JOIN Trainings ON TrainingWithExercises.training_id = Trainings.training_id
+        JOIN Exercises AS Exercises1 ON TrainingWithExercises.exercise_1 = Exercises1.exercise_id
+        JOIN Exercises AS Exercises2 ON TrainingWithExercises.exercise_2 = Exercises2.exercise_id
+        JOIN Exercises AS Exercises3 ON TrainingWithExercises.exercise_3 = Exercises3.exercise_id
+        LEFT JOIN Exercises AS Exercises4 ON TrainingWithExercises.exercise_4 = Exercises4.exercise_id
+        LEFT JOIN Exercises AS Exercises5 ON TrainingWithExercises.exercise_5 = Exercises5.exercise_id
+        LEFT JOIN Exercises AS Exercises6 ON TrainingWithExercises.exercise_6 = Exercises6.exercise_id
+        LEFT JOIN Exercises AS Exercises7 ON TrainingWithExercises.exercise_7 = Exercises7.exercise_id
+        LEFT JOIN Exercises AS Exercises8 ON TrainingWithExercises.exercise_8 = Exercises8.exercise_id
+        LEFT JOIN Exercises AS Exercises9 ON TrainingWithExercises.exercise_9 = Exercises9.exercise_id
+        WHERE training_with_exercises_id = $training_with_exercises_id;
+        ";
+
+        $result = mysqli_query($conn, $query);
+        $record = mysqli_fetch_assoc($result);
+        $training_with_exercises_id = $record["training_with_exercises_id"];
+        $training_id = $record["training_id"];
+        $exercise_1 = $record["exercise_1"];
+        $exercise_2 = $record["exercise_2"];
+        $exercise_3 = $record["exercise_3"];
+        $training_name = $record["training_name"];
+        $exercise_name1 = $record["exercise_name1"];
+        $exercise_name2 = $record["exercise_name2"];
+        $exercise_name3 = $record["exercise_name3"];
+        echo "training_name: " . $training_name . "<br>";
+        echo "Training With Exercises ID: " . $training_with_exercises_id . "<br>";
+        echo "Training training_id: " . $training_id . "<br>";
+        echo "exercise_1 1: " . $exercise_1 . " Repetitions 1: " . $exercise_name1 . "<br>";
+        echo "exercise_1 2: " . $exercise_2 . " Repetitions 2: " . $exercise_name2 . "<br>";
+        echo "exercise_1 3: " . $exercise_3 . " Repetitions 3: " . $exercise_name3 . "<br>";
+        
+        echo "</table>";
+
+        $conn->close();
+      }
+      select_training_with_exercise(6);
+      ?>
+    </div>
   </div>
   <div id="klasa2" class="klasa2">
-      <div class="div1">
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 21" name="Name" required></p>  
-      </div>
-      <div class="div2"> 
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 22" name="Name" required></p>
-      </div>
-      <div class="div3">
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 23" name="Name" required></p>
-      </div>
-      <div class="div4"> 
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 24" name="Name" required></p>
-      </div>
-      <div class="div5"> 
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 25" name="Name" required></p>
-      </div>
-      <div class="div6"> 
-        <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 26" name="Name" required></p>
-      </div>
+    <div id="recordContainer">
+      <?php
+        select_training_with_exercise(7);
+      ?>
+    </div>
   </div>
   <div id="klasa3" class="klasa3">
-    <div class="div1">
-      <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 31" name="Name" required></p>  
-    </div>
-    <div class="div2"> 
-      <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 32" name="Name" required></p>
-    </div>
-    <div class="div3">
-      <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 33" name="Name" required></p>
-    </div>
-    <div class="div4"> 
-      <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 34" name="Name" required></p>
-    </div>
-    <div class="div5"> 
-      <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 35" name="Name" required></p>
-    </div>
-    <div class="div6"> 
-      <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 36" name="Name" required></p>
+    <div id="recordContainer">
+      <?php
+        select_training_with_exercise(10);
+      ?>
     </div>
   </div>
   <div id="klasa4" class="klasa4">
@@ -261,6 +269,57 @@ if (isset($_POST['submit2'])) {
   </div>
   <div id="klasa5" class="klasa5">
     <div class="div1">
+      <form method="post">
+        <input type="text" name="text1" class="css-input css-border" placeholder="Nazwa treningu">
+        <input type="text" name="text2" class="css-input css-border" placeholder="Ćwiczenie 1">
+        <input type="text" name="text3" class="css-input css-border" placeholder="Ćwiczenie 2">
+        <input type="text" name="text4" class="css-input css-border" placeholder="Ćwiczenie 3">
+        <input type="submit" name="submit2" class="css-button css-block css-black" value="Dodaj trening">
+      </form>
+    </div>
+  </div>  
+  <div id="klasa6" class="klasa6>
+    <div id="recordContainer">
+        <?php
+          // Połączenie z bazą danych
+          $servername = "127.0.0.1";
+          $username = "bartek";
+          $password = "gymsitedb321";
+          $dbname = "gym site database";
+
+          // Tworzenie połączenia
+          $conn = mysqli_connect($servername, $username, $password, $dbname);
+          $query = "SELECT * FROM TrainingHistory WHERE training_with_exercises_id = 6";
+          $result = mysqli_query($conn, $query);
+          $record = mysqli_fetch_assoc($result);
+          $training_history_id = $record["training_history_id"];
+          $training_with_exercises_id = $record["training_with_exercises_id"];
+          $training_date = $record["training_date"];
+          $weight_1 = $record["weight_1"];
+          $reps_1 = $record["reps_1"];
+          $weight_2 = $record["weight_2"];
+          $reps_2 = $record["reps_2"];
+          $weight_3 = $record["weight_3"];
+          $reps_3 = $record["reps_3"];
+          echo "Training History ID: " . $training_history_id . "<br>";
+          echo "Training With Exercises ID: " . $training_with_exercises_id . "<br>";
+          echo "Training Date: " . $training_date . "<br>";
+          echo "Weight 1: " . $weight_1 . " Repetitions 1: " . $reps_1 . "<br>";
+          echo "Weight 2: " . $weight_2 . " Repetitions 2: " . $reps_2 . "<br>";
+          echo "Weight 3: " . $weight_3 . " Repetitions 3: " . $reps_3 . "<br>";
+        ?>
+        <a onclick="getRecord()" href="#" class="css-bar-item css-button">Click</a>
+    </div>
+  </div>  
+  <div id="klasa7" class="klasa7">
+    <div class="div1">
+      <form method="post">
+        <input type="text" name="text1" class="css-input css-border" placeholder="Nazwa treningu">
+      </form>
+    </div>
+  </div> 
+  <div id="klasa8" class="klasa8">
+    <div class="div1">
         <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 51" name="Name" required></p>  
       </div>
       <div class="div2"> 
@@ -279,7 +338,7 @@ if (isset($_POST['submit2'])) {
         <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 56" name="Name" required></p>
       </div>
   </div>
-  <div id="klasa6" class="klasa6">
+  <div id="klasa9" class="klasa9">
       <div class="div1">
         <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 61" name="Name" required></p>  
       </div>
@@ -299,7 +358,7 @@ if (isset($_POST['submit2'])) {
         <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 66" name="Name" required></p>
       </div>
   </div>
-  <div id="klasa7" class="klasa7">
+  <div id="klasa10" class="klasa10">
     <div class="div1">
       <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 71" name="Name" required></p>  
     </div>
@@ -319,7 +378,7 @@ if (isset($_POST['submit2'])) {
       <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 76" name="Name" required></p>
     </div>
   </div>
-  <div id="klasa8" class="klasa8">
+  <div id="klasa_on" class="klasa_on">
     <div class="div1">
       <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 81" name="Name" required></p>  
     </div>
@@ -339,26 +398,12 @@ if (isset($_POST['submit2'])) {
       <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 86" name="Name" required></p>
     </div>
   </div>
-  <div id="klasa9" class="klasa9">
-    <div class="div1">
-      <form method="post">
-        <input type="text" name="text" class="css-input css-border" placeholder="Imię nowej osoby">
-        <input type="submit" name="submit1" class="css-button css-block css-black" value="Dodaj osobę">
-      </form>
-    </div>
+  <div id="klasa_on2" class="klasa_on2">
+    <form method="post">
+      <input type="text" name="text" class="css-input css-border" placeholder="Imię nowej osoby">
+      <input type="submit" name="submit1" class="css-button css-block css-black" value="Dodaj osobę">
+    </form>
   </div>
-  <div id="klasa10" class="klasa10">
-    <div class="div1">
-      <form method="post">
-        <input type="text" name="text1" class="css-input css-border" placeholder="Nazwa treningu">
-        <input type="text" name="text2" class="css-input css-border" placeholder="Ćwiczenie 1">
-        <input type="text" name="text3" class="css-input css-border" placeholder="Ćwiczenie 2">
-        <input type="text" name="text4" class="css-input css-border" placeholder="Ćwiczenie 3">
-        <input type="submit" name="submit2" class="css-button css-block css-black" value="Dodaj trening">
-      </form>
-    </div>
-  </div>  
-  
   
   <!-- Footer -->
   <footer class="css-padding-16 css-teal css-small css-center" id="footer">
@@ -412,6 +457,18 @@ function addClassOnClick(event) {
   if (event.target.classList.contains("css-button")) {
     event.target.classList.add("css-light-grey");
   }   
+}
+
+function getRecord() {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "get_record.php", true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      // Dokonaj renderowania rekordu w element HTML
+      document.getElementById("recordContainer").innerHTML = xhr.responseText;
+    }
+  };
+  xhr.send();
 }
 
 document.querySelectorAll("div").forEach(function(element) {

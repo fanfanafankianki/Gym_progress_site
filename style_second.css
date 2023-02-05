@@ -224,6 +224,14 @@ h6{
     display: none;
 }
 
+#klasa_on, #klasa_on * {
+    display: none;
+}
+
+#klasa_on2, #klasa_on2 * {
+    display: none;
+}
+
  hr{
     border:0;
     border-top:1px solid #eee;
@@ -349,7 +357,7 @@ a{
 }
  .css-input{
     display:block;
-    width:75.00%
+    width:75.00%;
     height: auto;
     margin: 0 auto;
     padding: 5px;
@@ -504,7 +512,7 @@ a{
     width:24.99999%
 }
 .css-col.s4{
-    width:50.00%
+    width:50.00%;
     height: auto;
     margin: 0 auto;
     padding: 10px;
