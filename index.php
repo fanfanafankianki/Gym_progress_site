@@ -15,11 +15,101 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
 </head>
 <body class="css-content" style="max-width:1200px">
 
+<?php
+if (isset($_POST['submit1'])) {
+  $text = $_POST['text'];
+
+  // Połączenie z bazą danych
+  $servername = "127.0.0.1";
+  $username = "bartek";
+  $password = "gymsitedb321";
+  $dbname = "gym site database";
+
+  // Tworzenie połączenia
+  $conn = mysqli_connect($servername, $username, $password, $dbname);
+  // Sprawdzanie połączenia
+  if (!$conn) {
+    die("Połączenie nieudane: " . mysqli_connect_error());
+  }
+
+  // Zapytanie SQL
+  $sql = "INSERT INTO users(user_name)
+  VALUES ('$text')";
+
+  if (mysqli_query($conn, $sql)) {
+    echo "Rekord został dodany";
+  } else {
+    echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
+  }
+  // Zamykanie połączenia
+  mysqli_close($conn);
+}
+?>
+
+<?php
+if (isset($_POST['submit2'])) {
+  $text1 = $_POST['text1'];
+  $text2 = $_POST['text2'];
+  $text3 = $_POST['text3'];
+  $text4 = $_POST['text4'];
+
+  // Połączenie z bazą danych
+  $servername = "127.0.0.1";
+  $username = "bartek";
+  $password = "gymsitedb321";
+  $dbname = "gym site database";
+
+  // Tworzenie połączenia
+  $conn = mysqli_connect($servername, $username, $password, $dbname);
+  // Sprawdzanie połączenia
+  if (!$conn) {
+    die("Połączenie nieudane: " . mysqli_connect_error());
+  }
+
+  // Zapytanie SQL
+
+  $sql1 = "INSERT INTO trainings (training_name, user_id)
+  VALUES ('$text1', (SELECT user_id FROM Users WHERE user_name = 'Jarek'));";
+
+  if (mysqli_query($conn, $sql1)) {
+    echo "Rekord został dodany!!!";
+  } else {
+    echo "B2łąd podczas dodawania rekordu: " . mysqli_error($conn);
+  }
+
+  $sql2 = "INSERT INTO exercises (exercise_name)
+  VALUES ('$text2'), ('$text3'), ('$text4');";
+
+  if (mysqli_query($conn, $sql2)) {
+    echo "Rekord został dodany2";
+  } else {
+    echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
+  }
+
+  $sql3 = "INSERT INTO TrainingWithExercises (training_id, exercise_1, exercise_2, exercise_3)
+  VALUES (3, 
+        (SELECT exercise_id FROM Exercises WHERE exercise_name = '$text2'), 
+        (SELECT exercise_id FROM Exercises WHERE exercise_name = '$text3'), 
+        (SELECT exercise_id FROM Exercises WHERE exercise_name = '$text4')
+  );";
+
+  if (mysqli_query($conn, $sql3)) {
+    echo "Rekord został dodany3";
+  } else {
+    echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
+  }
+
+  // Zamykanie połączenia
+  mysqli_close($conn);
+}
+?>
+
 <!-- Sidebar/menu -->
 <nav class="sidebar css-bar-block css-white css-collapse css-top" style="z-index:3;width:250px" id="mySidebar">
   <div class="css-container css-display-container css-padding-16">
     <i onclick=sidebar()" class="fa fa-remove css-hide-large css-button css-display-topright"></i>
-    <h3 onclick="reloadSite()" class="css-wide css-button"><b>Gym Site</b></h3>
+    <h3 onclick="reloadSite()" class="css-wide css-button"><b>Gym Site</b>
+    </h3>
   </div>
   <div class="css-padding-64 css-large css-text-grey" style="font-weight:bold">
     <a onclick="myAccFunc('object_one_items')" href="javascript:void(0)" class="css-button css-block2 css-white css-left-align" id="object_one">
@@ -30,6 +120,9 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
       <a onclick="loadDiv('klasa2')" href="#" class="css-bar-item css-button">Trening 2</a>
       <a onclick="loadDiv('klasa3')" href="#" class="css-bar-item css-button">Trening 3</a>
       <a onclick="loadDiv('klasa4')" href="#" class="css-bar-item css-button">Trening 4</a>
+      <a onclick="loadDiv('klasa10')" href="#" class="css-bar-item css-button">Dodaj trening</a>
+      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Historia treningów</a>
+      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Wykresy</a>
     </div>
     <a onclick="myAccFunc('object_two_items')" href="javascript:void(0)" class="css-button css-block2 css-white css-left-align" id="object_two">
       Bartek
@@ -39,16 +132,13 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
       <a onclick="loadDiv('klasa6')" href="#" class="css-bar-item css-button">Trening 2</a>
       <a onclick="loadDiv('klasa7')" href="#" class="css-bar-item css-button">Trening 3</a>
       <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Trening 4</a>
-    </div>
-
-    <a onclick="myAccFunc('object_three_items')" href="javascript:void(0)" class="css-button css-block2 css-white css-left-align" id="object_three">
-      Historia
-    </a>
-    <div id="object_three_items" class="css-bar-block css-hide css-padding-large css-medium">
-      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Historia</a>
+      <a onclick="loadDiv('klasa10')" href="#" class="css-bar-item css-button">Dodaj trening</a>
+      <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Historia treningów</a>
       <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Wykresy</a>
     </div>
-    <a onclick="loadDiv('klasa8')" href="#" class="css-bar-item css-button">Stwórz trening</a>
+    <a onclick="loadDiv('klasa9')" href="javascript:void(0)" class="css-button css-block2 css-white css-left-align" id="object_one">
+      Dodaj nową osobę
+    </a>
 </nav>
 
 <!-- Top menu on small screens -->
@@ -249,6 +339,26 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
       <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 86" name="Name" required></p>
     </div>
   </div>
+  <div id="klasa9" class="klasa9">
+    <div class="div1">
+      <form method="post">
+        <input type="text" name="text" class="css-input css-border" placeholder="Imię nowej osoby">
+        <input type="submit" name="submit1" class="css-button css-block css-black" value="Dodaj osobę">
+      </form>
+    </div>
+  </div>
+  <div id="klasa10" class="klasa10">
+    <div class="div1">
+      <form method="post">
+        <input type="text" name="text1" class="css-input css-border" placeholder="Nazwa treningu">
+        <input type="text" name="text2" class="css-input css-border" placeholder="Ćwiczenie 1">
+        <input type="text" name="text3" class="css-input css-border" placeholder="Ćwiczenie 2">
+        <input type="text" name="text4" class="css-input css-border" placeholder="Ćwiczenie 3">
+        <input type="submit" name="submit2" class="css-button css-block css-black" value="Dodaj trening">
+      </form>
+    </div>
+  </div>  
+  
   
   <!-- Footer -->
   <footer class="css-padding-16 css-teal css-small css-center" id="footer">

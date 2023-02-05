@@ -1,0 +1,69 @@
+CREATE DATABASE GymSiteDatabase;
+USE GymSiteDatabase;
+
+
+CREATE TABLE Users (
+user_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+user_name CHAR(25) NOT NULL
+);
+
+CREATE TABLE Exercises (
+exercise_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+exercise_name CHAR(50) NOT NULL
+);
+
+CREATE TABLE Trainings (
+training_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+training_name CHAR(55) NOT NULL,
+user_id INT NOT NULL,
+FOREIGN KEY (user_id) REFERENCES Users (user_id)
+);
+
+CREATE TABLE TrainingWithExercises (
+training_exercise_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+training_id INT NOT NULL,
+exercise_1 INT NOT NULL,
+exercise_2 INT NOT NULL,
+exercise_3 INT NOT NULL,
+exercise_4 INT,
+exercise_5 INT,
+exercise_6 INT,
+exercise_7 INT,
+exercise_8 INT,
+exercise_9 INT,
+FOREIGN KEY (training_id) REFERENCES Trainings (training_id),
+FOREIGN KEY (exercise_1) REFERENCES Exercises (exercise_id),
+FOREIGN KEY (exercise_2) REFERENCES Exercises (exercise_id),
+FOREIGN KEY (exercise_3) REFERENCES Exercises (exercise_id),
+FOREIGN KEY (exercise_4) REFERENCES Exercises (exercise_id),
+FOREIGN KEY (exercise_5) REFERENCES Exercises (exercise_id),
+FOREIGN KEY (exercise_6) REFERENCES Exercises (exercise_id),
+FOREIGN KEY (exercise_7) REFERENCES Exercises (exercise_id),
+FOREIGN KEY (exercise_8) REFERENCES Exercises (exercise_id),
+FOREIGN KEY (exercise_9) REFERENCES Exercises (exercise_id)
+);
+
+CREATE TABLE TrainingHistory (
+training_history_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+training_with_exercises_id INT NOT NULL,
+training_date DATETIME NOT NULL DEFAULT NOW(),
+weight_1 SMALLINT(200) NOT NULL,
+reps_1 SMALLINT(200) NOT NULL,
+weight_2 SMALLINT(200) NOT NULL,
+reps_2 SMALLINT(200) NOT NULL,
+weight_3 SMALLINT(200) NOT NULL,
+reps_3 SMALLINT(200) NOT NULL,
+weight_4 SMALLINT(200),
+reps_4 SMALLINT(200),
+weight_5 SMALLINT(200),
+reps_5 SMALLINT(200),
+weight_6 SMALLINT(200),
+reps_6 SMALLINT(200),
+weight_7 SMALLINT(200),
+reps_7 SMALLINT(200),
+weight_8 SMALLINT(200),
+reps_8 SMALLINT(200),
+weight_9 SMALLINT(200),
+reps_9 SMALLINT(200),
+FOREIGN KEY (training_with_exercises_id) REFERENCES TrainingWithExercises (training_with_exercises_id)
+);
