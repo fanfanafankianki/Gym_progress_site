@@ -192,6 +192,12 @@ h6{
     display: none;
 }
 
+#myChart {
+    width: 800px;
+    height: 400px;
+    display: block;
+  }
+
 #klasa3, #klasa3 * {
     display: none;
 }

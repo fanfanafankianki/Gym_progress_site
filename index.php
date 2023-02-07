@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,6 +16,7 @@
 .css-sidebar a {font-family: "Roboto", sans-serif}
 body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Montserrat", sans-serif;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <?php
@@ -32,23 +37,27 @@ function connectToDb() {
 ?>
 
 <?php
-if (isset($_POST['submit1'])) {
-  $text = $_POST['text'];
-
+function addUser($user_name) {
   $conn = connectToDb();
 
   // Zapytanie SQL
-  $sql = "INSERT INTO users(user_name)
-  VALUES ('$text')";
+  $sql = "INSERT INTO users(user_name) VALUES ('$user_name')";
 
   if (mysqli_query($conn, $sql)) {
     $user_id = mysqli_insert_id($conn);
-    echo "<script>document.addEventListener('DOMContentLoaded', function() {createUserElement('$text');});</script>";
+    $_SESSION['user_id'] = $user_id;
+    echo "<script>document.addEventListener('DOMContentLoaded', function() {createUserElement('$user_name');});</script>";
   } else {
     echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
   }
+
   // Zamykanie połączenia
   mysqli_close($conn);
+}
+
+if (isset($_POST['submit1'])) {
+  $user_name = $_POST['text'];
+  addUser($user_name);
 }
 ?>
 <body class="css-content" style="max-width:1200px">
@@ -92,7 +101,7 @@ if (isset($_POST['submit2'])) {
     echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
   }
 
-  $sql3 = "INSERT INTO TrainingWithExercises (training_id, exercise_1, exercise_2, exercise_3, exercise_4, exercise_5, exercise_6, exercise_7, exercise_8, exercise_9)
+  $sql3 = "INSERT INTO TrainingWithExercises (training_id, exercise_1, exercise_2, exercise_3,exercise_4, exercise_5, exercise_6, exercise_7, exercise_8, exercise_9)
   VALUES ($training_added_id, 
         (SELECT exercise_id FROM Exercises WHERE exercise_name = '$text2'), 
         (SELECT exercise_id FROM Exercises WHERE exercise_name = '$text3'), 
@@ -108,7 +117,7 @@ if (isset($_POST['submit2'])) {
   if (mysqli_query($conn, $sql3)) {
     echo "Rekord został dodany3";
   } else {
-    echo "Błądsad podczas dodawania rekordu: " . mysqli_error($conn);
+    echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
   }
 
   // Zamykanie połączenia
@@ -125,7 +134,7 @@ if (isset($_POST['submit2'])) {
   </div>
   <div id=target class="css-padding-64 css-large css-text-grey" style="font-weight:bold">
     <a onclick="myAccFunc('object_one_items')" href="javascript:void(0)" class="css-button css-block2 css-white css-left-align" id="object_one">
-      Dominika
+      Jaca
     </a>
     <div id="object_one_items" class="css-bar-block css-hide css-padding-large css-medium">
       <a onclick="loadDiv('klasa1')" href="#" class="css-bar-item css-button css-light-grey"></i>Trening 1</a>
@@ -170,9 +179,26 @@ if (isset($_POST['submit2'])) {
   
   <!-- Top header -->
   <header class="css-container css-xlarge css-sand">
+
+
+   
     <p class="css-left">Trening</p>
     <p class="css-right">
-      <button class="css-margin-right">Zaloguj się</button>
+      <?php if (isset($error)) { ?>
+        <p><?php echo $error; ?></p>
+      <?php } ?>
+      <?php if (empty($_SESSION['user'])) : ?>
+      <form action="http://localhost/Gym_Site/login.php" method="post" class="css-margin-right">
+        <input type="text" name="login" class="css-margin-right"/> 
+        <br/> 
+        <input type="password" name="password" class="css-margin-right"/>
+        <br/>
+        <button type="submit" class="css-margin-right">Zaloguj się</button>
+      </form>
+      <?php else : ?>
+          <p>Hi, <?=$_SESSION['user']?></p>
+          <a href="http://localhost/Gym_Site/logout.php">logout</a>
+      <?php endif; ?>
       <i class="fa fa-search"></i>
     </p>
   </header>
@@ -274,6 +300,7 @@ if (isset($_POST['submit2'])) {
     <div class="div6"> 
       <p><input class="css-input css-border" style=“display:none” type="text" placeholder="Ćwiczenie 46" name="Name" required></p>
     </div>
+
   </div>
   <div id="klasa5" class="klasa5">
     <div class="div1">
@@ -555,15 +582,54 @@ function createChildElements(parent) {
 }
 
 function showTrainingDetails(training_id) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "getTrainingDetails.php?training_id=" + training_id, true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        document.getElementById("tendiv").innerHTML = xhr.responseText;
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "getTrainingDetails.php?training_id=" + training_id, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+      document.getElementById("tendiv").innerHTML = xhr.responseText + '<div><canvas id="myChart2"></canvas></div>';
+      createChart();
+    }
+  };
+  xhr.send();
+}
+
+function createChart() {
+  const ctx = document.getElementById('myChart2');
+  const dates = ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05', '2022-01-06'];
+  const weight = [50, 55, 60, 65, 70, 75];
+  const repetitions = [10, 12, 15, 18, 20, 22];
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'Waga',
+        data: weight,
+        borderWidth: 1
+      },
+      {
+        label: 'Powtórzenia',
+        data: repetitions,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      stacked: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Wykres dla treningu'
+        }
       }
-    };
-    xhr.send();
-  }
+    }
+  });
+}
 
 document.getElementById("object_one").click();
 
