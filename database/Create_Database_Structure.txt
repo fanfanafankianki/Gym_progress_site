@@ -1,10 +1,17 @@
-CREATE DATABASE GymSiteDatabase;
-USE GymSiteDatabase;
+CREATE DATABASE GymSiteDatabase_v4;
+USE GymSiteDatabase_v4;
 
 
 CREATE TABLE Users (
 user_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 user_name CHAR(25) NOT NULL
+);
+
+CREATE TABLE UserProfiles (
+profile_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+profile_name CHAR(20) NOT NULL,
+user_id INT,
+FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE Exercises (
@@ -15,12 +22,12 @@ exercise_name CHAR(50) NOT NULL
 CREATE TABLE Trainings (
 training_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 training_name CHAR(55) NOT NULL,
-user_id INT NOT NULL,
-FOREIGN KEY (user_id) REFERENCES Users (user_id)
+profile_id INT,
+FOREIGN KEY (profile_id) REFERENCES UserProfiles(profile_id)
 );
 
 CREATE TABLE TrainingWithExercises (
-training_exercise_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+training_with_exercises_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 training_id INT NOT NULL,
 exercise_1 INT NOT NULL,
 exercise_2 INT NOT NULL,

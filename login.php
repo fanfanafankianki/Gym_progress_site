@@ -12,7 +12,7 @@ if (!empty($_POST['login']) && !empty($_POST['password']))
         if ($_POST['password'] == PASSWORD)
         {
 			echo "3213";
-            $_SESSION['user'] = htmlspecialchars($_POST['login']);  
+            $_SESSION['profile_id'] = htmlspecialchars($_POST['login']);  
 		} else {
     $error = 'Nieprawidłowe dane logowania1';
 	echo $error;

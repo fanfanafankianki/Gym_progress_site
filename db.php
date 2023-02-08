@@ -1,3 +1,3 @@
 <?php
-define('USERNAME', 'admin');
+define('USERNAME', '3');
 define('PASSWORD', 'admin');
