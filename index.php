@@ -24,7 +24,7 @@ function connectToDb() {
   $servername = "127.0.0.1";
   $username = "bartek";
   $password = "gymsitedb321";
-  $dbname = "gymsitedatabase_final";
+  $dbname = "gymsitedatabase_final3";
 
   // Tworzenie połączenia
   $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -46,7 +46,7 @@ function addUser($profile_name_to_add) {
   if (mysqli_query($conn, $sql)) {
     $profile_id = mysqli_insert_id($conn);
     $_SESSION['profile_id1'] = $profile_id;
-    echo "<script>document.addEventListener('DOMContentLoaded', function() {createUserElement('$profile_name_to_add');});</script>";
+    echo "<script>document.addEventListener('DOMContentLoaded', function() {createUserElement('$profile_id','$profile_name_to_add');});</script>";
   } else {
     echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
   }
@@ -85,33 +85,7 @@ if (isset($_POST['submit1'])) {
   select_user_training_info(2);
   select_user_training_info(3);
 ?>
-<?php
-function getTrainingHistoryByUserId($profile_id) {
-  $conn = connectToDb();
-  $query = "SELECT TrainingHistory.*, UserProfiles.profile_id FROM TrainingHistory INNER JOIN TrainingWithExercises ON TrainingHistory.training_with_exercises_id = TrainingWithExercises.training_with_exercises_id INNER JOIN Trainings ON TrainingWithExercises.training_id = Trainings.training_id INNER JOIN UserProfiles ON Trainings.profile_id = UserProfiles.profile_id WHERE UserProfiles.profile_id = $profile_id";
-  $result = mysqli_query($conn, $query);
 
-  while ($record = mysqli_fetch_assoc($result)) {
-    $training_history_id = $record["training_history_id"];
-    $training_with_exercises_id = $record["training_with_exercises_id"];
-    $training_date = $record["training_date"];
-    $weight_1 = $record["weight_1"];
-    $reps_1 = $record["reps_1"];
-    $weight_2 = $record["weight_2"];
-    $reps_2 = $record["reps_2"];
-    $weight_3 = $record["weight_3"];
-    $reps_3 = $record["reps_3"];
-    $profile_id = $record["profile_id"];
-    echo "Training History ID: " . $training_history_id . "<br>";
-    echo "Training With Exercises ID: " . $training_with_exercises_id . "<br>";
-    echo "Training Date: " . $training_date . "<br>";
-    echo "Weight 1: " . $weight_1 . " Repetitions 1: " . $reps_1 . "<br>";
-    echo "Weight 2: " . $weight_2 . " Repetitions 2: " . $reps_2 . "<br>";
-    echo "Weight 3: " . $weight_3 . " Repetitions 3: " . $reps_3 . "<br>";
-    echo "profile_id: " . $profile_id . "<br>";
-  }
-}
-?>
 <?php
 function select_training_with_exercise($training_with_exercises_id) {
 
@@ -197,12 +171,21 @@ function select_training_with_exercise($training_with_exercises_id) {
         <p><?php echo $error; ?></p>
       <?php } ?>
       <?php if (empty($_SESSION['profile_id'])) : ?>
-      <form action="http://localhost/Gym_Site/login.php" method="post" class="css-margin-right">
-        <input type="text" name="login" class="css-margin-right"/> 
+      <form action="http://localhost/Gym_Site/login.php" method="post" class="css-left">
+        <input type="text" name="login"/> 
         <br/> 
-        <input type="password" name="password" class="css-margin-right"/>
+        <input type="password" name="password"/>
         <br/>
-        <button type="submit" class="css-margin-right">Zaloguj się</button>
+        <button type="submit">Zaloguj się</button>
+      </form>
+      <form action="http://localhost/Gym_Site/registration.php" method="post" class="css-right">
+        <label for="username">Nazwa użytkownika:</label>
+        <input type="text" id="username" name="username"><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br>
+        <label for="password">Hasło:</label>
+        <input type="password" id="password" name="password"><br>
+        <input type="submit" name="submitRegistration" value="Zarejestruj">
       </form>
       <?php else : ?>
           <p>Hi, <?=$_SESSION['profile_id']?></p>
@@ -211,7 +194,6 @@ function select_training_with_exercise($training_with_exercises_id) {
       <i class="fa fa-search"></i>
     </p>
   </header>
-  <p>Hi, <?=$_SESSION['profile_id']?></p>
 
 
   <div class="css-container css-text-grey" id="number_of_items">
@@ -234,22 +216,7 @@ function select_training_with_exercise($training_with_exercises_id) {
   </div>  
   <div id="klasa7" class="klasa7">
     <div id="tendiv" class="div1">
-      <?php
-        function getTrainingsByUserId($profile_id) {
-          $conn = connectToDb();
-          $query = "SELECT Trainings.training_id, Trainings.training_name
-          FROM Trainings
-          INNER JOIN UserProfiles ON Trainings.profile_id = UserProfiles.profile_id
-          WHERE UserProfiles.profile_id = $profile_id";
-          $result = mysqli_query($conn, $query);
-          while ($record = mysqli_fetch_assoc($result)) {+
-            $training_id = $record["training_id"];
-            $training_name = $record["training_name"];
-            echo "<a onclick='showTrainingDetails(" . $training_id . ")' href='#' class='css-bar-item css-button'>" . $training_name . "</a><br>";
-          }
-        }
-        getTrainingsByUserId($profile_id);
-      ?>
+
     </div>
   </div> 
   <div id="klasa_on2" class="klasa_on2">
@@ -323,14 +290,14 @@ function createChildElements(parent, profile_id, profile_name) {
 
   let a2 = document.createElement("a");
   a2.innerHTML = "Historia treningów";
-  a2.setAttribute("onclick", "loadTrainingHistoryDiv()");
+  a2.setAttribute("onclick", "loadTrainingHistoryDiv("+profile_id+")");
   a2.setAttribute("href", "#");
   a2.setAttribute("class", "css-bar-item css-button");
   div.appendChild(a2);
 
   let a3 = document.createElement("a");
   a3.innerHTML = "Wykresy";
-  a3.setAttribute("onclick", "loadChartDiv()");
+  a3.setAttribute("onclick", "loadChartDiv("+profile_id+")");
   a3.setAttribute("href", "#");
   a3.setAttribute("class", "css-bar-item css-button");
   div.appendChild(a3);
@@ -353,19 +320,6 @@ function loadDiv(klasa) {
   document.querySelectorAll(klasa).style.display = "block";
 }
 
-function showTrainingDetails(training_id) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "getTrainingDetails.php?training_id=" + training_id, true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-      document.getElementById("tendiv").innerHTML = xhr.responseText + '<div style="display: block;"><canvas id="myChart2"></canvas></div>';
-      createChart();
-    }
-  };
-  xhr.send();
-}
-
-
 function loadTrainingDiv(training_id) {
 
 var xhr = new XMLHttpRequest();
@@ -381,7 +335,44 @@ xhr.onload = function() {
 
     var newDiv2 = document.createElement("div");
     newDiv2.id = "record2Container";
-    newDiv2.innerHTML = this.responseText;
+
+    var records = JSON.parse(this.responseText);
+    var table = document.createElement("table");
+    table.setAttribute("border", "1");
+    table.style.margin = "0 auto";
+    for (var i = 0; i < records.length; i++) {
+      var row = table.insertRow();
+      table.style.width = "30%";
+      var cell0 = row.insertCell(0);
+      cell0.innerHTML = records[i]['training_name'];
+      cell0.style.textAlign = "center";
+      cell0.style.fontWeight = "bold";
+
+      
+      for (var j = 0; j < records[i]['exercises'].length; j++) {
+          var subRow = table.insertRow();
+          var subCell0 = subRow.insertCell(0);
+          var subCell1 = subRow.insertCell(1);
+          var subCell2 = subRow.insertCell(2);
+
+          
+          subCell0.innerHTML = records[i]['exercises'][j];Ciężar
+          subCell0.style.textAlign = "center";
+          subCell1.innerHTML = "<input type='text' placeholder='Ciężar'>"
+          subCell1.style.textAlign = "center";
+          subCell2.innerHTML = "<input type='text' placeholder='Ilość powtórzeń'>"
+          subCell2.style.textAlign = "center";
+
+      }
+      var subCell3 = subRow.insertCell(3);
+      subCell3.innerHTML = "<input type='submit' value='Wyślij'>"
+      subCell3.style.textAlign = "center";
+    }   
+
+
+
+
+    newDiv2.appendChild(table);
     newDiv1.appendChild(newDiv2);
     addDisplayBlockToChilds(newDiv1);
     document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
@@ -391,6 +382,7 @@ xhr.onload = function() {
 };
 
 xhr.send("training_id=" + training_id);
+
 }
 
 
@@ -406,39 +398,146 @@ function getRecord() {
   xhr.send();
 }
 
-function loadChartDiv() {
-  var newDiv1 = document.createElement("div");
-  newDiv1.id = "klasa7";
-  newDiv1.className = "klasa7";
-  newDiv1.style.display = "block";
+function loadChartDiv(profile_id) {
 
-  var newDiv2 = document.createElement("div");
-  newDiv2.id = "tendiv";
-  newDiv2.className = "div1";
-
-  newDiv2.innerHTML = "<?php getTrainingsByUserId($_SESSION['profile_id']); ?>";
-
-  newDiv1.appendChild(newDiv2);
-  addDisplayBlockToChilds(newDiv1);
-  document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "getTrainingsByUserId.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.status == 200) {
+      var newDiv1 = document.createElement("div");
+      newDiv1.id = "klasa7";
+      newDiv1.className = "klasa7";
+      var newDiv2 = document.createElement("div");
+      newDiv2.id = "tendiv";
+      newDiv2.innerHTML = this.responseText;
+      newDiv1.appendChild(newDiv2);
+      addDisplayBlockToChilds(newDiv1);
+      document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+    } else {
+      console.error('An error occurred while loading the training div. Response status: ', this.status);
+    }
+  };
+  xhr.send("profile_id=" + profile_id);
 }
 
-function loadTrainingHistoryDiv() {
+function showTrainingWithExercisesDetails(training_id) {
 
-  var newDiv1 = document.createElement("div");
-  newDiv1.id = "klasa6";
-  newDiv1.className = "klasa6";
-
-  var newDiv2 = document.createElement("div");
-  newDiv2.id = "recordContainer";
-
-  newDiv2.innerHTML = "<?php getTrainingHistoryByUserId($_SESSION['profile_id']); ?>";
-
-  newDiv1.appendChild(newDiv2);
-  addDisplayBlockToChilds(newDiv1);
-  document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "getExercisesByTrainingId.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.status == 200) {
+      var newDiv1 = document.createElement("div");
+      newDiv1.id = "klasa7";
+      newDiv1.className = "klasa7";
+      var newDiv2 = document.createElement("div");
+      newDiv2.id = "tendiv";
+      newDiv2.innerHTML = this.responseText;
+      newDiv1.appendChild(newDiv2);
+      addDisplayBlockToChilds(newDiv1);
+      document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+    } else {
+      console.error('An error occurred while loading the training div. Response status: ', this.status);
+    }
+  };
+  xhr.send("training_id=" + training_id);
 }
 
+function showTrainingHistoryDetails(training_history_id) {
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "getExercisesByHistoryId.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.status == 200) {
+      var newDiv1 = document.createElement("div");
+      newDiv1.id = "klasa7";
+      newDiv1.className = "klasa7";
+      var newDiv2 = document.createElement("div");
+      newDiv2.id = "tendiv";
+      newDiv2.innerHTML = this.responseText;
+      newDiv1.appendChild(newDiv2);
+      addDisplayBlockToChilds(newDiv1);
+      document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+    } else {
+      console.error('An error occurred while loading the training div. Response status: ', this.status);
+    }
+  };
+  xhr.send("training_history_id=" + training_history_id);
+}
+
+function showExerciseDetailsChart(exercise_id, training_id) {
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "getExerciseDetails.php?exercise_id=" + exercise_id + "&training_id=" + training_id, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+      const response = JSON.parse(xhr.responseText);
+      document.getElementById("tendiv").innerHTML = xhr.responseText + '<div style="display: block;"><canvas id="myChart"></canvas></div>';
+      createChart(response.dates, response.weights, response.repetitions);
+    }
+  };
+  xhr.send();
+}
+
+function createChart(dates, weights, repetitions) {
+  const ctx = document.getElementById('myChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'Waga',
+        data: weights,
+        borderWidth: 1
+      },
+      {
+        label: 'Powtórzenia',
+        data: repetitions,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: true,
+      },
+      stacked: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Wykres dla treningu'
+        }
+      }
+    }
+  });
+}
+
+
+
+
+function loadTrainingHistoryDiv(profile_id) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "getTrainingHistoryByUserId.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.status == 200) {
+      var newDiv1 = document.createElement("div");
+      newDiv1.id = "klasa6";
+      newDiv1.className = "klasa6";
+      var newDiv2 = document.createElement("div");
+      newDiv2.id = "recordContainer";
+      newDiv2.innerHTML = this.responseText;
+      newDiv1.appendChild(newDiv2);
+      addDisplayBlockToChilds(newDiv1);
+      document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+    } else {
+      console.error('An error occurred while loading the training div. Response status: ', this.status);
+    }
+  };
+  xhr.send("profile_id=" + profile_id);
+}
 
 
 function loadAddTrainingDiv(profile_id) {
@@ -510,55 +609,34 @@ document.querySelectorAll("div").forEach(function(element) {
   element.addEventListener("click", addClassOnClick);
 });
 
-function showTrainingDetails(training_id) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "getTrainingDetails.php?training_id=" + training_id, true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-      document.getElementById("tendiv").innerHTML = xhr.responseText + '<div style="display: block;"><canvas id="myChart2"></canvas></div>';
-      createChart();
-    }
-  };
-  xhr.send();
+
+function showTrainingDetails(training_id, profile_id) {
+
+var xhr = new XMLHttpRequest();
+
+xhr.open("POST", "selectTrainingWithExercise.php", true);
+xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+xhr.onload = function() {
+  if (this.status == 200) {
+    
+    var newDiv1 = document.createElement("div");
+    newDiv1.id = "klasa4";
+    newDiv1.className = "klasa4";
+
+    var newDiv2 = document.createElement("div");
+    newDiv2.id = "record2Container";
+    newDiv2.innerHTML = this.responseText;
+    newDiv1.appendChild(newDiv2);
+    addDisplayBlockToChilds(newDiv1);
+    document.querySelector("#tendiv").innerHTML = newDiv1.outerHTML;
+  } else {
+    console.error('An error occurred while loading the training div. Response status: ', this.status);
+  }
+};
+xhr.send("training_id=" + training_id);
 }
 
-function createChart() {
-  const ctx = document.getElementById('myChart2');
-  const dates = ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05', '2022-01-06'];
-  const weight = [50, 55, 60, 65, 70, 75];
-  const repetitions = [10, 12, 15, 18, 20, 22];
 
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: dates,
-      datasets: [{
-        label: 'Waga',
-        data: weight,
-        borderWidth: 1
-      },
-      {
-        label: 'Powtórzenia',
-        data: repetitions,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      interaction: {
-        mode: 'index',
-        intersect: false,
-      },
-      stacked: false,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Wykres dla treningu'
-        }
-      }
-    }
-  });
-}
 
 
 function reloadSite() {

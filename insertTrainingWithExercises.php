@@ -3,7 +3,7 @@ function connectToDb() {
   $servername = "127.0.0.1";
   $username = "bartek";
   $password = "gymsitedb321";
-  $dbname = "gymsitedatabase_final";
+  $dbname = "gymsitedatabase_final3";
 
   // Tworzenie połączenia
   $conn = mysqli_connect($servername, $username, $password, $dbname);

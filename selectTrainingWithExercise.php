@@ -3,7 +3,7 @@ function connectToDb() {
   $servername = "127.0.0.1";
   $username = "bartek";
   $password = "gymsitedb321";
-  $dbname = "gymsitedatabase_final";
+  $dbname = "gymsitedatabase_final3";
 
   // Tworzenie połączenia
   $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -32,22 +32,20 @@ WHERE Trainings.training_id = $training_id;
 ";
 
 $result = mysqli_query($conn, $query);
-$record = mysqli_fetch_assoc($result);
-$training_with_exercises_id = $record["training_with_exercises_id"];
-$exercise_1 = $record["exercise_1"];
-$exercise_2 = $record["exercise_2"];
-$exercise_3 = $record["exercise_3"];
-$training_name = $record["training_name"];
-$exercise_name1 = $record["exercise_name1"];
-$exercise_name2 = $record["exercise_name2"];
-$exercise_name3 = $record["exercise_name3"];
-echo "training_name: " . $training_name . "<br>";
-echo "Training With Exercises ID: " . $training_with_exercises_id . "<br>";
-echo "Training training_id: " . $training_id . "<br>";
-echo "exercise_1 1: " . $exercise_1 . " Repetitions 1: " . $exercise_name1 . "<br>";
-echo "exercise_1 2: " . $exercise_2 . " Repetitions 2: " . $exercise_name2 . "<br>";
-echo "exercise_1 3: " . $exercise_3 . " Repetitions 3: " . $exercise_name3 . "<br>";
+$records = [];
+while ($record = mysqli_fetch_assoc($result)) {
+    $training = [
+        'training_name' => $record['training_name'],
+        'exercises' => []
+    ];
+    for ($i = 1; $i <= 9; $i++) {
+        if ($record['exercise_name' . $i]) {
+            $training['exercises'][] = $record['exercise_name' . $i];
+        }
+    }
+    $records[] = $training;
+}
 
-echo "</table>";
+echo json_encode($records);
 
 $conn->close();
