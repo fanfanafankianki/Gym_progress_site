@@ -37,16 +37,23 @@ function connectToDb() {
 ?>
 
 <?php
-function addUser($profile_name_to_add) {
+function addUser($profile_name_to_add, $user_id) {
   $conn = connectToDb();
 
   // Zapytanie SQL
-  $sql = "INSERT INTO userProfiles(profile_name) VALUES ('$profile_name_to_add')";
+  $sql = "INSERT INTO userProfiles(profile_name, user_id) VALUES ('$profile_name_to_add', '$user_id')";
 
   if (mysqli_query($conn, $sql)) {
+    $counter = 0;
+    for($i = 0; $i < $_SESSION['profiles']; $i++){ 
+        $counter++;
+    }
     $profile_id = mysqli_insert_id($conn);
-    $_SESSION['profile_id1'] = $profile_id;
-    echo "<script>document.addEventListener('DOMContentLoaded', function() {createUserElement('$profile_id','$profile_name_to_add');});</script>";
+    $_SESSION['profiles']++;
+    $_SESSION["profile_id_" . $counter] = $profile_id;
+    $counter++;
+    echo "<p>Liczba profili: ".$counter."</p>";
+    echo "<p>Ostatnio dodane profile_id: ".$profile_id."</p>";
   } else {
     echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
   }
@@ -58,7 +65,8 @@ function addUser($profile_name_to_add) {
 
 if (isset($_POST['submit1'])) {
   $profile_name = $_POST['text'];
-  addUser($profile_name);
+  addUser($profile_name, $_SESSION['user_id']);
+
 }
 ?>
 <body class="css-content" style="max-width:1200px">
@@ -71,19 +79,27 @@ if (isset($_POST['submit1'])) {
     FROM UserProfiles
     JOIN Trainings ON UserProfiles.profile_id = Trainings.profile_id
     WHERE UserProfiles.profile_id = $profile_id";
+
+    $query2="SELECT UserProfiles.profile_id, UserProfiles.profile_name FROM UserProfiles WHERE UserProfiles.profile_id = $profile_id";
     $result = mysqli_query($conn, $query);
-    $training_names = array();
-    while($record = mysqli_fetch_assoc($result)) {
-    $profile_id = $record["profile_id"];
-    $profile_name = $record["profile_name"];
-    $training_ids[] = $record["training_id"];
-    $training_names[] = $record["training_name"];
+    if (mysqli_num_rows(mysqli_query($conn, $query)) == 0) {
+      $result = mysqli_query($conn, $query2);
+      $record = mysqli_fetch_assoc($result);
+      $profile_id = $record["profile_id"];
+      $profile_name = $record["profile_name"];
+      echo "<script>document.addEventListener('DOMContentLoaded', function() {createUserElement('$profile_id', '$profile_name');});</script>";
+    } else {
+      $training_names = array();
+      while($record = mysqli_fetch_assoc($result)) {
+        $profile_id = $record["profile_id"];
+        $profile_name = $record["profile_name"];
+        $training_ids[] = $record["training_id"];
+        $training_names[] = $record["training_name"];
+      }
+      echo "<script>document.addEventListener('DOMContentLoaded', function() {createUserElement('$profile_id', '$profile_name', " . json_encode($training_names) . ", " . json_encode($training_ids) . ");});</script>";
     }
-    echo "<script>document.addEventListener('DOMContentLoaded', function() {createUserElement('$profile_id', '$profile_name', " . json_encode($training_names) . ", " . json_encode($training_ids) . ");});</script>";
     $conn->close();
-    } 
-  select_user_training_info(2);
-  select_user_training_info(3);
+  } 
 ?>
 
 <?php
@@ -188,7 +204,18 @@ function select_training_with_exercise($training_with_exercises_id) {
         <input type="submit" name="submitRegistration" value="Zarejestruj">
       </form>
       <?php else : ?>
-          <p>Hi, <?=$_SESSION['profile_id']?></p>
+        <p>Hi, <?=$_SESSION['profile_id']?></p>
+        <?php 
+        $counter = 0;
+        for($i = 0; $i < $_SESSION['profiles']; $i++){ 
+            $counter++;
+        ?>
+        <p><?=select_user_training_info($_SESSION['profile_id_'.$i])?></p>
+        <?php 
+        } 
+        echo "<p>Liczba profili1: ".$_SESSION['profiles']."</p>";
+        echo "<p>Liczba profili: ".$counter."</p>";
+        ?>
           <a href="http://localhost/Gym_Site/logout.php">logout</a>
       <?php endif; ?>
       <i class="fa fa-search"></i>
@@ -196,9 +223,9 @@ function select_training_with_exercise($training_with_exercises_id) {
   </header>
 
 
-  <div class="css-container css-text-grey" id="number_of_items">
-    <p>6 items</p>
-  </div>
+
+  <p></p>
+
 
   <!-- Product grid -->
   <div class="parent">
@@ -225,7 +252,7 @@ function select_training_with_exercise($training_with_exercises_id) {
       <input type="submit" name="submit1" class="css-button css-block css-black" value="Dodaj osobę">
     </form>
   </div>
-  
+  <p></p>
   <!-- Footer -->
   <footer class="css-padding-16 css-teal css-small css-center" id="footer">
     <div class="css-row-padding">
@@ -339,12 +366,18 @@ xhr.onload = function() {
     var records = JSON.parse(this.responseText);
     var table = document.createElement("table");
     table.setAttribute("border", "1");
+
     table.style.margin = "0 auto";
+    var form = document.createElement("form");
+    form.id = "addTrainingForm";
+    form.action = "insertTrainingWithDate.php";
+    form.method = "post";
+    newDiv2.appendChild(form);
     for (var i = 0; i < records.length; i++) {
       var row = table.insertRow();
       table.style.width = "30%";
       var cell0 = row.insertCell(0);
-      cell0.innerHTML = records[i]['training_name'];
+      cell0.innerHTML = records[i]['training_name'] + "<input type='hidden' name='Training_With_Exercises_ID' value='" + records[i]['training_with_exercises_id'] + "'>";
       cell0.style.textAlign = "center";
       cell0.style.fontWeight = "bold";
 
@@ -352,27 +385,25 @@ xhr.onload = function() {
       for (var j = 0; j < records[i]['exercises'].length; j++) {
           var subRow = table.insertRow();
           var subCell0 = subRow.insertCell(0);
-          var subCell1 = subRow.insertCell(1);
-          var subCell2 = subRow.insertCell(2);
+          var subCell1 = subRow.insertCell(0);
+          var subCell2 = subRow.insertCell(0);
 
           
-          subCell0.innerHTML = records[i]['exercises'][j];Ciężar
+          subCell0.innerHTML = "<input type='text' name='Weight_" + j + "' placeholder='Ciężar'>"
           subCell0.style.textAlign = "center";
-          subCell1.innerHTML = "<input type='text' placeholder='Ciężar'>"
+          subCell1.innerHTML = "<input type='text' name='Reps_" + j + "' placeholder='Ilość powtórzeń'> <input type='hidden' name='Exercise_ID_" + j + "' value='" + records[i]['exercise_id'][j] + "'>"
           subCell1.style.textAlign = "center";
-          subCell2.innerHTML = "<input type='text' placeholder='Ilość powtórzeń'>"
+          subCell2.innerHTML = records[i]['exercises'][j];
           subCell2.style.textAlign = "center";
-
       }
-      var subCell3 = subRow.insertCell(3);
-      subCell3.innerHTML = "<input type='submit' value='Wyślij'>"
-      subCell3.style.textAlign = "center";
-    }   
+    }  
+    var subCell4 = subRow.insertCell(3);
+    subCell4.innerHTML = "<input type='submit' name='WstawDate' class='css-button css-black' value='Wyślij'>"
+    subCell4.style.textAlign = "center"; 
 
 
 
-
-    newDiv2.appendChild(table);
+    form.appendChild(table);
     newDiv1.appendChild(newDiv2);
     addDisplayBlockToChilds(newDiv1);
     document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
@@ -445,7 +476,6 @@ function showTrainingWithExercisesDetails(training_id) {
 }
 
 function showTrainingHistoryDetails(training_history_id) {
-
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "getExercisesByHistoryId.php", true);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -454,10 +484,29 @@ function showTrainingHistoryDetails(training_history_id) {
       var newDiv1 = document.createElement("div");
       newDiv1.id = "klasa7";
       newDiv1.className = "klasa7";
-      var newDiv2 = document.createElement("div");
-      newDiv2.id = "tendiv";
-      newDiv2.innerHTML = this.responseText;
-      newDiv1.appendChild(newDiv2);
+      var newTable = document.createElement("table");
+      newTable.id = "training_history_table";
+      newTable.className = "training_history_table";
+      newTable.setAttribute("border", "1");
+      newTable.style.margin = "0 auto";
+      newTable.style.width = "30%";
+      // Parsuj odpowiedź responsetext i dodaj ją jako wiersze i komórki tabeli
+      var responseData = JSON.parse(this.responseText);
+      for (var i = 0; i < responseData.length; i++) {
+        var newRow = newTable.insertRow();
+        var exerciseCell = newRow.insertCell();
+        exerciseCell.style.textAlign = "center";
+        exerciseCell.style.fontWeight = "bold";
+        exerciseCell.innerHTML = responseData[i].exercise_name;
+        var weightCell = newRow.insertCell();
+        weightCell.style.textAlign = "center";
+        weightCell.innerHTML = responseData[i].weight;
+        var repsCell = newRow.insertCell();
+        repsCell.style.textAlign = "center";
+        repsCell.innerHTML = responseData[i].reps;
+      }
+      
+      newDiv1.appendChild(newTable);
       addDisplayBlockToChilds(newDiv1);
       document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
     } else {

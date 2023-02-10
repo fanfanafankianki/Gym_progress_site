@@ -16,7 +16,7 @@ function connectToDb() {
 	$exercise_id = $_GET["exercise_id"];
 	$training_id = $_GET["training_id"];  
 	$conn = connectToDb();
-	$query = "SELECT Exercises.exercise_id, Exercises.exercise_name, TrainingHistory.training_date, 				TrainingHistory.training_history_id, TrainingDetails.weight, TrainingDetails.reps
+	$query = "SELECT Exercises.exercise_id, Exercises.exercise_name, TrainingHistory.training_date, TrainingHistory.training_history_id, TrainingDetails.weight, TrainingDetails.reps
 	FROM TrainingDetails
 	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
 	JOIN TrainingHistory ON TrainingDetails.training_history_id = TrainingHistory.training_history_id

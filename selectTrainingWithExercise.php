@@ -16,7 +16,16 @@ function connectToDb() {
 
 $training_id = $_POST['training_id'];
 $conn = connectToDb();
-$query = "SELECT TrainingWithExercises.*, Trainings.training_name, Exercises1.exercise_name AS exercise_name1, Exercises2.exercise_name AS exercise_name2, Exercises3.exercise_name AS exercise_name3, Exercises4.exercise_name AS exercise_name4, Exercises5.exercise_name AS exercise_name5, Exercises6.exercise_name AS exercise_name6, Exercises7.exercise_name AS exercise_name7, Exercises8.exercise_name AS exercise_name8, Exercises9.exercise_name AS exercise_name9
+$query = "SELECT TrainingWithExercises.*, Trainings.training_name, 
+Exercises1.exercise_id AS exercise_id1, Exercises1.exercise_name AS exercise_name1, 
+Exercises2.exercise_id AS exercise_id2, Exercises2.exercise_name AS exercise_name2, 
+Exercises3.exercise_id AS exercise_id3, Exercises3.exercise_name AS exercise_name3, 
+Exercises4.exercise_id AS exercise_id4, Exercises4.exercise_name AS exercise_name4, 
+Exercises5.exercise_id AS exercise_id5, Exercises5.exercise_name AS exercise_name5, 
+Exercises6.exercise_id AS exercise_id6, Exercises6.exercise_name AS exercise_name6, 
+Exercises7.exercise_id AS exercise_id7, Exercises7.exercise_name AS exercise_name7, 
+Exercises8.exercise_id AS exercise_id8, Exercises8.exercise_name AS exercise_name8, 
+Exercises9.exercise_id AS exercise_id9, Exercises9.exercise_name AS exercise_name9
 FROM TrainingWithExercises
 JOIN Trainings ON TrainingWithExercises.training_id = Trainings.training_id
 JOIN Exercises AS Exercises1 ON TrainingWithExercises.exercise_1 = Exercises1.exercise_id
@@ -35,12 +44,17 @@ $result = mysqli_query($conn, $query);
 $records = [];
 while ($record = mysqli_fetch_assoc($result)) {
     $training = [
+	    'training_with_exercises_id' => $record['training_with_exercises_id'],
         'training_name' => $record['training_name'],
-        'exercises' => []
+        'exercises' => [],
+        'exercise_id' => []
     ];
     for ($i = 1; $i <= 9; $i++) {
         if ($record['exercise_name' . $i]) {
             $training['exercises'][] = $record['exercise_name' . $i];
+        }
+		if ($record['exercise_id' . $i]) {
+            $training['exercise_id'][] = $record['exercise_id' . $i];
         }
     }
     $records[] = $training;

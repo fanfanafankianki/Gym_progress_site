@@ -143,17 +143,20 @@ function getExercisesByTrainingId($training_history_id) {
 	TrainingDetails.exercise_id = TrainingWithExercises.exercise_9
 	AND TrainingHistory.training_history_id = $training_history_id;
 	";
-  $result = mysqli_query($conn, $query);
+	$result = mysqli_query($conn, $query);
+	$records = [];
 	while ($record = mysqli_fetch_assoc($result)) {
-	echo "exercise_name: " . $record["exercise_name"] . "<br>";
-	echo "exercise_id : " . $record["exercise_id"] . "<br>";
-	echo "weight: " . $record["weight"] . "<br>";
-	echo "reps: " . $record["reps"] . "<br>";
+		$exercise_details = [
+			'exercise_name' => $record['exercise_name'],
+			'exercise_id' => $record['exercise_id'],
+			'weight' => $record['weight'],
+			'reps' => $record['reps']
+		];
+		$records[] = $exercise_details;
 	}
-  mysqli_close($conn);
-
+	echo json_encode($records);
+	mysqli_close($conn);
 }
-
 $training_history_id = $_POST["training_history_id"];
 
 getExercisesByTrainingId(1);
