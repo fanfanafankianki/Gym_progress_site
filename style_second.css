@@ -192,6 +192,12 @@ h6{
     display: none;
 }
 
+#myChart {
+    width: 800px;
+    height: 400px;
+    display: block;
+  }
+
 #klasa3, #klasa3 * {
     display: none;
 }
@@ -213,6 +219,22 @@ h6{
 }
 
 #klasa8, #klasa8 * {
+    display: none;
+}
+
+#klasa9, #klasa9 * {
+    display: none;
+}
+
+#klasa10, #klasa10 * {
+    display: none;
+}
+
+#klasa_on, #klasa_on * {
+    display: none;
+}
+
+#klasa_on2, #klasa_on2 * {
     display: none;
 }
 
@@ -341,7 +363,7 @@ a{
 }
  .css-input{
     display:block;
-    width:75.00%
+    width:75.00%;
     height: auto;
     margin: 0 auto;
     padding: 5px;
@@ -496,7 +518,7 @@ a{
     width:24.99999%
 }
 .css-col.s4{
-    width:50.00%
+    width:50.00%;
     height: auto;
     margin: 0 auto;
     padding: 10px;
