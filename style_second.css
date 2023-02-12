@@ -192,6 +192,12 @@ h6{
     display: none;
 }
 
+#myChart {
+    width: 800px;
+    height: 400px;
+    display: block;
+  }
+
 #klasa3, #klasa3 * {
     display: none;
 }
@@ -213,6 +219,22 @@ h6{
 }
 
 #klasa8, #klasa8 * {
+    display: none;
+}
+
+#klasa9, #klasa9 * {
+    display: none;
+}
+
+#klasa10, #klasa10 * {
+    display: none;
+}
+
+#klasa_on, #klasa_on * {
+    display: none;
+}
+
+#klasa_on2, #klasa_on2 * {
     display: none;
 }
 
@@ -341,7 +363,7 @@ a{
 }
  .css-input{
     display:block;
-    width:75.00%
+    width:75.00%;
     height: auto;
     margin: 0 auto;
     padding: 5px;
@@ -434,7 +456,8 @@ a{
 }
 .css-center .css-bar{
     display:inline-block;
-    width:auto
+    width:auto;
+    margin: 0 auto;
 }
  .css-bar .css-bar-item{
     padding:8px 16px;
@@ -496,7 +519,7 @@ a{
     width:24.99999%
 }
 .css-col.s4{
-    width:50.00%
+    width:50.00%;
     height: auto;
     margin: 0 auto;
     padding: 10px;
@@ -1206,14 +1229,8 @@ a{
     color:#fff!important;
     background-color:#f44336!important
 }
- .css-sand,.css-hover-sand:hover{
-    color:#000!important;
-    background-color:#fdf5e6!important
-}
- .css-teal,.css-hover-teal:hover{
-    color:#fff!important;
-    background-color:#009688!important
-}
+
+
  .css-yellow,.css-hover-yellow:hover{
     color:#000!important;
     background-color:#ffeb3b!important
@@ -1226,6 +1243,27 @@ a{
     color:#fff!important;
     background-color:#000!important
 }
+
+.css-color1,.css-hover-color1:hover{
+    color:#000!important;
+    background-color:#90E0A7!important
+}
+
+.css-color2,.css-hover-color2:hover{
+    color:#000!important;
+    background-color:#97A19A!important
+}
+
+.css-color3,.css-hover-color3:hover{
+    color:#000!important;
+    background-color:#D3E0D7!important
+}
+
+.css-color4,.css-hover-color4:hover{
+    color:#000!important;
+    background-color:#EBF9EF!important
+}
+
  .css-grey,.css-hover-grey:hover,.css-gray,.css-hover-gray:hover{
     color:#000!important;
     background-color:#9e9e9e!important
