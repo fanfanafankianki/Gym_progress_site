@@ -489,7 +489,7 @@ a{
 }
 .css-block{
     display:block;
-    width:20%
+    width:100%
 }
 
 .css-block2{
@@ -1244,24 +1244,24 @@ a{
     background-color:#000!important
 }
 
-.css-color1,.css-hover-color1:hover{
+.css-headercolor,.css-hover-headercolor:hover{
     color:#000!important;
-    background-color:#90E0A7!important
+    background-color:#667EA1!important
 }
 
-.css-color2,.css-hover-color2:hover{
+.css-bodycolor,.css-hover-bodycolor:hover{
     color:#000!important;
-    background-color:#97A19A!important
+    background-color:#F3F7F9!important
 }
 
-.css-color3,.css-hover-color3:hover{
+.css-mainframecolor,.css-hover-mainframecolor:hover{
     color:#000!important;
-    background-color:#D3E0D7!important
+    background-color:#83ABCD!important
 }
 
-.css-color4,.css-hover-color4:hover{
+.css-footercolor,.css-hover-footercolor:hover{
     color:#000!important;
-    background-color:#EBF9EF!important
+    background-color:#6B72B6!important
 }
 
  .css-grey,.css-hover-grey:hover,.css-gray,.css-hover-gray:hover{

@@ -83,11 +83,3 @@ CREATE TABLE accounts (
   email VARCHAR(25) NOT NULL UNIQUE CHECK (LENGTH(email) >= 5 AND LENGTH(email) <= 20)
 );
 
-
-INSERT INTO accounts (username, password)
-VALUES
-("user1", "password1"),
-("user2", "password2"),
-("user3", "password3"),
-("user4", "password4"),
-("user5", "password5");

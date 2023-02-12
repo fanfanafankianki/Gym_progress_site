@@ -1,19 +1,5 @@
 <?php
-function connectToDb() {
-  $servername = "127.0.0.1";
-  $username = "bartek";
-  $password = "gymsitedb321";
-  $dbname = "gymsitedatabase_final3";
-
-  // Tworzenie połączenia
-  $conn = mysqli_connect($servername, $username, $password, $dbname);
-  // Sprawdzanie połączenia
-  if (!$conn) {
-    die("Połączenie nieudane: " . mysqli_connect_error());
-  }
-  return $conn;
-}
-
+require('db.php');
 function getExercisesByTrainingId($training_id) {
   $conn = connectToDb();
   $query = "SELECT Exercises.exercise_name, Exercises.exercise_id
@@ -41,8 +27,6 @@ function getExercisesByTrainingId($training_id) {
 }
 
 $training_id = $_POST["training_id"];
-
 getExercisesByTrainingId($training_id);
-
 ?>
 

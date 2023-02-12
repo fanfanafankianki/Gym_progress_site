@@ -1,18 +1,5 @@
 <?php
-function connectToDb() {
-  $servername = "127.0.0.1";
-  $username = "bartek";
-  $password = "gymsitedb321";
-  $dbname = "gymsitedatabase_final3";
-
-  // Tworzenie połączenia
-  $conn = mysqli_connect($servername, $username, $password, $dbname);
-  // Sprawdzanie połączenia
-  if (!$conn) {
-    exit("Połączenie nieudane: " . mysqli_connect_error());
-  }
-  return $conn;
-}
+require('db.php');
 
 $training_id = $_POST['training_id'];
 $conn = connectToDb();
@@ -63,3 +50,4 @@ while ($record = mysqli_fetch_assoc($result)) {
 echo json_encode($records);
 
 $conn->close();
+?>

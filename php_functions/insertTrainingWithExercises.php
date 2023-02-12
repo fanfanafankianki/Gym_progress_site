@@ -1,18 +1,6 @@
 <?php
-function connectToDb() {
-  $servername = "127.0.0.1";
-  $username = "bartek";
-  $password = "gymsitedb321";
-  $dbname = "gymsitedatabase_final3";
+require('db.php');
 
-  // Tworzenie połączenia
-  $conn = mysqli_connect($servername, $username, $password, $dbname);
-  // Sprawdzanie połączenia
-  if (!$conn) {
-    exit("Połączenie nieudane: " . mysqli_connect_error());
-  }
-  return $conn;
-}
 if (isset($_POST['submit2'])) {
   $training_name = $_POST['text1'];
   $exercise_1 = $_POST['text2'];
@@ -80,3 +68,4 @@ if (isset($_POST['submit2'])) {
   header("Location: http://localhost/Gym_Site/index.php");
   
 }
+?>

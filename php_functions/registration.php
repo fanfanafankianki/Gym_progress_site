@@ -1,19 +1,11 @@
 <?php
+require('db.php');
 if(isset($_POST['submitRegistration'])) {
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $servername = "127.0.0.1";
-    $usernameDB = "bartek";
-    $passwordDB = "gymsitedb321";
-    $dbname = "gymsite_users";
-    
-    // Tworzenie połączenia
-    $conn = mysqli_connect($servername, $usernameDB, $passwordDB, $dbname);
-    if (!$conn) {
-        die("Połączenie nieudane: " . mysqli_connect_error());
-    }
+    $conn = connectToDbUsers();
 
     // Hashowanie hasła
     //$password = password_hash($password, PASSWORD_DEFAULT);
@@ -30,20 +22,8 @@ if(isset($_POST['submitRegistration'])) {
 
     mysqli_close($conn);
 
-    $username2 = $_POST['username'];
-    $email2 = $_POST['email'];
-    $password2 = $_POST['password'];
-
-    $servername2 = "127.0.0.1";
-    $usernameDB2 = "bartek";
-    $passwordDB2 = "gymsitedb321";
-    $dbname2 = "gymsitedatabase_final3";
-    
     // Tworzenie połączenia
-    $conn2 = mysqli_connect($servername2, $usernameDB2, $passwordDB2, $dbname2);
-    if (!$conn2) {
-        die("Połączenie nieudane: " . mysqli_connect_error());
-    }
+    $conn2 = connectToDb();
 
     // Hashowanie hasła
     //$password = password_hash($password, PASSWORD_DEFAULT);

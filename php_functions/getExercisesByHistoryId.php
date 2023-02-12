@@ -1,18 +1,5 @@
 <?php
-function connectToDb() {
-  $servername = "127.0.0.1";
-  $username = "bartek";
-  $password = "gymsitedb321";
-  $dbname = "gymsitedatabase_final3";
-
-  // Tworzenie połączenia
-  $conn = mysqli_connect($servername, $username, $password, $dbname);
-  // Sprawdzanie połączenia
-  if (!$conn) {
-    die("Połączenie nieudane: " . mysqli_connect_error());
-  }
-  return $conn;
-}
+require('db.php');
 
 function getExercisesByTrainingId($training_history_id) {
   $conn = connectToDb();
@@ -156,10 +143,10 @@ function getExercisesByTrainingId($training_history_id) {
 	}
 	echo json_encode($records);
 	mysqli_close($conn);
+	tuple= 
 }
+
 $training_history_id = $_POST["training_history_id"];
-
 getExercisesByTrainingId(1);
-
 ?>
 
