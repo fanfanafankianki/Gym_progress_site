@@ -49,8 +49,8 @@ function addUser($profile_name_to_add, $user_id) {
         $counter++;
     }
     $profile_id = mysqli_insert_id($conn);
-    $_SESSION['profiles']++;
     $_SESSION["profile_id_" . $counter] = $profile_id;
+    $_SESSION['profiles']++;
     $counter++;
     echo "<p>Liczba profili: ".$counter."</p>";
     echo "<p>Ostatnio dodane profile_id: ".$profile_id."</p>";
@@ -65,11 +65,12 @@ function addUser($profile_name_to_add, $user_id) {
 
 if (isset($_POST['submit1'])) {
   $profile_name = $_POST['text'];
+  echo $_SESSION['user_id'];
   addUser($profile_name, $_SESSION['user_id']);
 
 }
 ?>
-<body class="css-content" style="max-width:1200px">
+<body class="css-content css-color4" style="max-width:1200px">
 
 
 <?php
@@ -149,21 +150,27 @@ function select_training_with_exercise($training_with_exercises_id) {
 
 ?>
 <!-- Sidebar/menu -->
-<nav class="sidebar css-bar-block css-white css-collapse css-top" style="z-index:3;width:250px" id="mySidebar">
+<nav class="sidebar css-bar-block css-color4 css-collapse css-top" style="z-index:3;width:250px" id="mySidebar">
   <div class="css-container css-display-container css-padding-16">
     <i onclick="sidebar()" class="fa fa-remove css-hide-large css-button css-display-topright"></i>
     <h3 onclick="reloadSite()" class="css-wide css-button"><b>Gym Site</b>
     </h3>
   </div>
-  <div id=target class="css-padding-64 css-large css-text-grey" style="font-weight:bold">
-    <a onclick="loadDiv('klasa_on2')" href="javascript:void(0)" class="css-button css-block2 css-white css-left-align" id="object_one">
-      Dodaj nową osobę
+  <div id='target' class="css-padding-64 css-large css-text-grey" style="font-weight:bold">
+    <a onclick="loadBMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">
+        BMI Calculator
+    </a>
+    <a onclick="loadCaloriesCalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">
+        Calories Calculator
+    </a>
+    <a onclick="loadFFMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">
+        FFMI Calculator
     </a>
 </nav>
 
 <!-- Top menu on small screens -->
 <header class="css-bar css-top css-hide-large css-black css-xlarge">
-  <div class="css-bar-item css-padding-24 css-wide">Gym Site</div>
+  <div class="css-bar-item css-padding-24 css-wide css-black">Gym Site</div>
   <a href="javascript:void(0)" class="css-bar-item css-button css-padding-24 css-right" onclick="sidebar_open()"><i class="fa fa-bars"></i></a>
 </header>
 
@@ -177,49 +184,54 @@ function select_training_with_exercise($training_with_exercises_id) {
   <div class="css-hide-large" style="margin-top:83px"></div>
   
   <!-- Top header -->
-  <header class="css-container css-xlarge css-sand">
+  <header class="css-container css-xlarge css-color1">
 
 
    
-    <p class="css-left">Trening</p>
+
     <p class="css-right">
+    <div style="display: flex; justify-content: space-between; line-height: 25px; padding: 5px; align-items: center;">
+
+
       <?php if (isset($error)) { ?>
         <p><?php echo $error; ?></p>
       <?php } ?>
       <?php if (empty($_SESSION['profile_id'])) : ?>
-      <form action="http://localhost/Gym_Site/login.php" method="post" class="css-left">
-        <input type="text" name="login"/> 
+      <div style="float: left; text-align: left;  align-items: center;">
+      Log in and track your progress!
+      </div>
+      <div style="float: right; text-align: right; align-items: center; line-height: 25px;">
+      <form action="http://localhost/Gym_Site/login.php" method="post" class="css-right">
+        <label for="text" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;">Nazwa użytkownika:</label>
+        <input type="text" name="login" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;"/> 
         <br/> 
-        <input type="password" name="password"/>
+        <label for="password" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;">Hasło:</label>
+        <input type="password" name="password" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;"/>
         <br/>
-        <button type="submit">Zaloguj się</button>
+        <button type="submit" style="width: 100px; height: 35px; font-size: 15px; padding: 5px;">Zaloguj się</button>
       </form>
-      <form action="http://localhost/Gym_Site/registration.php" method="post" class="css-right">
-        <label for="username">Nazwa użytkownika:</label>
-        <input type="text" id="username" name="username"><br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br>
-        <label for="password">Hasło:</label>
-        <input type="password" id="password" name="password"><br>
-        <input type="submit" name="submitRegistration" value="Zarejestruj">
-      </form>
+
+      <script>document.addEventListener('DOMContentLoaded', function() {createRegisterElement();});</script>
+      </div>
       <?php else : ?>
-        <p>Hi, <?=$_SESSION['profile_id']?></p>
+        <div style="float: right; text-align: right; align-items: center; line-height: 25px;">
+        <p>Hi, <?=$_SESSION['profile_id']?> <a href="http://localhost/Gym_Site/logout.php">logout</a> </p>
         <?php 
         $counter = 0;
+        echo "<script>document.addEventListener('DOMContentLoaded', function() {createAddUserElement();});</script>";
         for($i = 0; $i < $_SESSION['profiles']; $i++){ 
             $counter++;
         ?>
-        <p><?=select_user_training_info($_SESSION['profile_id_'.$i])?></p>
-        <?php 
-        } 
-        echo "<p>Liczba profili1: ".$_SESSION['profiles']."</p>";
-        echo "<p>Liczba profili: ".$counter."</p>";
-        ?>
-          <a href="http://localhost/Gym_Site/logout.php">logout</a>
-      <?php endif; ?>
-      <i class="fa fa-search"></i>
-    </p>
+      <?php if (isset($_SESSION['profile_id_0']))
+      echo select_user_training_info($_SESSION['profile_id_'.$i]);
+      }
+      
+      ?>
+          </p>
+            
+        <?php endif; ?>
+      </p>
+      </div>
   </header>
 
 
@@ -229,13 +241,34 @@ function select_training_with_exercise($training_with_exercises_id) {
 
   <!-- Product grid -->
   <div class="parent">
-    <div id="empty_place_for_divs">
-      Welcome to Gym Site! Here you can configure your training routine, track your trainings and your progress! 
+    <div id="empty_place_for_divs" class="css-color3" style="text-align: center; align-items: center;">
+      <div id="welcome_site" style="font-weight: bold; font-size: 17px; letter-spacing:3px;">
+        <br>
+        <br>
+        Welcome to Gym Site! 
+        <br>
+        <br>
+        Here you can configure your training routine, track your trainings and your progress! 
+        <br>
+        <br>
+        Add your everyday trainings and your exercise routine.
+        <br>
+        <br>
+        You can also use BMI, FFMI and Calorie calculator!
+        <br>
+        <br>
+        Register now and start tracking your progress.
+        <br>
+        <br>
+        <br>
+          <div id="welcome_site2" style="font-weight: bold; font-size: 17px; letter-spacing:3px; line-height: 35px;">
+          </div>
+        </div>
     </div>
   </div> 
 
 
-  <div id="klasa6" class="klasa6>
+  <div id="klasa6" class="klasa6">
     <div id="recordContainer">
 
         <a onclick="getRecord()" href="#" class="css-bar-item css-button">Click</a>
@@ -248,14 +281,15 @@ function select_training_with_exercise($training_with_exercises_id) {
   </div> 
   <div id="klasa_on2" class="klasa_on2">
     <form method="post">
-      <input type="text" name="text" class="css-input css-border" placeholder="Imię nowej osoby">
-      <input type="submit" name="submit1" class="css-button css-block css-black" value="Dodaj osobę">
+      <br><br>Dodaj nowy profil/osobę: <br><br>
+      <input type="text" name="text" class="css-input css-border" placeholder="Nazwa profilu"><br>
+      <input type="submit" name="submit1" class="css-button css-block css-black" value="Dodaj profil">
     </form>
   </div>
   <p></p>
   <!-- Footer -->
-  <footer class="css-padding-16 css-teal css-small css-center" id="footer">
-    <div class="css-row-padding">
+  <footer class="css-padding-16 css-color2 css-small css-center" id="footer">
+    <div class="css-row-padding" style="align-items: center; margin: 0 auto; display: flex;">
       <div class="css-col s4">
         <h4>Kontakt</h4>
         <p>Masz pytanie? Zadaj je tutaj!</p>
@@ -276,172 +310,307 @@ function select_training_with_exercise($training_with_exercises_id) {
 </div>
 
 <script>
-// Accordion 
-function myAccFunc(arg) {
-  var x = document.getElementById(arg);
-  if (x.className.indexOf("css-show") == -1) {
-    x.className += " css-show";
-  } else {
-    x.className = x.className.replace(" css-show", "");
+  function loadBMICalculator() {
+    var BMICalculator = `<br><br> Kalkulator BMI <br><br>
+    <input type="text" id="weight" placeholder="Waga"><br><br>
+    <input type="text" id="height" placeholder="Wzrost"><br><br>
+    <button onclick="calculateBMI()">Oblicz BMI</button><br><br>
+    <div id="result"></div>`;
+    let target = document.getElementById("empty_place_for_divs");
+    document.getElementById('empty_place_for_divs').innerHTML = BMICalculator;
   }
-}
 
-function createUserElement(profile_id, profile_name, trainingList = [], trainingIds = []) {
-  let a = document.createElement("a");
-  a.innerHTML = profile_name;
-  a.setAttribute("href", "javascript:void(0)");
-  a.setAttribute("onclick", `myAccFunc('${profile_name}_items')`);
-  a.setAttribute("class", "css-button css-block2 css-white css-left-align css-show");
-  a.setAttribute("id", profile_name);
-  let target = document.getElementById("target");
-  target.insertBefore(a, target.firstChild);
-  createChildElements(a, profile_id, profile_name); 
-  if (trainingList.length === trainingIds.length && trainingList.length > 0) {
-    for (let i = 0; i < trainingList.length; i++) {
-      createTrainingElement(trainingList[i], trainingIds[i], profile_name);
-    }
+  function calculateBMI() {
+  // Pobieranie wartości wagi i wzrostu z pól input
+  var weight = document.getElementById("weight").value;
+  var height = document.getElementById("height").value;
+
+  // Konwersja pól input na liczby
+  weight = parseFloat(weight);
+  height = parseFloat(height);
+
+  // Sprawdzanie, czy wprowadzono prawidłowe dane
+  if (isNaN(weight) || isNaN(height) || height <= 0) {
+    document.getElementById("result").innerHTML = "Wprowadzono nieprawidłowe dane.";
+    return;
   }
-}
 
-function createChildElements(parent, profile_id, profile_name) {
-  let div = document.createElement("div");
-  div.setAttribute("id", profile_name+"_items");
-  div.setAttribute("class", "css-bar-block css-hide css-padding-large css-medium css-show");
+  // Obliczenie BMI
+  var bmi = (weight / (height * height))*10000;
 
-  let a1 = document.createElement("a");
-  a1.innerHTML = "Dodaj trening";
-  a1.setAttribute("onclick", "loadAddTrainingDiv("+profile_id+")");
-  a1.setAttribute("href", "#");
-  a1.setAttribute("class", "css-bar-item css-button");
-  div.appendChild(a1);
+  // Wyświetlenie wyniku
+  document.getElementById("result").innerHTML = "Twoje BMI wynosi: " + bmi.toFixed(2);
+  }
 
-  let a2 = document.createElement("a");
-  a2.innerHTML = "Historia treningów";
-  a2.setAttribute("onclick", "loadTrainingHistoryDiv("+profile_id+")");
-  a2.setAttribute("href", "#");
-  a2.setAttribute("class", "css-bar-item css-button");
-  div.appendChild(a2);
+  function loadCaloriesCalculator() {
+    var CaloriesCalculator = `<br><br> Kalkulator zapotrzebowania kalorycznego <br><br>
+    <input type="text" id="weight" placeholder="Waga"><br><br>
+    <input type="text" id="height" placeholder="Wzrost"><br><br>
+    <input type="text" id="age" placeholder="Wiek"><br><br>
+    <select id="gender">
+        <option value="male">Mężczyzna</option>
+        <option value="female">Kobieta</option>
+    </select><br><br>
+    <select id="activity">
+        <option value="1.20">Prawie brak</option>
+        <option value="1.40">Lekka aktywność</option>
+        <option value="1.60">Umiarkowana aktywność</option>
+        <option value="1.80">Duża aktywność</option>
+        <option value="2.00">Bardzo duża aktywność</option>
+    </select><br><br>
+    <button onclick="calculateCaloricRequirement()">Oblicz zapotrzebowanie kaloryczne</button><br><br>
+    <div id="result"></div><br>`;
+    let target = document.getElementById("empty_place_for_divs");
+    document.getElementById('empty_place_for_divs').innerHTML = CaloriesCalculator;
+  }
 
-  let a3 = document.createElement("a");
-  a3.innerHTML = "Wykresy";
-  a3.setAttribute("onclick", "loadChartDiv("+profile_id+")");
-  a3.setAttribute("href", "#");
-  a3.setAttribute("class", "css-bar-item css-button");
-  div.appendChild(a3);
-
-  parent.parentNode.insertBefore(div, parent.nextSibling);
-}
-
-function createTrainingElement(training, training_id, profile_name) {
-  let a1 = document.createElement("a");
-  a1.innerHTML = training;
-  a1.setAttribute("onclick", "loadTrainingDiv("+training_id+")");
-  a1.setAttribute("href", "#");
-  a1.setAttribute("class", "css-bar-item css-button css-show");
-  let target = document.getElementById(profile_name+"_items");
-  target.insertBefore(a1, target.firstChild);
-}
-
-function loadDiv(klasa) {
-  document.getElementById('empty_place_for_divs').innerHTML = document.getElementById(klasa).innerHTML;
-  document.querySelectorAll(klasa).style.display = "block";
-}
-
-function loadTrainingDiv(training_id) {
-
-var xhr = new XMLHttpRequest();
-
-xhr.open("POST", "selectTrainingWithExercise.php", true);
-xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-xhr.onload = function() {
-  if (this.status == 200) {
+  function calculateCaloricRequirement() {
+    // Pobieranie wartości wagi, wzrostu i wieku z pól input
+    var weight = document.getElementById("weight").value;
+    var height = document.getElementById("height").value;
+    var age = document.getElementById("age").value;
+    var gender = document.getElementById("gender").value;
+    var activity = document.getElementById("activity").value;
     
-    var newDiv1 = document.createElement("div");
-    newDiv1.id = "klasa4";
-    newDiv1.className = "klasa4";
+    // Konwersja pól input na liczby
+    weight = parseFloat(weight);
+    height = parseFloat(height);
+    age = parseFloat(age);
 
-    var newDiv2 = document.createElement("div");
-    newDiv2.id = "record2Container";
-
-    var records = JSON.parse(this.responseText);
-    var table = document.createElement("table");
-    table.setAttribute("border", "1");
-
-    table.style.margin = "0 auto";
-    var form = document.createElement("form");
-    form.id = "addTrainingForm";
-    form.action = "insertTrainingWithDate.php";
-    form.method = "post";
-    newDiv2.appendChild(form);
-    for (var i = 0; i < records.length; i++) {
-      var row = table.insertRow();
-      table.style.width = "30%";
-      var cell0 = row.insertCell(0);
-      cell0.innerHTML = records[i]['training_name'] + "<input type='hidden' name='Training_With_Exercises_ID' value='" + records[i]['training_with_exercises_id'] + "'>";
-      cell0.style.textAlign = "center";
-      cell0.style.fontWeight = "bold";
-
-      
-      for (var j = 0; j < records[i]['exercises'].length; j++) {
-          var subRow = table.insertRow();
-          var subCell0 = subRow.insertCell(0);
-          var subCell1 = subRow.insertCell(0);
-          var subCell2 = subRow.insertCell(0);
-
-          
-          subCell0.innerHTML = "<input type='text' name='Weight_" + j + "' placeholder='Ciężar'>"
-          subCell0.style.textAlign = "center";
-          subCell1.innerHTML = "<input type='text' name='Reps_" + j + "' placeholder='Ilość powtórzeń'> <input type='hidden' name='Exercise_ID_" + j + "' value='" + records[i]['exercise_id'][j] + "'>"
-          subCell1.style.textAlign = "center";
-          subCell2.innerHTML = records[i]['exercises'][j];
-          subCell2.style.textAlign = "center";
-      }
-    }  
-    var subCell4 = subRow.insertCell(3);
-    subCell4.innerHTML = "<input type='submit' name='WstawDate' class='css-button css-black' value='Wyślij'>"
-    subCell4.style.textAlign = "center"; 
-
-
-
-    form.appendChild(table);
-    newDiv1.appendChild(newDiv2);
-    addDisplayBlockToChilds(newDiv1);
-    document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
-  } else {
-    console.error('An error occurred while loading the training div. Response status: ', this.status);
-  }
-};
-
-xhr.send("training_id=" + training_id);
-
-}
-
-
-function getRecord() {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "get_record.php", true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      // Dokonaj renderowania rekordu w element HTML
-      document.getElementById("recordContainer").innerHTML = xhr.responseText;
+    // Sprawdzanie, czy wprowadzono prawidłowe dane
+    if (isNaN(weight) || isNaN(height) || isNaN(age) || height <= 0) {
+      document.getElementById("result").innerHTML = "Wprowadzono nieprawidłowe dane.";
+      return;
     }
-  };
-  xhr.send();
-}
 
-function loadChartDiv(profile_id) {
+    // Obliczenie zapotrzebowania kalorycznego
+    var PPM;
+    var BMR;
+    var BMR_Masa;
+    var BMR_Redukcja;
+    if (gender === "male") {
+      PPM = 66  + (13.7 * weight) + (5 * height) - (6.8 * age);
+      BMR = (66  + (13.7 * weight) + (5 * height) - (6.8 * age)) * activity;
+      BMR_Masa = ((66  + (13.7 * weight) + (5 * height) - (6.8 * age)) * activity) + 150;
+      BMR_Redukcja = ((66  + (13.7 * weight) + (5 * height) - (6.8 * age)) * activity) - 150;
+    } else {
+      PPM = 655  + (9.6 * weight) + (1.8 * height) - (4.7 * age);
+      BMR = (655  + (9.6 * weight) + (1.8 * height) - (4.7 * age)) * activity;
+      BMR_Masa = ((655  + (9.6 * weight) + (1.8 * height) - (4.7 * age)) * activity) + 150;
+      BMR_Redukcja = ((655  + (9.6 * weight) + (1.8 * height) - (4.7 * age)) * activity) - 150;
+    }
+
+    // Wyświetlenie wyniku
+    document.getElementById("result").innerHTML = "Twoje Podstawowa Przemiana Materii wynosi około: " + PPM.toFixed(2) + " kalorii. <br><br>";
+    document.getElementById("result").innerHTML += "Twoje dzienne zapotrzebowanie kaloryczne wynosi około: " + BMR.toFixed(2) + " kalorii. <br><br>";
+    document.getElementById("result").innerHTML += "Twoje dzienne zapotrzebowanie kaloryczne na masie wynosi około: " + BMR_Masa.toFixed(2) + " kalorii. <br><br>";
+    document.getElementById("result").innerHTML += "Twoje dzienne zapotrzebowanie kaloryczne na redukcji wynosi około: " + BMR_Redukcja.toFixed(2) + " kalorii. <br><br>";
+  
+  }
+
+  function loadFFMICalculator() {
+    var FFMICalculator = `<br><br> Kalkulator FFMI <br><br>
+    <input type="text" id="weight" placeholder="Waga"><br><br>
+    <input type="text" id="height" placeholder="Wzrost"><br><br>
+    <input type="text" id="fat" placeholder="Poziom tkanki tłuszczowej"><br><br>
+    <button onclick="calculateFFMI()">Oblicz FFMI</button><br><br>
+    <div id="result"></div>`;
+    let target = document.getElementById("empty_place_for_divs");
+    document.getElementById('empty_place_for_divs').innerHTML = FFMICalculator;
+  }
+
+  function calculateFFMI() {
+    // Pobieranie wartości wagi, wzrostu i poziomu tkanki tłuszczowej z pól input
+    var weight = document.getElementById("weight").value;
+    var height = document.getElementById("height").value;
+    var fat = document.getElementById("fat").value;
+
+    // Konwersja pól input na liczby
+    weight = parseFloat(weight);
+    height = parseFloat(height);
+    fat = parseFloat(fat);
+
+    // Sprawdzanie, czy wprowadzono prawidłowe dane
+    if (isNaN(weight) || isNaN(height) || isNaN(fat) || height <= 0 || fat < 0 || fat > 100) {
+      document.getElementById("result").innerHTML = "Wprowadzono nieprawidłowe dane.";
+      return;
+    }
+
+    // Obliczenie masy beztłuszczowej
+    var leanMass = weight * (1 - (fat / 100));
+
+    // Obliczenie FFMI
+    var ffmi = (leanMass /((height/100) * (height/100)));
+
+    var normalized_ffmi = ffmi + 6.1*(1.8-(height/100));
+
+    // Wyświetlenie wyniku
+    document.getElementById("result").innerHTML = "Twoje FFMI wynosi: " + ffmi.toFixed(2) + "<br> Twoje Normalized FFMI wynosi: " + normalized_ffmi.toFixed(2);
+  }
+
+  // Accordion 
+  function myAccFunc(arg) {
+    var x = document.getElementById(arg);
+    if (x.className.indexOf("css-show") == -1) {
+      x.className += " css-show";
+    } else {
+      x.className = x.className.replace(" css-show", "");
+    }
+  }
+
+  function createUserElement(profile_id, profile_name, trainingList = [], trainingIds = []) {
+    let a = document.createElement("a");
+    a.innerHTML = profile_name;
+    a.setAttribute("href", "javascript:void(0)");
+    a.setAttribute("onclick", `myAccFunc('${profile_name}_items')`);
+    a.setAttribute("class", "css-button css-block css-left-align css-show");
+    a.setAttribute("id", profile_name);
+    let target = document.getElementById("target");
+    target.insertBefore(a, target.firstChild);
+
+
+
+    createChildElements(a, profile_id, profile_name); 
+    if (trainingList.length === trainingIds.length && trainingList.length > 0) {
+      for (let i = 0; i < trainingList.length; i++) {
+        createTrainingElement(trainingList[i], trainingIds[i], profile_name);
+      }
+    }
+
+  }
+
+  function createAddUserElement() {
+    let a2 = document.createElement("a");
+    a2.innerHTML = "Dodaj nowy profil";
+    a2.setAttribute("onclick", "loadDiv('klasa_on2')");
+    a2.setAttribute("href", "#");
+    a2.setAttribute("class", "css-button css-block2 css-left-align");
+
+    let target = document.getElementById("target");
+    target.insertBefore(a2, target.firstChild);
+  }
+
+
+  function createChildElements(parent, profile_id, profile_name) {
+    let div = document.createElement("div");
+    div.setAttribute("id", profile_name+"_items");
+    div.setAttribute("class", "css-bar-block css-hide css-padding-large css-medium css-show");
+
+    let a1 = document.createElement("a");
+    a1.innerHTML = "Dodaj trening";
+    a1.setAttribute("onclick", "loadAddTrainingDiv("+profile_id+")");
+    a1.setAttribute("href", "#");
+    a1.setAttribute("class", "css-bar-item css-button");
+    div.appendChild(a1);
+
+    let a2 = document.createElement("a");
+    a2.innerHTML = "Historia treningów";
+    a2.setAttribute("onclick", "loadTrainingHistoryDiv("+profile_id+")");
+    a2.setAttribute("href", "#");
+    a2.setAttribute("class", "css-bar-item css-button");
+    div.appendChild(a2);
+
+    let a3 = document.createElement("a");
+    a3.innerHTML = "Wykresy";
+    a3.setAttribute("onclick", "loadChartDiv("+profile_id+")");
+    a3.setAttribute("href", "#");
+    a3.setAttribute("class", "css-bar-item css-button");
+    div.appendChild(a3);
+
+
+
+    parent.parentNode.insertBefore(div, parent.nextSibling);
+  }
+
+  function createTrainingElement(training, training_id, profile_name) {
+    let a1 = document.createElement("a");
+    a1.innerHTML = training;
+    a1.setAttribute("onclick", "loadTrainingDiv("+training_id+")");
+    a1.setAttribute("href", "#");
+    a1.setAttribute("class", "css-bar-item css-button css-show");
+    let target = document.getElementById(profile_name+"_items");
+    target.insertBefore(a1, target.firstChild);
+  }
+
+  function loadDiv(klasa) {
+    document.getElementById('empty_place_for_divs').innerHTML = document.getElementById(klasa).innerHTML;
+    document.querySelectorAll(klasa).style.display = "block";
+  }
+
+  function createRegisterElement() {
+    var registerForm = `
+      <form action="http://localhost/Gym_Site/registration.php" method="post">
+        Register now! <br>
+        <input type="text" id="username" name="username" placeholder="Username">
+        <br>
+        <input type="email" id="email" name="email" placeholder="Email">
+        <br>
+        <input type="password" id="password" name="password" placeholder="Password">
+        <br>
+        <input type="submit" name="submitRegistration" value="Zarejestruj">
+      </form><br>
+    `;
+
+    document.getElementById("welcome_site2").innerHTML += registerForm;
+  }
+
+  function loadTrainingDiv(training_id) {
 
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "getTrainingsByUserId.php", true);
+
+  xhr.open("POST", "selectTrainingWithExercise.php", true);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onload = function() {
     if (this.status == 200) {
+      
       var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa7";
-      newDiv1.className = "klasa7";
+      newDiv1.id = "klasa4";
+      newDiv1.className = "klasa4";
+
       var newDiv2 = document.createElement("div");
-      newDiv2.id = "tendiv";
-      newDiv2.innerHTML = this.responseText;
+      newDiv2.id = "record2Container";
+
+      var records = JSON.parse(this.responseText);
+      var table = document.createElement("table");
+      table.setAttribute("border", "1");
+
+      table.style.margin = "0 auto";
+      var form = document.createElement("form");
+      form.id = "addTrainingForm";
+      form.action = "insertTrainingWithDate.php";
+      form.method = "post";
+      newDiv2.appendChild(form);
+      for (var i = 0; i < records.length; i++) {
+        var row = table.insertRow();
+        table.style.width = "30%";
+        var cell0 = row.insertCell(0);
+        cell0.innerHTML = records[i]['training_name'] + "<input type='hidden' name='Training_With_Exercises_ID' value='" + records[i]['training_with_exercises_id'] + "'>";
+        cell0.style.textAlign = "center";
+        cell0.style.fontWeight = "bold";
+
+        
+        for (var j = 0; j < records[i]['exercises'].length; j++) {
+            var subRow = table.insertRow();
+            var subCell0 = subRow.insertCell(0);
+            var subCell1 = subRow.insertCell(0);
+            var subCell2 = subRow.insertCell(0);
+
+            
+            subCell0.innerHTML = "<input type='text' name='Weight_" + j + "' placeholder='Ciężar'>"
+            subCell0.style.textAlign = "center";
+            subCell1.innerHTML = "<input type='text' name='Reps_" + j + "' placeholder='Ilość powtórzeń'> <input type='hidden' name='Exercise_ID_" + j + "' value='" + records[i]['exercise_id'][j] + "'>"
+            subCell1.style.textAlign = "center";
+            subCell2.innerHTML = records[i]['exercises'][j];
+            subCell2.style.textAlign = "center";
+        }
+      }  
+      var subCell4 = subRow.insertCell(3);
+      subCell4.innerHTML = "<input type='submit' name='WstawDate' class='css-button css-black' value='Wyślij'>"
+      subCell4.style.textAlign = "center"; 
+
+
+
+      form.appendChild(table);
       newDiv1.appendChild(newDiv2);
       addDisplayBlockToChilds(newDiv1);
       document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
@@ -449,263 +618,297 @@ function loadChartDiv(profile_id) {
       console.error('An error occurred while loading the training div. Response status: ', this.status);
     }
   };
-  xhr.send("profile_id=" + profile_id);
-}
 
-function showTrainingWithExercisesDetails(training_id) {
+  xhr.send("training_id=" + training_id);
+
+  }
+
+
+  function getRecord() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "get_record.php", true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // Dokonaj renderowania rekordu w element HTML
+        document.getElementById("recordContainer").innerHTML = xhr.responseText;
+      }
+    };
+    xhr.send();
+  }
+
+  function loadChartDiv(profile_id) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "getTrainingsByUserId.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+      if (this.status == 200) {
+        var newDiv1 = document.createElement("div");
+        newDiv1.id = "klasa7";
+        newDiv1.className = "klasa7";
+        var newDiv2 = document.createElement("div");
+        newDiv2.id = "tendiv";
+        newDiv2.innerHTML = this.responseText;
+        newDiv1.appendChild(newDiv2);
+        addDisplayBlockToChilds(newDiv1);
+        document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+      } else {
+        console.error('An error occurred while loading the training div. Response status: ', this.status);
+      }
+    };
+    xhr.send("profile_id=" + profile_id);
+  }
+
+  function showTrainingWithExercisesDetails(training_id) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "getExercisesByTrainingId.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+      if (this.status == 200) {
+        var newDiv1 = document.createElement("div");
+        newDiv1.id = "klasa7";
+        newDiv1.className = "klasa7";
+        var newDiv2 = document.createElement("div");
+        newDiv2.id = "tendiv";
+        newDiv2.innerHTML = this.responseText;
+        newDiv1.appendChild(newDiv2);
+        addDisplayBlockToChilds(newDiv1);
+        document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+      } else {
+        console.error('An error occurred while loading the training div. Response status: ', this.status);
+      }
+    };
+    xhr.send("training_id=" + training_id);
+  }
+
+  function showTrainingHistoryDetails(training_history_id) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "getExercisesByHistoryId.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+      if (this.status == 200) {
+        var newDiv1 = document.createElement("div");
+        newDiv1.id = "klasa7";
+        newDiv1.className = "klasa7";
+        var newTable = document.createElement("table");
+        newTable.id = "training_history_table";
+        newTable.className = "training_history_table";
+        newTable.setAttribute("border", "1");
+        newTable.style.margin = "0 auto";
+        newTable.style.width = "30%";
+        // Parsuj odpowiedź responsetext i dodaj ją jako wiersze i komórki tabeli
+        var responseData = JSON.parse(this.responseText);
+        for (var i = 0; i < responseData.length; i++) {
+          var newRow = newTable.insertRow();
+          var exerciseCell = newRow.insertCell();
+          exerciseCell.style.textAlign = "center";
+          exerciseCell.style.fontWeight = "bold";
+          exerciseCell.innerHTML = responseData[i].exercise_name;
+          var weightCell = newRow.insertCell();
+          weightCell.style.textAlign = "center";
+          weightCell.innerHTML = responseData[i].weight;
+          var repsCell = newRow.insertCell();
+          repsCell.style.textAlign = "center";
+          repsCell.innerHTML = responseData[i].reps;
+        }
+        
+        newDiv1.appendChild(newTable);
+        addDisplayBlockToChilds(newDiv1);
+        document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+      } else {
+        console.error('An error occurred while loading the training div. Response status: ', this.status);
+      }
+    };
+    xhr.send("training_history_id=" + training_history_id);
+  }
+
+  function showExerciseDetailsChart(exercise_id, training_id) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "getExerciseDetails.php?exercise_id=" + exercise_id + "&training_id=" + training_id, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        document.getElementById("tendiv").innerHTML = xhr.responseText + '<div style="display: block;"><canvas id="myChart"></canvas></div>';
+        createChart(response.dates, response.weights, response.repetitions);
+      }
+    };
+    xhr.send();
+  }
+
+  function createChart(dates, weights, repetitions) {
+    const ctx = document.getElementById('myChart');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [{
+          label: 'Waga',
+          data: weights,
+          borderWidth: 1
+        },
+        {
+          label: 'Powtórzenia',
+          data: repetitions,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        interaction: {
+          mode: 'index',
+          intersect: true,
+        },
+        stacked: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Wykres dla treningu'
+          }
+        }
+      }
+    });
+  }
+
+
+
+
+  function loadTrainingHistoryDiv(profile_id) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "getTrainingHistoryByUserId.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onload = function() {
+      if (this.status == 200) {
+        var newDiv1 = document.createElement("div");
+        newDiv1.id = "klasa6";
+        newDiv1.className = "klasa6";
+        var newDiv2 = document.createElement("div");
+        newDiv2.id = "recordContainer";
+        newDiv2.innerHTML = this.responseText;
+        newDiv1.appendChild(newDiv2);
+        addDisplayBlockToChilds(newDiv1);
+        document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+      } else {
+        console.error('An error occurred while loading the training div. Response status: ', this.status);
+      }
+    };
+    xhr.send("profile_id=" + profile_id);
+  }
+
+
+  function loadAddTrainingDiv(profile_id) {
+    var newDiv1 = document.createElement("div");
+    newDiv1.id = "klasa5";
+    newDiv1.className = "klasa5";
+
+    var newDiv2 = document.createElement("div");
+    newDiv2.id = "tendiv";
+    newDiv2.className = "div1";
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("POST", "selectTrainingWithExercise.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.send("profile_id=" + profile_id);
+    newDiv2.innerHTML = `
+
+    <form id="addTrainingForm" action="insertTrainingWithExercises.php" method="post">
+      <input type="hidden" name="profile_id" value="${profile_id}">
+      <input type="text" name="text1" class="css-input css-border" placeholder="Nazwa treningu">
+      <input type="text" name="text2" class="css-input css-border" placeholder="Ćwiczenie 1">
+      <input type="text" name="text3" class="css-input css-border" placeholder="Ćwiczenie 2">
+      <input type="text" name="text4" class="css-input css-border" placeholder="Ćwiczenie 3">
+      <input type="text" name="text5" class="css-input css-border" placeholder="Ćwiczenie 4">
+      <input type="text" name="text6" class="css-input css-border" placeholder="Ćwiczenie 5">
+      <input type="text" name="text7" class="css-input css-border" placeholder="Ćwiczenie 6">
+      <input type="text" name="text8" class="css-input css-border" placeholder="Ćwiczenie 7">
+      <input type="text" name="text9" class="css-input css-border" placeholder="Ćwiczenie 8">
+      <input type="text" name="text10" class="css-input css-border" placeholder="Ćwiczenie 9">
+      <input type="submit" name="submit2" class="css-button css-block css-black" value="Dodaj trening">
+    </form>`;
+    newDiv1.appendChild(newDiv2);
+
+    addDisplayBlockToChilds(newDiv1);
+
+    document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+  }
+
+
+
+
+
+
+
+
+
+
+  function addDisplayBlockToChilds(div) {
+    div.style.display = "block";
+    var allDescendants = div.getElementsByTagName("*");
+    for (var i = 0; i < allDescendants.length; i++) {
+        allDescendants[i].style.display = "block";
+    }
+  }
+
+  function addClassOnClick(event) {
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach((element) => {
+      element.classList.remove('css-light-grey');
+    });
+
+    if (event.target.classList.contains("css-button")) {
+      event.target.classList.add("css-light-grey");
+    }   
+  }
+
+  document.querySelectorAll("div").forEach(function(element) {
+    element.addEventListener("click", addClassOnClick);
+  });
+
+
+  function showTrainingDetails(training_id, profile_id) {
 
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "getExercisesByTrainingId.php", true);
+
+  xhr.open("POST", "selectTrainingWithExercise.php", true);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onload = function() {
     if (this.status == 200) {
+      
       var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa7";
-      newDiv1.className = "klasa7";
+      newDiv1.id = "klasa4";
+      newDiv1.className = "klasa4";
+
       var newDiv2 = document.createElement("div");
-      newDiv2.id = "tendiv";
+      newDiv2.id = "record2Container";
       newDiv2.innerHTML = this.responseText;
       newDiv1.appendChild(newDiv2);
       addDisplayBlockToChilds(newDiv1);
-      document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
+      document.querySelector("#tendiv").innerHTML = newDiv1.outerHTML;
     } else {
       console.error('An error occurred while loading the training div. Response status: ', this.status);
     }
   };
   xhr.send("training_id=" + training_id);
-}
-
-function showTrainingHistoryDetails(training_history_id) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "getExercisesByHistoryId.php", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
-    if (this.status == 200) {
-      var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa7";
-      newDiv1.className = "klasa7";
-      var newTable = document.createElement("table");
-      newTable.id = "training_history_table";
-      newTable.className = "training_history_table";
-      newTable.setAttribute("border", "1");
-      newTable.style.margin = "0 auto";
-      newTable.style.width = "30%";
-      // Parsuj odpowiedź responsetext i dodaj ją jako wiersze i komórki tabeli
-      var responseData = JSON.parse(this.responseText);
-      for (var i = 0; i < responseData.length; i++) {
-        var newRow = newTable.insertRow();
-        var exerciseCell = newRow.insertCell();
-        exerciseCell.style.textAlign = "center";
-        exerciseCell.style.fontWeight = "bold";
-        exerciseCell.innerHTML = responseData[i].exercise_name;
-        var weightCell = newRow.insertCell();
-        weightCell.style.textAlign = "center";
-        weightCell.innerHTML = responseData[i].weight;
-        var repsCell = newRow.insertCell();
-        repsCell.style.textAlign = "center";
-        repsCell.innerHTML = responseData[i].reps;
-      }
-      
-      newDiv1.appendChild(newTable);
-      addDisplayBlockToChilds(newDiv1);
-      document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
-    } else {
-      console.error('An error occurred while loading the training div. Response status: ', this.status);
-    }
-  };
-  xhr.send("training_history_id=" + training_history_id);
-}
-
-function showExerciseDetailsChart(exercise_id, training_id) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", "getExerciseDetails.php?exercise_id=" + exercise_id + "&training_id=" + training_id, true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-      const response = JSON.parse(xhr.responseText);
-      document.getElementById("tendiv").innerHTML = xhr.responseText + '<div style="display: block;"><canvas id="myChart"></canvas></div>';
-      createChart(response.dates, response.weights, response.repetitions);
-    }
-  };
-  xhr.send();
-}
-
-function createChart(dates, weights, repetitions) {
-  const ctx = document.getElementById('myChart');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: dates,
-      datasets: [{
-        label: 'Waga',
-        data: weights,
-        borderWidth: 1
-      },
-      {
-        label: 'Powtórzenia',
-        data: repetitions,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      interaction: {
-        mode: 'index',
-        intersect: true,
-      },
-      stacked: false,
-      plugins: {
-        title: {
-          display: true,
-          text: 'Wykres dla treningu'
-        }
-      }
-    }
-  });
-}
-
-
-
-
-function loadTrainingHistoryDiv(profile_id) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "getTrainingHistoryByUserId.php", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
-    if (this.status == 200) {
-      var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa6";
-      newDiv1.className = "klasa6";
-      var newDiv2 = document.createElement("div");
-      newDiv2.id = "recordContainer";
-      newDiv2.innerHTML = this.responseText;
-      newDiv1.appendChild(newDiv2);
-      addDisplayBlockToChilds(newDiv1);
-      document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
-    } else {
-      console.error('An error occurred while loading the training div. Response status: ', this.status);
-    }
-  };
-  xhr.send("profile_id=" + profile_id);
-}
-
-
-function loadAddTrainingDiv(profile_id) {
-  var newDiv1 = document.createElement("div");
-  newDiv1.id = "klasa5";
-  newDiv1.className = "klasa5";
-
-  var newDiv2 = document.createElement("div");
-  newDiv2.id = "tendiv";
-  newDiv2.className = "div1";
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("POST", "selectTrainingWithExercise.php", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-  xhr.send("profile_id=" + profile_id);
-  newDiv2.innerHTML = `
-
-  <form id="addTrainingForm" action="insertTrainingWithExercises.php" method="post">
-    <input type="hidden" name="profile_id" value="${profile_id}">
-    <input type="text" name="text1" class="css-input css-border" placeholder="Nazwa treningu">
-    <input type="text" name="text2" class="css-input css-border" placeholder="Ćwiczenie 1">
-    <input type="text" name="text3" class="css-input css-border" placeholder="Ćwiczenie 2">
-    <input type="text" name="text4" class="css-input css-border" placeholder="Ćwiczenie 3">
-    <input type="text" name="text5" class="css-input css-border" placeholder="Ćwiczenie 4">
-    <input type="text" name="text6" class="css-input css-border" placeholder="Ćwiczenie 5">
-    <input type="text" name="text7" class="css-input css-border" placeholder="Ćwiczenie 6">
-    <input type="text" name="text8" class="css-input css-border" placeholder="Ćwiczenie 7">
-    <input type="text" name="text9" class="css-input css-border" placeholder="Ćwiczenie 8">
-    <input type="text" name="text10" class="css-input css-border" placeholder="Ćwiczenie 9">
-    <input type="submit" name="submit2" class="css-button css-block css-black" value="Dodaj trening">
-  </form>`;
-  newDiv1.appendChild(newDiv2);
-
-  addDisplayBlockToChilds(newDiv1);
-
-  document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
-}
-
-
-
-
-
-
-
-
-
-
-function addDisplayBlockToChilds(div) {
-  div.style.display = "block";
-  var allDescendants = div.getElementsByTagName("*");
-  for (var i = 0; i < allDescendants.length; i++) {
-      allDescendants[i].style.display = "block";
   }
-}
-
-function addClassOnClick(event) {
-  const allElements = document.querySelectorAll('*');
-  allElements.forEach((element) => {
-    element.classList.remove('css-light-grey');
-  });
-
-  if (event.target.classList.contains("css-button")) {
-    event.target.classList.add("css-light-grey");
-  }   
-}
-
-document.querySelectorAll("div").forEach(function(element) {
-  element.addEventListener("click", addClassOnClick);
-});
 
 
-function showTrainingDetails(training_id, profile_id) {
 
-var xhr = new XMLHttpRequest();
 
-xhr.open("POST", "selectTrainingWithExercise.php", true);
-xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-xhr.onload = function() {
-  if (this.status == 200) {
-    
-    var newDiv1 = document.createElement("div");
-    newDiv1.id = "klasa4";
-    newDiv1.className = "klasa4";
-
-    var newDiv2 = document.createElement("div");
-    newDiv2.id = "record2Container";
-    newDiv2.innerHTML = this.responseText;
-    newDiv1.appendChild(newDiv2);
-    addDisplayBlockToChilds(newDiv1);
-    document.querySelector("#tendiv").innerHTML = newDiv1.outerHTML;
-  } else {
-    console.error('An error occurred while loading the training div. Response status: ', this.status);
+  function reloadSite() {
+    location.reload();
   }
-};
-xhr.send("training_id=" + training_id);
-}
 
-
-
-
-function reloadSite() {
-  location.reload();
-}
-
-document.getElementById("object_one").click();
-
-document.getElementById("object_two").click();
-
-// Open and close sidebar
-function sidebar_open() {
-  document.getElementById("mySidebar").style.display = "block";
-  document.getElementById("myOverlay").style.display = "block";
-}
- 
-function sidebar_close() {
-  document.getElementById("mySidebar").style.display = "none";
-  document.getElementById("myOverlay").style.display = "none";
-}
+  // Open and close sidebar
+  function sidebar_open() {
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("myOverlay").style.display = "block";
+  }
+  
+  function sidebar_close() {
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("myOverlay").style.display = "none";
+  }
 </script>
 
 </body>
