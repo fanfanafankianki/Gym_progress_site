@@ -183,7 +183,7 @@ function createUserElement(
   let a = document.createElement("a");
   a.innerHTML = profile_name;
   a.setAttribute("href", "javascript:void(0)");
-  a.setAttribute("onclick", `myAccFunc('${profile_name}_items')`);
+  a.setAttribute("onclick", `myAccFunc('${profile_name}_items${profile_id}')`);
   a.setAttribute("class", "css-button css-left-align css-show");
   a.setAttribute("id", profile_name);
   let target = document.getElementById("target");
@@ -192,7 +192,12 @@ function createUserElement(
   createChildElements(a, profile_id, profile_name);
   if (trainingList.length === trainingIds.length && trainingList.length > 0) {
     for (let i = 0; i < trainingList.length; i++) {
-      createTrainingElement(trainingList[i], trainingIds[i], profile_name);
+      createTrainingElement(
+        trainingList[i],
+        trainingIds[i],
+        profile_name,
+        profile_id
+      );
     }
   }
 }
@@ -200,7 +205,7 @@ function createUserElement(
 function createAddUserElement() {
   let a2 = document.createElement("a");
   a2.innerHTML = "Add new profile";
-  a2.setAttribute("onclick", "loadDiv('klasa_on2')");
+  a2.setAttribute("onclick", "loadProfileDiv()");
   a2.setAttribute("href", "#");
   a2.setAttribute("class", "css-button css-block2 css-left-align");
 
@@ -210,7 +215,7 @@ function createAddUserElement() {
 
 function createChildElements(parent, profile_id, profile_name) {
   let div = document.createElement("div");
-  div.setAttribute("id", profile_name + "_items");
+  div.setAttribute("id", profile_name + "_items" + profile_id);
   div.setAttribute(
     "class",
     "css-bar-block css-hide css-padding-large css-medium css-show"
@@ -240,24 +245,23 @@ function createChildElements(parent, profile_id, profile_name) {
   parent.parentNode.insertBefore(div, parent.nextSibling);
 }
 
-function createTrainingElement(training, training_id, profile_name) {
+function createTrainingElement(
+  training,
+  training_id,
+  profile_name,
+  profile_id
+) {
   let a1 = document.createElement("a");
   a1.innerHTML = training;
   a1.setAttribute("onclick", "loadTrainingDiv(" + training_id + ")");
   a1.setAttribute("href", "#");
   a1.setAttribute("class", "css-bar-item css-button css-show");
-  let target = document.getElementById(profile_name + "_items");
+  let target = document.getElementById(profile_name + "_items" + profile_id);
   target.insertBefore(a1, target.firstChild);
 }
 
-function loadDiv(klasa) {
-  document.getElementById("empty_place_for_divs").innerHTML =
-    document.getElementById(klasa).innerHTML;
-  document.querySelectorAll(klasa).style.display = "block";
-}
-
 function createRegisterElement() {
-  var registerForm = `
+  var registerForm = `Register now and start tracking your progress.<br>
     <form action="php_functions/registration.php" method="post">
     Register now! <br>
     <input type="text" id="username" name="username" placeholder="Username">
@@ -266,11 +270,27 @@ function createRegisterElement() {
     <br>
     <input type="password" id="password" name="password" placeholder="Password">
     <br>
-    <input type="submit" name="submitRegistration" value="Register">
+    `;
+
+  if (error_registration) {
+    registerForm += "<p style='color:red;'>" + error_registration + "</p>";
+  }
+
+  registerForm += `<input type="submit" name="submitRegistration" value="Register">
     </form><br>
     `;
 
   document.getElementById("welcome_site2").innerHTML += registerForm;
+}
+
+function loadProfileDiv() {
+  document.getElementById(
+    "empty_place_for_divs"
+  ).innerHTML = `<form method='post'>
+  <br><br>Add new profile: <br><br>
+  <input type='text' name='text' class='css-input css-border' placeholder='Profile name'><br>
+  <input type='submit' name='add_profile' class='css-button css-black' value='Add profile'>
+  </form>`;
 }
 
 function loadTrainingDiv(training_id) {
@@ -281,15 +301,15 @@ function loadTrainingDiv(training_id) {
   xhr.onload = function () {
     if (this.status == 200) {
       var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa4";
-      newDiv1.className = "klasa4";
+      newDiv1.id = "TrainingDiv";
 
       var newDiv2 = document.createElement("div");
-      newDiv2.id = "record2Container";
+      newDiv2.id = "TrainingContainer";
+      newDiv2.innerHTML = "<br><br><p></p>";
 
       var records = JSON.parse(this.responseText);
       var table = document.createElement("table");
-      table.setAttribute("border", "1");
+      table.setAttribute("border", "10");
 
       table.style.margin = "0 auto";
       var form = document.createElement("form");
@@ -299,7 +319,7 @@ function loadTrainingDiv(training_id) {
       newDiv2.appendChild(form);
       for (var i = 0; i < records.length; i++) {
         var row = table.insertRow();
-        table.style.width = "50%";
+        table.style.width = "55%";
         var cell0 = row.insertCell(0);
         cell0.innerHTML =
           records[i]["training_name"] +
@@ -352,30 +372,91 @@ function loadTrainingDiv(training_id) {
   xhr.send("training_id=" + training_id);
 }
 
-function getRecord() {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "get_record.php", true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      // Dokonaj renderowania rekordu w element HTML
-      document.getElementById("recordContainer").innerHTML = xhr.responseText;
-    }
-  };
-  xhr.send();
-}
-
 function loadChartDiv(profile_id) {
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "php_functions/getTrainingsByUserId.php", true);
+  xhr.open("POST", "php_functions/selectTrainingsByProfileId.php", true);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onload = function () {
     if (this.status == 200) {
       var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa7";
-      newDiv1.className = "klasa7";
+      newDiv1.id = "ChartDiv";
       var newDiv2 = document.createElement("div");
-      newDiv2.id = "tendiv";
-      newDiv2.innerHTML = this.responseText;
+      newDiv2.id = "ChartContainer";
+      newDiv2.style.fontWeight = "bold";
+      if (this.responseText === "") {
+        newDiv2.innerHTML = `<br><p></p><br></br><p></p><br><p></p><br><p></p><br><p></p><b>
+          <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
+      } else {
+        newDiv2.innerHTML =
+          "<br><p></p><br>Select the workout for which you want to view the chart: <br><p></p><br>" +
+          this.responseText;
+      }
+      newDiv1.appendChild(newDiv2);
+      addDisplayBlockToChilds(newDiv1);
+      document.querySelector("#empty_place_for_divs").innerHTML =
+        newDiv1.outerHTML;
+    } else {
+      console.error(
+        "An error occurred while loading the training div. Response status: ",
+        this.status
+      );
+    }
+  };
+  xhr.send("profile_id=" + profile_id);
+}
+
+function loadTrainingHistoryDiv(profile_id) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "php_functions/selectTrainingsByProfileIdHistory.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.onload = function () {
+    if (this.status == 200) {
+      var newDiv1 = document.createElement("div");
+      newDiv1.id = "TrainingHistoryDiv";
+      var newDiv2 = document.createElement("div");
+      newDiv2.id = "TrainingHistoryContainer";
+      newDiv2.style.fontWeight = "bold";
+      if (this.responseText === "") {
+        newDiv2.innerHTML = `<br><p></p><br></br><p></p><br><p></p><br><p></p><br><p></p><b>
+          <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
+      } else {
+        newDiv2.innerHTML =
+          "<br><p></p><br>Select the workout for which you want to view history: <br><p></p><br>" +
+          this.responseText;
+      }
+      newDiv1.appendChild(newDiv2);
+      addDisplayBlockToChilds(newDiv1);
+      document.querySelector("#empty_place_for_divs").innerHTML =
+        newDiv1.outerHTML;
+    } else {
+      console.error(
+        "An error occurred while loading the training div. Response status: ",
+        this.status
+      );
+    }
+  };
+  xhr.send("profile_id=" + profile_id);
+}
+
+function loadTrainingHistoryTableDiv(profile_id) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "php_functions/selectTrainingHistoryByProfileId.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.onload = function () {
+    if (this.status == 200) {
+      var newDiv1 = document.createElement("div");
+      newDiv1.id = "TrainingHistoryTableDiv";
+      var newDiv2 = document.createElement("div");
+      newDiv2.id = "TrainingHistoryTableContainer";
+      newDiv2.style.fontWeight = "bold";
+      if (this.responseText === "") {
+        newDiv2.innerHTML = `<br><p></p><br></br><p></p><br><p></p><br><p></p><br><p></p><b>
+          <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
+      } else {
+        newDiv2.innerHTML =
+          "<br><p></p><br>Select the workout for which you want to view history: <br><p></p><br>" +
+          this.responseText;
+      }
       newDiv1.appendChild(newDiv2);
       addDisplayBlockToChilds(newDiv1);
       document.querySelector("#empty_place_for_divs").innerHTML =
@@ -392,16 +473,23 @@ function loadChartDiv(profile_id) {
 
 function showTrainingWithExercisesDetails(training_id) {
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "php_functions/getExercisesByTrainingId.php", true);
+  xhr.open("POST", "php_functions/selectExercisesByTrainingId.php", true);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onload = function () {
     if (this.status == 200) {
       var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa7";
-      newDiv1.className = "klasa7";
+      newDiv1.id = "TrainingWithExercisesDiv";
       var newDiv2 = document.createElement("div");
-      newDiv2.id = "tendiv";
-      newDiv2.innerHTML = this.responseText;
+      newDiv2.id = "TrainingWithExercisesContainer";
+      newDiv2.style.fontWeight = "bold";
+      if (this.responseText === "") {
+        newDiv2.innerHTML = `<br><p></p><br></br><p></p><br><p></p><br><p></p><br><p></p><b>
+          <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
+      } else {
+        newDiv2.innerHTML =
+          "<br><p></p><br>Select exercise for which you want to view the chart: <br><p></p><br>" +
+          this.responseText;
+      }
       newDiv1.appendChild(newDiv2);
       addDisplayBlockToChilds(newDiv1);
       document.querySelector("#empty_place_for_divs").innerHTML =
@@ -418,17 +506,17 @@ function showTrainingWithExercisesDetails(training_id) {
 
 function showTrainingHistoryDetails(training_history_id) {
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "php_functions/getExercisesByHistoryId.php", true);
+  xhr.open("POST", "php_functions/selectExercisesByHistoryId.php", true);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onload = function () {
     if (this.status == 200) {
       var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa7";
-      newDiv1.className = "klasa7";
+      newDiv1.id = "TrainingHistoryDetailsDiv";
+      newDiv1.innerHTML = "<br><br><p></p>";
       var newTable = document.createElement("table");
       newTable.id = "training_history_table";
       newTable.className = "training_history_table";
-      newTable.setAttribute("border", "1");
+      newTable.setAttribute("border", "10");
       newTable.style.margin = "0 auto";
       newTable.style.width = "30%";
       // Parsuj odpowiedź responsetext i dodaj ją jako wiersze i komórki tabeli
@@ -439,12 +527,12 @@ function showTrainingHistoryDetails(training_history_id) {
         exerciseCell.style.textAlign = "center";
         exerciseCell.style.fontWeight = "bold";
         exerciseCell.innerHTML = responseData[i].exercise_name;
-        var weightCell = newRow.insertCell();
-        weightCell.style.textAlign = "center";
-        weightCell.innerHTML = responseData[i].weight;
         var repsCell = newRow.insertCell();
         repsCell.style.textAlign = "center";
-        repsCell.innerHTML = responseData[i].reps;
+        repsCell.innerHTML = "Repetitions: " + responseData[i].reps;
+        var weightCell = newRow.insertCell();
+        weightCell.style.textAlign = "center";
+        weightCell.innerHTML = "Weight: " + responseData[i].weight;
       }
 
       newDiv1.appendChild(newTable);
@@ -465,7 +553,7 @@ function showExerciseDetailsChart(exercise_id, training_id) {
   const xhr = new XMLHttpRequest();
   xhr.open(
     "GET",
-    "php_functions/getExerciseDetails.php?exercise_id=" +
+    "php_functions/selectExerciseDetails.php?exercise_id=" +
       exercise_id +
       "&training_id=" +
       training_id,
@@ -474,12 +562,46 @@ function showExerciseDetailsChart(exercise_id, training_id) {
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
       const response = JSON.parse(xhr.responseText);
-      document.getElementById("tendiv").innerHTML =
+      document.getElementById("TrainingWithExercisesContainer").innerHTML =
         '<div style="display: block;"><canvas id="myChart"></canvas></div>';
       createChart(response.dates, response.weights, response.repetitions);
     }
   };
   xhr.send();
+}
+
+function loadAddTrainingDiv(profile_id) {
+  var newDiv1 = document.createElement("div");
+  newDiv1.id = "AddTrainingDiv";
+
+  var newDiv2 = document.createElement("div");
+  newDiv2.id = "AddTrainingContainer";
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("POST", "php_functions/selectTrainingWithExercise.php", true);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+  xhr.send("profile_id=" + profile_id);
+  newDiv2.innerHTML = `<br><p></p><b>Add new training to your profile</b><br><p>
+    <form id="addTrainingForm" action="php_functions/insertTrainingWithExercises.php" method="post">
+    <input type="hidden" name="profile_id" value="${profile_id}">
+    <input type="text" name="text1" class="css-input css-border" placeholder="Training name">
+    <input type="text" name="text2" class="css-input css-border" placeholder="Exercise 1">
+    <input type="text" name="text3" class="css-input css-border" placeholder="Exercise 2">
+    <input type="text" name="text4" class="css-input css-border" placeholder="Exercise 3">
+    <input type="text" name="text5" class="css-input css-border" placeholder="Exercise 4">
+    <input type="text" name="text6" class="css-input css-border" placeholder="Exercise 5">
+    <input type="text" name="text7" class="css-input css-border" placeholder="Exercise 6">
+    <input type="text" name="text8" class="css-input css-border" placeholder="Exercise 7">
+    <input type="text" name="text9" class="css-input css-border" placeholder="Exercise 8">
+    <input type="text" name="text10" class="css-input css-border" placeholder="Exercise 9"><p> </p>
+    <input type="submit" name="insertTrainingWithExercises" class="css-button css-black" value="Add training">
+    </form>`;
+  newDiv1.appendChild(newDiv2);
+
+  addDisplayBlockToChilds(newDiv1);
+
+  document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
 }
 
 function createChart(dates, weights, repetitions) {
@@ -492,12 +614,14 @@ function createChart(dates, weights, repetitions) {
         {
           label: "Waga",
           data: weights,
-          borderWidth: 1,
+          borderWidth: 8,
+          yAxisID: "y",
         },
         {
           label: "Powtórzenia",
           data: repetitions,
-          borderWidth: 1,
+          borderWidth: 8,
+          yAxisID: "y1",
         },
       ],
     },
@@ -514,70 +638,32 @@ function createChart(dates, weights, repetitions) {
           text: "Wykres dla treningu",
         },
       },
+      scales: {
+        y: {
+          type: "linear",
+          display: true,
+          position: "left",
+          title: {
+            display: true,
+            text: "Weight",
+          },
+        },
+        y1: {
+          type: "linear",
+          display: true,
+          position: "right",
+          title: {
+            display: true,
+            text: "Repetitions",
+          },
+          // grid line settings
+          grid: {
+            drawOnChartArea: false, // only want the grid lines for one axis to show up
+          },
+        },
+      },
     },
   });
-}
-
-function loadTrainingHistoryDiv(profile_id) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "php_functions/getTrainingHistoryByUserId.php", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onload = function () {
-    if (this.status == 200) {
-      var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa6";
-      newDiv1.className = "klasa6";
-      var newDiv2 = document.createElement("div");
-      newDiv2.id = "recordContainer";
-      newDiv2.innerHTML = this.responseText;
-      newDiv1.appendChild(newDiv2);
-      addDisplayBlockToChilds(newDiv1);
-      document.querySelector("#empty_place_for_divs").innerHTML =
-        newDiv1.outerHTML;
-    } else {
-      console.error(
-        "An error occurred while loading the training div. Response status: ",
-        this.status
-      );
-    }
-  };
-  xhr.send("profile_id=" + profile_id);
-}
-
-function loadAddTrainingDiv(profile_id) {
-  var newDiv1 = document.createElement("div");
-  newDiv1.id = "klasa5";
-  newDiv1.className = "klasa5";
-
-  var newDiv2 = document.createElement("div");
-  newDiv2.id = "tendiv";
-  newDiv2.className = "div1";
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("POST", "php_functions/selectTrainingWithExercise.php", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-  xhr.send("profile_id=" + profile_id);
-  newDiv2.innerHTML = `<b>Add new training to your profile</b><br><p>
-    <form id="addTrainingForm" action="php_functions/insertTrainingWithExercises.php" method="post">
-    <input type="hidden" name="profile_id" value="${profile_id}">
-    <input type="text" name="text1" class="css-input css-border" placeholder="Training name">
-    <input type="text" name="text2" class="css-input css-border" placeholder="Exercise 1">
-    <input type="text" name="text3" class="css-input css-border" placeholder="Exercise 2">
-    <input type="text" name="text4" class="css-input css-border" placeholder="Exercise 3">
-    <input type="text" name="text5" class="css-input css-border" placeholder="Exercise 4">
-    <input type="text" name="text6" class="css-input css-border" placeholder="Exercise 5">
-    <input type="text" name="text7" class="css-input css-border" placeholder="Exercise 6">
-    <input type="text" name="text8" class="css-input css-border" placeholder="Exercise 7">
-    <input type="text" name="text9" class="css-input css-border" placeholder="Exercise 8">
-    <input type="text" name="text10" class="css-input css-border" placeholder="Exercise 9"><p> </p>
-    <input type="submit" name="submit2" class="css-button css-block css-black" value="Add training">
-    </form>`;
-  newDiv1.appendChild(newDiv2);
-
-  addDisplayBlockToChilds(newDiv1);
-
-  document.querySelector("#empty_place_for_divs").innerHTML = newDiv1.outerHTML;
 }
 
 function addDisplayBlockToChilds(div) {
@@ -602,33 +688,6 @@ function addClassOnClick(event) {
 document.querySelectorAll("div").forEach(function (element) {
   element.addEventListener("click", addClassOnClick);
 });
-
-function showTrainingDetails(training_id, profile_id) {
-  var xhr = new XMLHttpRequest();
-
-  xhr.open("POST", "php_functions/selectTrainingWithExercise.php", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onload = function () {
-    if (this.status == 200) {
-      var newDiv1 = document.createElement("div");
-      newDiv1.id = "klasa4";
-      newDiv1.className = "klasa4";
-
-      var newDiv2 = document.createElement("div");
-      newDiv2.id = "record2Container";
-      newDiv2.innerHTML = this.responseText;
-      newDiv1.appendChild(newDiv2);
-      addDisplayBlockToChilds(newDiv1);
-      document.querySelector("#tendiv").innerHTML = newDiv1.outerHTML;
-    } else {
-      console.error(
-        "An error occurred while loading the training div. Response status: ",
-        this.status
-      );
-    }
-  };
-  xhr.send("training_id=" + training_id);
-}
 
 function reloadSite() {
   location.reload();

@@ -1,14 +1,17 @@
+<!-- All images on this site are generated from https://www.midjourney.com/ They use CC BY-NC 4.0 license. More information: https://creativecommons.org/licenses/by-nc/4.0/ -->
+
 <?php
 session_start();
+
 require('php_functions/db.php');
-require('php_functions/selectUserTrainingInfo.php');
-require('php_functions/addUser.php');
+require('php_functions/selectProfileTrainingInfo.php');
+require('php_functions/insertUserProfile.php');
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-<title>Gym progress site</title>
+<title>PowerTrckr</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="css/styles.css">
@@ -26,12 +29,16 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
 <body class="css-content css-bodycolor" style="max-width:1200px">
 
 <!-- Sidebar/menu -->
-<nav class="sidebar css-bar-block css-bodycolor css-collapse css-top" style="z-index:3;width:250px" id="mySidebar">
-  <div class="css-container css-display-container css-padding-16">
+<nav class="sidebar css-bar-block css-sidebarcolor css-collapse css-top " style="z-index:3;width:250px; text-align: center; align-items: center;" id="mySidebar">
+  <div>
     <i onclick="sidebar_close()" class="fa fa-remove css-hide-large css-button css-display-topright"></i>
-    <h3 onclick="reloadSite()" class="css-wide css-button"><b>Gym Site</b></h3>
+    <h4 onclick="reloadSite()" class="css-wide css-button"><b>
+      <div style="width: 140; height: 130; border: 10px solid black;">
+        <img src="images/Gym_icon_rdy.png" alt="Gym icon" width="140" height="130">
+      </div>
+    </b></h4>
   </div>
-  <div id='target' class="css-padding-64 css-large css-text-grey" style="font-weight:bold">
+  <div id='target' class="css-padding-16 css-large css-text-grey" style="font-weight:bold;">
     <a onclick="loadBMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">
         BMI Calculator
     </a>
@@ -45,7 +52,7 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
 
 <!-- Top menu on small screens -->
 <header class="css-bar css-top css-hide-large css-black css-xlarge">
-  <div onclick="reloadSite()" class="css-bar-item css-padding-24 css-wide css-black">Gym Site</div>
+  <div onclick="reloadSite()" class="css-bar-item css-padding-24 css-wide css-black">PowerTrckr</div>
   <a href="javascript:void(0)" id="open" class="css-bar-item css-button css-padding-24 css-right" onclick="sidebar_open()"><i class="fa fa-bars"></i></a>
 </header>
 
@@ -64,10 +71,11 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
     <p class="css-right">
     <div style="display: flex; justify-content: space-between; line-height: 25px; padding: 5px; align-items: center;">
 
-      <?php if (isset($error)) { ?>
+      <?php if (isset($error)) {
+         ?>
         <p><?php echo $error; ?></p>
       <?php } ?>
-      <?php if (empty($_SESSION['profile_id'])) : ?>
+      <?php if (empty($_SESSION['profile_id'])) :?>
         <div style="float: left; text-align: left;  align-items: center;">
         Log in and track your progress!
         </div>
@@ -79,7 +87,14 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
             <input type="password" name="password" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;"/>
             <button type="submit" style="width: 100px; height: 35px; font-size: 15px; padding: 5px;">Log in</button>
           </form>
+          <script> var error_registration = <?php echo json_encode($_SESSION['error_registration'] ?? ''); ?>; </script>
           <script>document.addEventListener('DOMContentLoaded', function() {createRegisterElement();});</script>
+        <?php if (!empty($_SESSION['error'])) : ?><br><div style="font-size: 12px; color: #F08080;">
+          <?php
+          echo $_SESSION['error'];
+          ?>...        
+          </div>       
+        <?php endif; ?>
         </div>
       <?php else : ?>
       <div style="float: right; text-align: right; align-items: center; line-height: 25px;">
@@ -91,7 +106,7 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
             $counter++;
       ?>
       <?php if (isset($_SESSION['profile_id_0']))
-        echo select_user_training_info($_SESSION['profile_id_'.$i]);
+        echo select_profile_training_info($_SESSION['profile_id_'.$i]);
         } 
       ?>        
       <?php endif; ?>
@@ -103,14 +118,14 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
 
   <div class="parent">
     <p></p>
-    <div id="empty_place_for_divs" class="css-mainframecolor" style="text-align: center; align-items: center; min-height: 430px;">
+    <div id="empty_place_for_divs" class="css-mainframecolor" style="text-align: center; align-items: center; min-height: 500px;">
       <div id="welcome_site" style="font-weight: bold; font-size: 17px; letter-spacing:3px;">
         <br><br>
-        Welcome to Gym Site! <br><br>
+        Welcome to PowerTrckr! <br><br>
         Here you can configure your training routine, track your trainings and your progress! <br><br>
         Add your everyday trainings and your exercise routine.<br><br>
         You can also use BMI, FFMI and Calorie calculator!<br><br>
-        Register now and start tracking your progress.<br><br><br>
+          <img src="images/Gym_photo2.png" alt="Gym photo" width="300" height="250" style="border: 5px solid black;"><br><br><br><br>
           <div id="welcome_site2" style="font-weight: bold; font-size: 17px; letter-spacing:3px; line-height: 35px;">
           </div>
       </div>
@@ -118,27 +133,21 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
     <p></p>
   </div> 
 
-  <div id="klasa_on2" class="klasa_on2">
-    <form method="post">
-      <br><br>Add new profile: <br><br>
-      <input type="text" name="text" class="css-input css-border" placeholder="Profile name"><br>
-      <input type="submit" name="add_profile" class="css-button css-block css-black" value="Add profile">
-    </form>
-  </div>
-
   <!-- Footer -->
   <footer class="css-padding-16 css-footercolor css-small css-center" id="footer">
     <div class="css-row-padding" style="align-items: center; margin: 0 auto; display: flex;">
       <div class="css-col s4">
         <h4>Contact</h4>
         <p>Do you have a question? Ask it here!</p>
-        <form action="/action_page.php" target="_blank">
-          <p><input class="css-input css-border" type="text" placeholder="Name" name="Name" required></p>
-          <p><input class="css-input css-border" type="text" placeholder="Email" name="Email" required></p>
-          <p><input class="css-input css-border" type="text" placeholder="Subject" name="Subject" required></p>
-          <p><input class="css-input css-border" type="text" placeholder="Message" name="Message" required></p>
-          <button onclick="reloadSite()" type="submit" class="css-button css-block css-black">Wyślij</button>
+        
+        <form action="php_functions/sendEmail.php" method="POST">
+          <p><input class="css-input css-border" type="text" placeholder="Name" id="Name" name="Name" required></p>
+          <p><input class="css-input css-border" type="email" placeholder="Email" id="Email" name="Email" required></p>
+          <p><input class="css-input css-border" type="text" placeholder="Subject" id="Subject" name="Subject" required></p>
+          <p><textarea class="css-input css-border" placeholder="Message" id="Message" name="Message" required></textarea></p>
+          <button type="submit" name="submitEmail" class="css-button css-block css-black">Wyślij</button>
         </form>
+
       </div>
     </div>
   </footer>

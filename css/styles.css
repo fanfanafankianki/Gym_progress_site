@@ -1246,22 +1246,31 @@ a{
 
 .css-headercolor,.css-hover-headercolor:hover{
     color:#000!important;
-    background-color:#667EA1!important
+    background-color:#5D799F!important
+}
+
+.css-sidebarcolor,.css-hover-sidebarcolor:hover{
+    color:#000!important;
+    background-image: url("../images/sidebar.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .css-bodycolor,.css-hover-bodycolor:hover{
     color:#000!important;
-    background-color:#F3F7F9!important
+    background-image: url("../images/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .css-mainframecolor,.css-hover-mainframecolor:hover{
     color:#000!important;
-    background-color:#83ABCD!important
+    background-color:#6098BD!important
 }
 
 .css-footercolor,.css-hover-footercolor:hover{
     color:#000!important;
-    background-color:#6B72B6!important
+    background-color:#395A70!important
 }
 
  .css-grey,.css-hover-grey:hover,.css-gray,.css-hover-gray:hover{
