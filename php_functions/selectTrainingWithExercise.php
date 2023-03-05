@@ -1,21 +1,10 @@
 <?php
-function connectToDb() {
-  $servername = "127.0.0.1";
-  $username = "bartek";
-  $password = "gymsitedb321";
-  $dbname = "gymsitedatabase_final3";
-
-  // Tworzenie połączenia
-  $conn = mysqli_connect($servername, $username, $password, $dbname);
-  // Sprawdzanie połączenia
-  if (!$conn) {
-    exit("Połączenie nieudane: " . mysqli_connect_error());
-  }
-  return $conn;
-}
+session_start();
+require('db.php');
 
 $training_id = $_POST['training_id'];
 $conn = connectToDb();
+$user_id = $_SESSION['user_id'];
 $query = "SELECT TrainingWithExercises.*, Trainings.training_name, 
 Exercises1.exercise_id AS exercise_id1, Exercises1.exercise_name AS exercise_name1, 
 Exercises2.exercise_id AS exercise_id2, Exercises2.exercise_name AS exercise_name2, 
@@ -28,6 +17,8 @@ Exercises8.exercise_id AS exercise_id8, Exercises8.exercise_name AS exercise_nam
 Exercises9.exercise_id AS exercise_id9, Exercises9.exercise_name AS exercise_name9
 FROM TrainingWithExercises
 JOIN Trainings ON TrainingWithExercises.training_id = Trainings.training_id
+JOIN userprofiles ON Trainings.profile_id = userprofiles.profile_id    
+JOIN Users ON userprofiles.user_id = users.user_id  
 JOIN Exercises AS Exercises1 ON TrainingWithExercises.exercise_1 = Exercises1.exercise_id
 JOIN Exercises AS Exercises2 ON TrainingWithExercises.exercise_2 = Exercises2.exercise_id
 JOIN Exercises AS Exercises3 ON TrainingWithExercises.exercise_3 = Exercises3.exercise_id
@@ -37,7 +28,7 @@ LEFT JOIN Exercises AS Exercises6 ON TrainingWithExercises.exercise_6 = Exercise
 LEFT JOIN Exercises AS Exercises7 ON TrainingWithExercises.exercise_7 = Exercises7.exercise_id
 LEFT JOIN Exercises AS Exercises8 ON TrainingWithExercises.exercise_8 = Exercises8.exercise_id
 LEFT JOIN Exercises AS Exercises9 ON TrainingWithExercises.exercise_9 = Exercises9.exercise_id
-WHERE Trainings.training_id = $training_id;
+WHERE Trainings.training_id = $training_id AND users.user_id = $user_id
 ";
 
 $result = mysqli_query($conn, $query);
@@ -63,3 +54,4 @@ while ($record = mysqli_fetch_assoc($result)) {
 echo json_encode($records);
 
 $conn->close();
+?>

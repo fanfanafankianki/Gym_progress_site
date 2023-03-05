@@ -489,7 +489,7 @@ a{
 }
 .css-block{
     display:block;
-    width:20%
+    width:100%
 }
 
 .css-block2{
@@ -1244,24 +1244,33 @@ a{
     background-color:#000!important
 }
 
-.css-color1,.css-hover-color1:hover{
+.css-headercolor,.css-hover-headercolor:hover{
     color:#000!important;
-    background-color:#90E0A7!important
+    background-color:#5D799F!important
 }
 
-.css-color2,.css-hover-color2:hover{
+.css-sidebarcolor,.css-hover-sidebarcolor:hover{
     color:#000!important;
-    background-color:#97A19A!important
+    background-image: url("../images/sidebar.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
-.css-color3,.css-hover-color3:hover{
+.css-bodycolor,.css-hover-bodycolor:hover{
     color:#000!important;
-    background-color:#D3E0D7!important
+    background-image: url("../images/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
-.css-color4,.css-hover-color4:hover{
+.css-mainframecolor,.css-hover-mainframecolor:hover{
     color:#000!important;
-    background-color:#EBF9EF!important
+    background-color:#6098BD!important
+}
+
+.css-footercolor,.css-hover-footercolor:hover{
+    color:#000!important;
+    background-color:#395A70!important
 }
 
  .css-grey,.css-hover-grey:hover,.css-gray,.css-hover-gray:hover{

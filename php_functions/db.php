@@ -1,25 +1,27 @@
-
 <?php
+function connectToDbUsers() {
+    $servername = "127.0.0.1";
+    $username = "bartek";
+    $password = "gymsitedb321";
+    $dbname = "gymsite_users";
 
-$servername = "127.0.0.1";
-$username = "bartek";
-$password = "gymsitedb321";
-$dbname = "gymsite_users";
+    // Tworzenie połączenia
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-// Tworzenie połączenia
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-
-if (!$conn) {
-    die("Połączenie z bazą danych nie powiodło się: " . mysqli_connect_error());
+    if (!$conn) {
+        die("Połączenie z bazą danych nie powiodło się: " . mysqli_connect_error());
+    }
+    return $conn;
 }
 
 function checkUserExists($username, $password) {
-    global $conn;
 
-    $username = mysqli_real_escape_string($conn, $username);
-    $password = mysqli_real_escape_string($conn, $password);
+    $conn=connectToDbUsers();
 
-    $query = "SELECT id, username, password FROM accounts WHERE username = '$username' AND password = '$password'";
+    $username_check = mysqli_real_escape_string($conn, $username);
+    $password_check = mysqli_real_escape_string($conn, $password);
+
+    $query = "SELECT id, username, password FROM accounts WHERE username = '$username_check' AND password = '$password_check'";
     $result = mysqli_query($conn, $query);
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
@@ -31,8 +33,7 @@ function checkUserExists($username, $password) {
     }    
 }
 
-function returnUserProfiles($user_id) {
-
+function connectToDb() {
     $servername = "127.0.0.1";
     $username = "bartek";
     $password = "gymsitedb321";
@@ -40,6 +41,16 @@ function returnUserProfiles($user_id) {
 
     // Tworzenie połączenia
     $conn = mysqli_connect($servername, $username, $password, $dbname);
+    // Sprawdzanie połączenia
+    if (!$conn) {
+    die("Połączenie nieudane: " . mysqli_connect_error());
+    }
+    return $conn;
+}
+
+function returnUserProfiles($user_id) {
+
+    $conn = connectToDb();
 
     if (!$conn) {
         die("Połączenie z bazą danych nie powiodło się: " . mysqli_connect_error());
@@ -60,6 +71,4 @@ function returnUserProfiles($user_id) {
     }
     
 }
-    
-
-
+?>

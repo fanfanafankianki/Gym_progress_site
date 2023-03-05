@@ -80,14 +80,6 @@ CREATE TABLE accounts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(25) NOT NULL UNIQUE CHECK (LENGTH(username) >= 5 AND LENGTH(username) <= 20),
   password VARCHAR(25) NOT NULL CHECK (LENGTH(password) >= 5 AND LENGTH(password) <= 20),
-  email VARCHAR(25) NOT NULL UNIQUE CHECK (LENGTH(email) >= 5 AND LENGTH(email) <= 20)
+  email VARCHAR(25) NOT NULL UNIQUE CHECK (LENGTH(email) >= 5 AND LENGTH(email) <= 50)
 );
 
-
-INSERT INTO accounts (username, password)
-VALUES
-("user1", "password1"),
-("user2", "password2"),
-("user3", "password3"),
-("user4", "password4"),
-("user5", "password5");
