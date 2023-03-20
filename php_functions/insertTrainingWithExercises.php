@@ -107,4 +107,5 @@ if (isset($_POST['insertTrainingWithExercises'])) {
   mysqli_close($conn);
   
 }
+header("Location: http://localhost/Gym_Site/logged.php");   
 ?>

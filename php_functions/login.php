@@ -25,11 +25,12 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
                 $_SESSION["profile_id_" . $i] = $profiles[$i];
             }
         }
+        header("Location: http://localhost/Gym_Site/logged.php");
     } else {
         $error = 'Nieprawidłowe dane logowania';
-        $_SESSION['error'] = $error;  
+        $_SESSION['error_login'] = $error;  
         echo $error;
     }
 }
-header("Location: http://localhost/Gym_Site/index.php");
+
 ?>

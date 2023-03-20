@@ -1,5 +1,5 @@
 <!-- All images on this site are generated from https://www.midjourney.com/ They use CC BY-NC 4.0 license. More information: https://creativecommons.org/licenses/by-nc/4.0/ -->
-
+{% extends "base.html" %}
 <?php
 session_start();
 
@@ -38,13 +38,20 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
       </div>
     </b></h4>
   </div>
-
+  
   <div id='target' class="css-padding-16 css-large css-text-grey" style="font-weight:bold;">
-      <a onclick="loadBMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">Witaj!</a>
-      <a onclick="loadBMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">BMI Calculator</a>
-      <a onclick="loadCaloriesCalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">Calories Calculator</a>
-      <a onclick="loadFFMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">FFMI Calculator</a>
-  </div>
+    {% block content %}
+      <h1>Logowanie</h1>
+    {% endblock %}
+    <a onclick="loadBMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">
+        BMI Calculator
+    </a>
+    <a onclick="loadCaloriesCalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">
+        Calories Calculator
+    </a>
+    <a onclick="loadFFMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">
+        FFMI Calculator
+    </a>
 </nav>
 
 <!-- Top menu on small screens -->

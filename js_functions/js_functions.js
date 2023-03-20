@@ -1,5 +1,59 @@
+function loadWelcomePage() {
+  var WelcomePage = `
+  <p></p>
+  <div id="empty_place_for_divs" class="css-mainframecolor" style="text-align: center; align-items: center; min-height: 500px;">
+    <div id="welcome_site" style="font-weight: bold; font-size: 24px; letter-spacing:1px;">
+    <br>
+
+      <h3>
+      PowerTrckr is site for tracking gym progress <br><br>
+      </h3>
+
+      You can create your training plans and track history of your gains <br><br>
+      <img src="images/welcome_photo2.png" alt="Gym photo" width="275" height="275" style="border: 5px solid black;"><br><br>
+
+      <h3>
+      Add your everyday trainings and your exercise routine<br><br>
+      Track your progress using history charts<br><br>
+      You can also check your BMI and FFMI level and and check your caloric needs using our calculators!<br><br>
+      </h3>
+      <u>Don't wait and register now!<br><br><br></u>
+
+    </div>
+  </div>
+  <p></p>
+  `;
+  let target = document.getElementById("empty_place_for_divs");
+  document.getElementById("empty_place_for_divs").innerHTML = WelcomePage;
+}
+
+function loadRulesPage() {
+  fetch("js_functions/rules.txt")
+    .then((response) => response.text())
+    .then((text) => {
+      var WelcomePage = `
+        <br>
+        <pre style="text-align: center; align-items: center; min-height: 500px; width: 100%; max-width: 100%; padding: 0 2px; white-space: pre-wrap;">${text}</pre>
+      `;
+      document.getElementById("empty_place_for_divs").innerHTML = WelcomePage;
+    })
+    .catch((error) => {
+      console.error("Error loading rules:", error);
+      var WelcomePage = `
+        <h1>Welcome to our site!</h1>
+        <p>Sorry, we could not load the rules at this time. Please try again later.</p>
+      `;
+      document.getElementById("empty_place_for_divs").innerHTML = WelcomePage;
+    });
+}
+
+// Dodajemy styl CSS
+var style = document.createElement("style");
+style.innerHTML = "#empty_place_for_divs pre {word-wrap: break-word;}";
+document.head.appendChild(style);
+
 function loadBMICalculator() {
-  var BMICalculator = `<br><br> BMI Calculator <br><br>
+  var BMICalculator = `<br><br><h4><b>BMI Calculator</b></h4><br><br>
   <input type="text" id="weight" placeholder="Weight"><br><br>
   <input type="text" id="height" placeholder="Height"><br><br>
   <button onclick="calculateBMI()">Calculate BMI</button><br><br>
@@ -33,7 +87,7 @@ function calculateBMI() {
 }
 
 function loadCaloriesCalculator() {
-  var CaloriesCalculator = `<br><br> Caloric requirement calculator <br><br>
+  var CaloriesCalculator = `<br><br><h4><b>Caloric requirement calculator</b></h4><br><br>
   <input type="text" id="weight" placeholder="Weight"><br><br>
   <input type="text" id="height" placeholder="Height"><br><br>
   <input type="text" id="age" placeholder="Age"><br><br>
@@ -114,7 +168,7 @@ function calculateCaloricRequirement() {
 }
 
 function loadFFMICalculator() {
-  var FFMICalculator = `<br><br> FFMI Calculator <br><br>
+  var FFMICalculator = `<br><br><h4><b>FFMI Calculator</b></h4><br><br>
   <input type="text" id="weight" placeholder="Weight"><br><br>
   <input type="text" id="height" placeholder="Height"><br><br>
   <input type="text" id="fat" placeholder="Fat level (%)"><br><br>
@@ -242,7 +296,32 @@ function createChildElements(parent, profile_id, profile_name) {
   a3.setAttribute("class", "css-bar-item css-button");
   div.appendChild(a3);
 
+  let a4 = document.createElement("a");
+  a4.innerHTML = "Delete Profile";
+  a4.setAttribute("onclick", "confirmProfileDeletion(" + profile_id + ")");
+  a4.setAttribute("href", "#");
+  a4.setAttribute("class", "css-bar-item css-button");
+  div.appendChild(a4);
+
   parent.parentNode.insertBefore(div, parent.nextSibling);
+}
+
+function confirmProfileDeletion(profile_id) {
+  let confirmation = window.alert(
+    "Are you sure you want to delete this profile? \n This will result in irreversible loss of data associated with this profile!"
+  );
+  if (confirmation) {
+    // kod do usunięcia profilu
+  }
+}
+
+function confirmTrainingDeletion(training_id) {
+  let confirmation = window.alert(
+    "Are you sure you want to delete this training? \n This will result in irreversible loss of data associated with this training!"
+  );
+  if (confirmation) {
+    // kod do usunięcia profilu
+  }
 }
 
 function createTrainingElement(
@@ -261,33 +340,52 @@ function createTrainingElement(
 }
 
 function createRegisterElement() {
-  var registerForm = `Register now and start tracking your progress.<br>
+  var registerForm = `
+    <strong>Register now and start tracking your progress.<br></strong>
     <form action="php_functions/registration.php" method="post">
-    Register now! <br>
-    <input type="text" id="username" name="username" placeholder="Username">
-    <br>
-    <input type="email" id="email" name="email" placeholder="Email">
-    <br>
-    <input type="password" id="password" name="password" placeholder="Password">
-    <br>
-    `;
+      <input type="text" id="username" placeholder="Username" name="username" required><br>
+      <input type="email" id="email" placeholder="Email" name="email" required><br>
+      <input type="password" id="password" placeholder="Password" name="password" required><br>
+      <input type="checkbox" id="accept-terms" name="accept-terms" required>
+      <label for="accept-terms" style="letter-spacing: 1px;">I have read and accept the terms of service.</label><br>
+      <input type="submit" name="submitRegistration" value="Register">
+    </form><br>
+  `;
 
   if (error_registration) {
-    registerForm += "<p style='color:red;'>" + error_registration + "</p>";
+    registerForm += "<p style='color:red;'>" + error_registration + "</p><br>";
   }
 
-  registerForm += `<input type="submit" name="submitRegistration" value="Register">
-    </form><br>
-    `;
+  const emptyPlaceDiv = document.getElementById("empty_place_for_divs");
+  const welcomeMsg = "Welcome";
+  const registerMsg = "Register now";
 
-  document.getElementById("welcome_site2").innerHTML += registerForm;
+  if (emptyPlaceDiv.innerHTML.includes(welcomeMsg)) {
+    if (emptyPlaceDiv.innerHTML.includes(registerMsg)) {
+      emptyPlaceDiv.innerHTML = `
+        <br><br>
+        <h4><br><strong>Start your journey with PowerTrckr now!</strong></h4>
+        <br><br>
+        ${registerForm}
+      `;
+    } else {
+      emptyPlaceDiv.innerHTML += registerForm;
+    }
+  } else {
+    emptyPlaceDiv.innerHTML = `
+      <br><br>
+      <h4><br><strong>Start your journey with PowerTrckr now!</strong></h4>
+      <br><br>
+      ${registerForm}
+    `;
+  }
 }
 
 function loadProfileDiv() {
   document.getElementById(
     "empty_place_for_divs"
   ).innerHTML = `<form method='post'>
-  <br><br>Add new profile: <br><br>
+  <br><br><h5><b>Add new profile: </b></h5><br>
   <input type='text' name='text' class='css-input css-border' placeholder='Profile name'><br>
   <input type='submit' name='add_profile' class='css-button css-black' value='Add profile'>
   </form>`;
@@ -353,14 +451,19 @@ function loadTrainingDiv(training_id) {
       }
       var subCell4 = subRow.insertCell(3);
       subCell4.innerHTML =
-        "<input type='submit' name='WstawDate' class='css-button css-black' value='Wyślij'>";
+        "<input type='submit' name='WstawDate' class='css-button css-black' value='Send'>";
       subCell4.style.textAlign = "center";
 
       form.appendChild(table);
       newDiv1.appendChild(newDiv2);
       addDisplayBlockToChilds(newDiv1);
+
       document.querySelector("#empty_place_for_divs").innerHTML =
-        newDiv1.outerHTML;
+        "<br><h4><b> Your training routine</h4></b>" +
+        newDiv1.outerHTML +
+        '<br><b><a onclick="confirmTrainingDeletion(' +
+        training_id +
+        ')" href="#" class="css-bar-item css-button css-black">Delete this training!</a></b><br><br>';
     } else {
       console.error(
         "An error occurred while loading the training div. Response status: ",
@@ -388,7 +491,7 @@ function loadChartDiv(profile_id) {
           <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
       } else {
         newDiv2.innerHTML =
-          "<br><p></p><br>Select the workout for which you want to view the chart: <br><p></p><br>" +
+          "<br><p></p><br><h4><b>Select the workout for which you want to view the chart: </b></h4><br><p></p><br>" +
           this.responseText;
       }
       newDiv1.appendChild(newDiv2);
@@ -421,7 +524,7 @@ function loadTrainingHistoryDiv(profile_id) {
           <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
       } else {
         newDiv2.innerHTML =
-          "<br><p></p><br>Select the workout for which you want to view history: <br><p></p><br>" +
+          "<br><p></p><br><h4><b>Select the workout for which you want to view history: </b></h4><br><p></p><br>" +
           this.responseText;
       }
       newDiv1.appendChild(newDiv2);
@@ -454,7 +557,7 @@ function loadTrainingHistoryTableDiv(profile_id) {
           <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
       } else {
         newDiv2.innerHTML =
-          "<br><p></p><br>Select the workout for which you want to view history: <br><p></p><br>" +
+          "<br><p></p><br><h4><b>Select the workout for which you want to view history: </b></h4><br><p></p><br>" +
           this.responseText;
       }
       newDiv1.appendChild(newDiv2);
@@ -538,7 +641,7 @@ function showTrainingHistoryDetails(training_history_id) {
       newDiv1.appendChild(newTable);
       addDisplayBlockToChilds(newDiv1);
       document.querySelector("#empty_place_for_divs").innerHTML =
-        newDiv1.outerHTML;
+        "<br><b>This was your training: </b><br>" + newDiv1.outerHTML + "<br>";
     } else {
       console.error(
         "An error occurred while loading the training div. Response status: ",
@@ -582,7 +685,7 @@ function loadAddTrainingDiv(profile_id) {
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
   xhr.send("profile_id=" + profile_id);
-  newDiv2.innerHTML = `<br><p></p><b>Add new training to your profile</b><br><p>
+  newDiv2.innerHTML = `<br><p></p><h4><b>Add new training to your profile:</b></h4><br><p>
     <form id="addTrainingForm" action="php_functions/insertTrainingWithExercises.php" method="post">
     <input type="hidden" name="profile_id" value="${profile_id}">
     <input type="text" name="text1" class="css-input css-border" placeholder="Training name">

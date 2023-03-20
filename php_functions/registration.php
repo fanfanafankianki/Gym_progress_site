@@ -2,6 +2,7 @@
 require('db.php');
 session_start();
 if(isset($_POST['submitRegistration'])) {
+    $_SESSION['error_registration']="";
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -51,5 +52,5 @@ if(isset($_POST['submitRegistration'])) {
 
 
 }
-header("Location: http://localhost/Gym_Site/index.php");    
+header("Location: http://localhost/Gym_Site/welcome.php");    
 ?>

@@ -1,0 +1,40 @@
+
+<u><strong>Terms of Use for PowerTrckr Website</strong></u>
+
+<u><strong>I. General provisions</strong></u>
+
+1. These Terms of Use define the rules for using the Powertrckr website, available at Powertrckr.com, hereinafter referred to as the "Service".
+2. The Service is operated by Bartosz Grzegorczyk residing in Lublin Poland, hereinafter referred to as the "Administrator".
+3. The Service is non-profit in nature and enables tracking of gym progress and storage of user training data in a database.
+4. Using the Service is tantamount to accepting these Terms of Use and the Privacy Policy.
+
+<u><strong>II. Registration and use of the Service</strong></u>
+
+1. Use of the Service is possible after registration by completing the registration form.
+2. Registration in the Service is voluntary and free of charge.
+3. The user is obliged to provide truthful personal data and a current email address.
+4. The user is obliged to protect their password to access the Service.
+5. The user can delete their account at any time by contacting the Administrator.
+
+<u><strong>III. Personal data protection</strong></u>
+
+1. The Service administration commits to complying with personal data protection regulations, including GDPR (Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016 on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, and repealing Directive 95/46/EC).
+2. Detailed information on the processing of personal data can be found in the Privacy Policy of the Service.
+
+<u><strong>IV. Copyright</strong></u>
+
+1. The Service and its elements, including the logo, name, graphic layout, texts, are protected by copyright and belong to the Administrator.
+2. Copying, distributing, or modifying any part of the Service without the Administrator's consent is prohibited.
+
+<u><strong>V. Liability</strong></u>
+1. The Administrator is not liable for any damages resulting from the use of the Service, in particular for the loss of data, interruptions in the operation of the Service, or errors in the system's functioning.
+2. The Administrator is not liable for the content published by users of the Service but reserves the right to remove content that violates applicable law, these Terms of Use, or good manners.
+3. The Administrator makes every effort to ensure that the Service operates continuously and without errors, but does not guarantee that the operation of the Service will be free from technical disruptions, failures, or errors.
+4. The Administrator is not liable for damages resulting from the use of data available in the Service by users for purposes inconsistent with the law, the Terms of Use, or health experience.
+
+<u><strong>VI. Final provisions</strong></u>
+
+1. The Administrator reserves the right to change these Terms of Use. Users will be informed about any changes through an announcement on the main page of the Service.
+2. In case of a violation of these Terms of Use by the User, the Administrator has the right to block or delete the User's account.
+3. Any disputes arising in connection with the use of the Service will be resolved by the court competent for the place of residence of the Administrator.
+4. The Terms of Use come into effect on 20 March 2023. <br><br>
