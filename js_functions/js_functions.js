@@ -306,21 +306,111 @@ function createChildElements(parent, profile_id, profile_name) {
   parent.parentNode.insertBefore(div, parent.nextSibling);
 }
 
+function goToCurrentPage() {
+  var currentPageUrl = window.location.href;
+  history.pushState({}, "", currentPageUrl);
+  window.location.reload(true);
+}
+
 function confirmProfileDeletion(profile_id) {
-  let confirmation = window.alert(
-    "Are you sure you want to delete this profile? \n This will result in irreversible loss of data associated with this profile!"
-  );
+  console.log("Starting confirmProfileDeletion function");
+  const confirmation = confirm("Are you sure you want to delete this profile?");
   if (confirmation) {
-    // kod do usunięcia profilu
+    console.log("First confirmation passed");
+    const second_confirmation = confirm(
+      "Are you really sure you want to delete this profile? \n This will result in irreversible loss of data associated with this profile!"
+    );
+    if (second_confirmation) {
+      console.log("Second confirmation passed");
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "php_functions/deleteProfile.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+          console.log("Received response from server:");
+          console.log(xhr.responseText);
+        } else if (this.readyState === 4) {
+          console.log("Error: Received status " + this.status + " from server");
+        }
+      };
+      xhr.send("profile_id=" + encodeURIComponent(profile_id));
+      console.log("XHR request sent");
+      goToCurrentPage();
+    } else {
+      console.log("Second confirmation failed");
+    }
+  } else {
+    console.log("First confirmation failed");
   }
 }
 
 function confirmTrainingDeletion(training_id) {
-  let confirmation = window.alert(
-    "Are you sure you want to delete this training? \n This will result in irreversible loss of data associated with this training!"
+  console.log("Starting confirmTrainingDeletion function");
+  const confirmation = confirm(
+    "Are you sure you want to delete this training?"
   );
   if (confirmation) {
-    // kod do usunięcia profilu
+    console.log("First confirmation passed");
+    const second_confirmation = confirm(
+      "Are you really sure you want to delete this training? \n This will result in irreversible loss of data associated with this training!"
+    );
+    if (second_confirmation) {
+      console.log("Second confirmation passed");
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "php_functions/deleteTraining.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+          console.log("Received response from server:");
+          console.log(xhr.responseText);
+        } else if (this.readyState === 4) {
+          console.log("Error: Received status " + this.status + " from server");
+        }
+      };
+      xhr.send("training_id=" + encodeURIComponent(training_id));
+      console.log("XHR request sent");
+      goToCurrentPage();
+    } else {
+      console.log("Second confirmation failed");
+    }
+  } else {
+    console.log("First confirmation failed");
+  }
+}
+
+function confirmTrainingHistoryDeletion(training_history_id) {
+  console.log("Starting confirmTrainingHistoryDeletion function");
+  const confirmation = confirm(
+    "Are you sure you want to delete this training history record?"
+  );
+  if (confirmation) {
+    console.log("First confirmation passed");
+    const second_confirmation = confirm(
+      "Are you really sure you want to delete this training history record? \n This will result in irreversible loss of data associated with this training history record!"
+    );
+    if (second_confirmation) {
+      console.log("Second confirmation passed");
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "php_functions/deleteTrainingHistory.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+          console.log("Received response from server:");
+          console.log(xhr.responseText);
+        } else if (this.readyState === 4) {
+          console.log("Error: Received status " + this.status + " from server");
+        }
+      };
+      xhr.send(
+        "training_history_id=" + encodeURIComponent(training_history_id)
+      );
+      console.log("XHR request sent");
+      goToCurrentPage();
+    } else {
+      console.log("Second confirmation failed");
+    }
+  } else {
+    console.log("First confirmation failed");
   }
 }
 
@@ -403,7 +493,7 @@ function loadTrainingDiv(training_id) {
 
       var newDiv2 = document.createElement("div");
       newDiv2.id = "TrainingContainer";
-      newDiv2.innerHTML = "<br><br><p></p>";
+      newDiv2.innerHTML = "<p></p>";
 
       var records = JSON.parse(this.responseText);
       var table = document.createElement("table");
@@ -426,6 +516,7 @@ function loadTrainingDiv(training_id) {
           "'>";
         cell0.style.textAlign = "center";
         cell0.style.fontWeight = "bold";
+        cell0.style.backgroundColor = "#2C4657";
 
         for (var j = 0; j < records[i]["exercises"].length; j++) {
           var subRow = table.insertRow();
@@ -433,33 +524,50 @@ function loadTrainingDiv(training_id) {
           var subCell1 = subRow.insertCell(0);
           var subCell2 = subRow.insertCell(0);
 
-          subCell0.innerHTML =
-            "<input type='text' name='Weight_" + j + "' placeholder='Weight'>";
+          subCell0.innerHTML = `
+          <select name="Weight_${j}" required>
+            <option value="">Weight</option>
+            ${Array.from(
+              { length: 500 },
+              (_, i) => `<option value="${i + 1}">${i + 1}</option>`
+            ).join("")}
+          </select>
+        `;
           subCell0.style.textAlign = "center";
-          subCell1.innerHTML =
-            "<input type='text' name='Reps_" +
-            j +
-            "' placeholder='Number of repetitions'> <input type='hidden' name='Exercise_ID_" +
-            j +
-            "' value='" +
-            records[i]["exercise_id"][j] +
-            "'>";
+          subCell0.style.backgroundColor = "#5D799F";
+
+          subCell1.innerHTML = `
+          <select name="Reps_${j}" required>
+            <option value="">Number of repetitions</option>
+            ${Array.from(
+              { length: 100 },
+              (_, i) => `<option value="${i + 1}">${i + 1}</option>`
+            ).join("")}
+          </select>
+          <input type="hidden" name="Exercise_ID_${j}" value="${
+            records[i]["exercise_id"][j]
+          }">
+        `;
+
           subCell1.style.textAlign = "center";
+          subCell1.style.backgroundColor = "#5D799F";
           subCell2.innerHTML = records[i]["exercises"][j];
           subCell2.style.textAlign = "center";
+          subCell2.style.backgroundColor = "#395A70";
         }
       }
       var subCell4 = subRow.insertCell(3);
       subCell4.innerHTML =
-        "<input type='submit' name='WstawDate' class='css-button css-black' value='Send'>";
+        "<input type='submit' name='SendTrainingWithExercises' class='css-button css-black' value='Send'>";
       subCell4.style.textAlign = "center";
+      subCell4.style.backgroundColor = "#8393A8";
 
       form.appendChild(table);
       newDiv1.appendChild(newDiv2);
       addDisplayBlockToChilds(newDiv1);
 
       document.querySelector("#empty_place_for_divs").innerHTML =
-        "<br><h4><b> Your training routine</h4></b>" +
+        '<br><h3><b style="font-family: Arial, sans-serif; font-weight: 600; color: #2d2d2d; text-transform: uppercase; letter-spacing: 1px;">YOUR TRAINING ROUTINE</b></h3>' +
         newDiv1.outerHTML +
         '<br><b><a onclick="confirmTrainingDeletion(' +
         training_id +
@@ -491,7 +599,7 @@ function loadChartDiv(profile_id) {
           <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
       } else {
         newDiv2.innerHTML =
-          "<br><p></p><br><h4><b>Select the workout for which you want to view the chart: </b></h4><br><p></p><br>" +
+          '<br><h4><b style="font-family: Arial, sans-serif; font-weight: 600; color: #2d2d2d; text-transform: uppercase; letter-spacing: 1px;">Select the workout for which you want to view the chart:</b></h4><br>' +
           this.responseText;
       }
       newDiv1.appendChild(newDiv2);
@@ -524,7 +632,7 @@ function loadTrainingHistoryDiv(profile_id) {
           <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
       } else {
         newDiv2.innerHTML =
-          "<br><p></p><br><h4><b>Select the workout for which you want to view history: </b></h4><br><p></p><br>" +
+          '<br><h4><b style="font-family: Arial, sans-serif; font-weight: 600; color: #2d2d2d; text-transform: uppercase; letter-spacing: 1px;">Select the workout for which you want to view history: </b></h4><br>' +
           this.responseText;
       }
       newDiv1.appendChild(newDiv2);
@@ -541,7 +649,7 @@ function loadTrainingHistoryDiv(profile_id) {
   xhr.send("profile_id=" + profile_id);
 }
 
-function loadTrainingHistoryTableDiv(profile_id) {
+function loadTrainingHistoryTableDiv(profile_id, training_id) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "php_functions/selectTrainingHistoryByProfileId.php", true);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -557,7 +665,7 @@ function loadTrainingHistoryTableDiv(profile_id) {
           <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
       } else {
         newDiv2.innerHTML =
-          "<br><p></p><br><h4><b>Select the workout for which you want to view history: </b></h4><br><p></p><br>" +
+          '<br><h4><b style="font-family: Arial, sans-serif; font-weight: 600; color: #2d2d2d; text-transform: uppercase; letter-spacing: 1px;">Select the workout for which you want to view history:</b></h4><br>' +
           this.responseText;
       }
       newDiv1.appendChild(newDiv2);
@@ -571,7 +679,7 @@ function loadTrainingHistoryTableDiv(profile_id) {
       );
     }
   };
-  xhr.send("profile_id=" + profile_id);
+  xhr.send("profile_id=" + profile_id + "& training_id=" + training_id);
 }
 
 function showTrainingWithExercisesDetails(training_id) {
@@ -590,7 +698,7 @@ function showTrainingWithExercisesDetails(training_id) {
           <div style='font-size:20px;'>There is no data for this tab.<br> Complete required information and come back here later!</div></b>`;
       } else {
         newDiv2.innerHTML =
-          "<br><p></p><br>Select exercise for which you want to view the chart: <br><p></p><br>" +
+          '<br><h4><b style="font-family: Arial, sans-serif; font-weight: 600; color: #2d2d2d; text-transform: uppercase; letter-spacing: 1px;">Select exercise for which you want to view the chart: </b></h4><br>' +
           this.responseText;
       }
       newDiv1.appendChild(newDiv2);
@@ -615,7 +723,7 @@ function showTrainingHistoryDetails(training_history_id) {
     if (this.status == 200) {
       var newDiv1 = document.createElement("div");
       newDiv1.id = "TrainingHistoryDetailsDiv";
-      newDiv1.innerHTML = "<br><br><p></p>";
+      newDiv1.innerHTML = "<p></p>";
       var newTable = document.createElement("table");
       newTable.id = "training_history_table";
       newTable.className = "training_history_table";
@@ -629,19 +737,26 @@ function showTrainingHistoryDetails(training_history_id) {
         var exerciseCell = newRow.insertCell();
         exerciseCell.style.textAlign = "center";
         exerciseCell.style.fontWeight = "bold";
+        exerciseCell.style.backgroundColor = "#395A70";
         exerciseCell.innerHTML = responseData[i].exercise_name;
         var repsCell = newRow.insertCell();
         repsCell.style.textAlign = "center";
+        repsCell.style.backgroundColor = "#5D799F";
         repsCell.innerHTML = "Repetitions: " + responseData[i].reps;
         var weightCell = newRow.insertCell();
         weightCell.style.textAlign = "center";
+        weightCell.style.backgroundColor = "#5D799F";
         weightCell.innerHTML = "Weight: " + responseData[i].weight;
       }
 
       newDiv1.appendChild(newTable);
       addDisplayBlockToChilds(newDiv1);
       document.querySelector("#empty_place_for_divs").innerHTML =
-        "<br><b>This was your training: </b><br>" + newDiv1.outerHTML + "<br>";
+        '<br><h4><b style="font-family: Arial, sans-serif; font-weight: 600; color: #2d2d2d; text-transform: uppercase; letter-spacing: 1px;">This was your training: </b></h4>' +
+        newDiv1.outerHTML +
+        '<br> <a onclick="confirmTrainingHistoryDeletion(' +
+        training_history_id +
+        ')" href="#" class="css-bar-item css-button css-black">Delete this history record!</a></b><br><br>';
     } else {
       console.error(
         "An error occurred while loading the training div. Response status: ",
@@ -685,13 +800,14 @@ function loadAddTrainingDiv(profile_id) {
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
   xhr.send("profile_id=" + profile_id);
-  newDiv2.innerHTML = `<br><p></p><h4><b>Add new training to your profile:</b></h4><br><p>
+  newDiv2.innerHTML = `
+  <br><h4><b style="font-family: Arial, sans-serif; font-weight: 600; color: #2d2d2d; text-transform: uppercase; letter-spacing: 1px;">Add new training to your profile:</b></h4>
     <form id="addTrainingForm" action="php_functions/insertTrainingWithExercises.php" method="post">
     <input type="hidden" name="profile_id" value="${profile_id}">
-    <input type="text" name="text1" class="css-input css-border" placeholder="Training name">
-    <input type="text" name="text2" class="css-input css-border" placeholder="Exercise 1">
-    <input type="text" name="text3" class="css-input css-border" placeholder="Exercise 2">
-    <input type="text" name="text4" class="css-input css-border" placeholder="Exercise 3">
+    <input type="text" name="text1" class="css-input css-border" placeholder="Training name" required>
+    <input type="text" name="text2" class="css-input css-border" placeholder="Exercise 1" required>
+    <input type="text" name="text3" class="css-input css-border" placeholder="Exercise 2" required>
+    <input type="text" name="text4" class="css-input css-border" placeholder="Exercise 3" required>
     <input type="text" name="text5" class="css-input css-border" placeholder="Exercise 4">
     <input type="text" name="text6" class="css-input css-border" placeholder="Exercise 5">
     <input type="text" name="text7" class="css-input css-border" placeholder="Exercise 6">
@@ -699,7 +815,7 @@ function loadAddTrainingDiv(profile_id) {
     <input type="text" name="text9" class="css-input css-border" placeholder="Exercise 8">
     <input type="text" name="text10" class="css-input css-border" placeholder="Exercise 9"><p> </p>
     <input type="submit" name="insertTrainingWithExercises" class="css-button css-black" value="Add training">
-    </form>`;
+    </form><br>`;
   newDiv1.appendChild(newDiv2);
 
   addDisplayBlockToChilds(newDiv1);
@@ -715,13 +831,13 @@ function createChart(dates, weights, repetitions) {
       labels: dates,
       datasets: [
         {
-          label: "Waga",
+          label: "Weights",
           data: weights,
           borderWidth: 8,
           yAxisID: "y",
         },
         {
-          label: "Powtórzenia",
+          label: "Repetitions",
           data: repetitions,
           borderWidth: 8,
           yAxisID: "y1",
@@ -738,7 +854,17 @@ function createChart(dates, weights, repetitions) {
       plugins: {
         title: {
           display: true,
-          text: "Wykres dla treningu",
+          text: "Training chart",
+          color: "black",
+          font: {
+            weight: "bold",
+            color: "black",
+          },
+        },
+        legend: {
+          labels: {
+            color: "black",
+          },
         },
       },
       scales: {
@@ -749,6 +875,22 @@ function createChart(dates, weights, repetitions) {
           title: {
             display: true,
             text: "Weight",
+            color: "black",
+            font: {
+              weight: "bold",
+              color: "black",
+            },
+          },
+          grid: {
+            lineWidth: 2,
+            color: "black",
+          },
+          ticks: {
+            color: "black",
+            font: {
+              weight: "bold",
+              color: "black",
+            },
           },
         },
         y1: {
@@ -758,10 +900,36 @@ function createChart(dates, weights, repetitions) {
           title: {
             display: true,
             text: "Repetitions",
+            color: "black",
+            font: {
+              weight: "bold",
+              color: "black",
+            },
           },
-          // grid line settings
           grid: {
+            lineWidth: 2,
+            color: "black",
             drawOnChartArea: false, // only want the grid lines for one axis to show up
+          },
+          ticks: {
+            color: "black",
+            font: {
+              weight: "bold",
+              color: "black",
+            },
+          },
+        },
+        x: {
+          grid: {
+            lineWidth: 2,
+            color: "black",
+          },
+          ticks: {
+            color: "black",
+            font: {
+              weight: "bold",
+              color: "black",
+            },
           },
         },
       },

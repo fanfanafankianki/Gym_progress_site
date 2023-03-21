@@ -48,9 +48,6 @@ if(isset($_POST['submitRegistration'])) {
     }
 
     mysqli_close($conn);
-
-
-
 }
 header("Location: http://localhost/Gym_Site/welcome.php");    
 ?>

@@ -14,8 +14,6 @@ function insertUserProfile($profile_name_to_add, $user_id) {
     $_SESSION["profile_id_" . $counter] = $profile_id;
     $_SESSION['profiles']++;
     $counter++;
-    echo "<p>Liczba profili: ".$counter."</p>";
-    echo "<p>Ostatnio dodane profile_id: ".$profile_id."</p>";
   } else {
     echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
   }
@@ -27,7 +25,6 @@ function insertUserProfile($profile_name_to_add, $user_id) {
 
 if (isset($_POST['add_profile'])) {
   $profile_name = $_POST['text'];
-  echo $_SESSION['user_id'];
   insertUserProfile($profile_name, $_SESSION['user_id']);
 
 }

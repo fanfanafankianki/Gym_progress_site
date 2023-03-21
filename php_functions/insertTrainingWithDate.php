@@ -2,7 +2,7 @@
 require('db.php');
 session_start();
 
-if (isset($_POST['WstawDate'])) {
+if (isset($_POST['SendTrainingWithExercises'])) {
   $conn = connectToDb();
   $user_id = $_SESSION['user_id'];
   $training_with_exercises_id = $_POST['Training_With_Exercises_ID'];
@@ -17,10 +17,9 @@ if (isset($_POST['WstawDate'])) {
   if (mysqli_num_rows($check_result) > 0) {
     $sql1 = "INSERT INTO TrainingHistory (training_with_exercises_id, training_date)
       VALUES ($training_with_exercises_id, NOW());";
-    echo count($_POST);
     if (mysqli_query($conn, $sql1)) {
       $training_history_id = mysqli_insert_id($conn);
-      for ($i = 0; $i < count($_POST) - 2; $i++) {
+      for ($i = 0; $i < (((count($_POST))-2)/3) ; $i++) {
         $weight = $_POST['Weight_' . $i];
         $reps = $_POST['Reps_' . $i];
         $exercise_id = $_POST['Exercise_ID_' . $i];
@@ -31,15 +30,14 @@ if (isset($_POST['WstawDate'])) {
           echo "Błąd podczas dodawania danych do tabel: " . mysqli_error($conn);
           break;
         }
+        echo "Dodano rekord $i ";
       }
-
-        echo "Pomyślnie dodano dane do tabel.";
       } else {
         echo "Błąd podczas dodawania danych do tabel: " . mysqli_error($conn);
       }
     }
 
   mysqli_close($conn);
-
+  header("Location: http://localhost/Gym_Site/logged.php");
 }
 ?>

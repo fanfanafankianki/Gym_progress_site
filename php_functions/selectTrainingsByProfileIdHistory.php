@@ -14,7 +14,7 @@ function selectTrainingsByProfileId($profile_id) {
   while ($record = mysqli_fetch_assoc($result)) {
     $training_id = $record["training_id"];
     $training_name = $record["training_name"];
-    echo "<a onclick='loadTrainingHistoryTableDiv(" . $profile_id . ")' href='#' class='css-bar-item css-button'>" . $training_name . "</a><br>";
+    echo "<a onclick='loadTrainingHistoryTableDiv(" . $profile_id ."," . $training_id . ")' href='#' class='css-bar-item css-button'>" . $training_name . "</a><br>";
   }
   mysqli_close($conn);
 
