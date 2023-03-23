@@ -7,23 +7,22 @@ if(isset($_POST['submitRegistration'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $conn = connectToDbUsers();
+    // Hashowanie hasła, loginu i emaila
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $hashed_username = hash('sha256', $username);
+    $hashed_email = hash('sha256', $email);
 
-    // Hashowanie hasła
-    //$password = password_hash($password, PASSWORD_DEFAULT);
+    $conn = connectToDbUsers();
 
     // Wstawianie danych do bazy danych
     $sql = "INSERT INTO accounts (username, email, password)
-    VALUES ('$username', '$email', '$password')";
+    VALUES ('$hashed_username', '$hashed_email', '$hashed_password')";
 
     if (mysqli_query($conn, $sql)) {
         echo "Użytkownik zarejestrowany pomyślnie";
         
         // Tworzenie połączenia
         $conn2 = connectToDb();
-
-        // Hashowanie hasła
-        //$password = password_hash($password, PASSWORD_DEFAULT);
 
         // Wstawianie danych do bazy danych
         $sql = "INSERT INTO users (user_name)

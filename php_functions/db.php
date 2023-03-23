@@ -16,22 +16,34 @@ function connectToDbUsers() {
 
 function checkUserExists($username, $password) {
 
-    $conn=connectToDbUsers();
+    $conn = connectToDbUsers();
 
-    $username_check = mysqli_real_escape_string($conn, $username);
+    // Hashowanie nazwy użytkownika
+    $hashed_username = hash('sha256', $username);
+
+    // Zabezpieczanie danych wprowadzanych przez użytkownika
+    $username_check = mysqli_real_escape_string($conn, $hashed_username);
     $password_check = mysqli_real_escape_string($conn, $password);
 
-    $query = "SELECT id, username, password FROM accounts WHERE username = '$username_check' AND password = '$password_check'";
+    // Zmiana zapytania do bazy danych, aby sprawdzać tylko nazwę użytkownika
+    $query = "SELECT id, username, password FROM accounts WHERE username = '$username_check'";
     $result = mysqli_query($conn, $query);
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
-        $id = $row["id"];
-        echo $id;
-        return $id;
+
+        // Weryfikacja hasła za pomocą funkcji password_verify()
+        if (password_verify($password_check, $row['password'])) {
+            $id = $row["id"];
+            echo $id;
+            return $id;
+        } else {
+            return false;
+        }
     } else {
         return false;
     }    
 }
+
 
 function connectToDb() {
     $servername = "127.0.0.1";
