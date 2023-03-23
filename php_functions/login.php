@@ -30,6 +30,7 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
         $error = 'Nieprawidłowe dane logowania';
         $_SESSION['error_login'] = $error;  
         echo $error;
+        header("Location: http://localhost/Gym_Site/welcome.php");
     }
 }
 

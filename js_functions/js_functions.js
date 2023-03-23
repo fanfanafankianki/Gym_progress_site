@@ -33,7 +33,7 @@ function loadRulesPage() {
     .then((text) => {
       var WelcomePage = `
         <br>
-        <pre style="text-align: center; align-items: center; min-height: 500px; width: 100%; max-width: 100%; padding: 0 2px; white-space: pre-wrap;">${text}</pre>
+        <pre id="rules" style="text-align: center; align-items: center; min-height: 500px; width: 100%; max-width: 100%; padding: 0 2px; white-space: pre-wrap;">${text}</pre>
       `;
       document.getElementById("empty_place_for_divs").innerHTML = WelcomePage;
     })
@@ -54,18 +54,18 @@ document.head.appendChild(style);
 
 function loadBMICalculator() {
   var BMICalculator = `<br><br><h4><b>BMI Calculator</b></h4><br><br>
-  <input type="text" id="weight" placeholder="Weight"><br><br>
-  <input type="text" id="height" placeholder="Height"><br><br>
+  <input type="text" id="weight_bmi" placeholder="Weight"><br><br>
+  <input type="text" id="height_bmi" placeholder="Height"><br><br>
   <button onclick="calculateBMI()">Calculate BMI</button><br><br>
-  <div id="result"></div>`;
+  <div id="result_bmi"></div>`;
   let target = document.getElementById("empty_place_for_divs");
   document.getElementById("empty_place_for_divs").innerHTML = BMICalculator;
 }
 
 function calculateBMI() {
   // Pobieranie wartości wagi i wzrostu z pól input
-  var weight = document.getElementById("weight").value;
-  var height = document.getElementById("height").value;
+  var weight = document.getElementById("weight_bmi").value;
+  var height = document.getElementById("height_bmi").value;
 
   // Konwersja pól input na liczby
   weight = parseFloat(weight);
@@ -73,7 +73,7 @@ function calculateBMI() {
 
   // Sprawdzanie, czy wprowadzono prawidłowe dane
   if (isNaN(weight) || isNaN(height) || height <= 0) {
-    document.getElementById("result").innerHTML =
+    document.getElementById("result_bmi").innerHTML =
       "Incorrect data has been entered.";
     return;
   }
@@ -82,20 +82,20 @@ function calculateBMI() {
   var bmi = (weight / (height * height)) * 10000;
 
   // Wyświetlenie wyniku
-  document.getElementById("result").innerHTML =
+  document.getElementById("result_bmi").innerHTML =
     "Your BMI is: " + bmi.toFixed(2);
 }
 
 function loadCaloriesCalculator() {
   var CaloriesCalculator = `<br><br><h4><b>Caloric requirement calculator</b></h4><br><br>
-  <input type="text" id="weight" placeholder="Weight"><br><br>
-  <input type="text" id="height" placeholder="Height"><br><br>
-  <input type="text" id="age" placeholder="Age"><br><br>
-  <select id="gender">
+  <input type="text" id="weight_calories" placeholder="Weight"><br><br>
+  <input type="text" id="height_calories" placeholder="Height"><br><br>
+  <input type="text" id="age_calories" placeholder="Age"><br><br>
+  <select id="gender_calories">
       <option value="male">Men</option>
       <option value="female">Women</option>
   </select><br><br>
-  <select id="activity">
+  <select id="activity_calories">
       <option value="1.20">Almost none</option>
       <option value="1.40">Light activity</option>
       <option value="1.60">Moderate activity</option>
@@ -103,7 +103,7 @@ function loadCaloriesCalculator() {
       <option value="2.00">Very high activity</option>
   </select><br><br>
   <button onclick="calculateCaloricRequirement()">Calculate your caloric needs</button><br><br>
-  <div id="result"></div><br>`;
+  <div id="result_calories"></div><br>`;
   let target = document.getElementById("empty_place_for_divs");
   document.getElementById("empty_place_for_divs").innerHTML =
     CaloriesCalculator;
@@ -111,11 +111,11 @@ function loadCaloriesCalculator() {
 
 function calculateCaloricRequirement() {
   // Pobieranie wartości wagi, wzrostu i wieku z pól input
-  var weight = document.getElementById("weight").value;
-  var height = document.getElementById("height").value;
-  var age = document.getElementById("age").value;
-  var gender = document.getElementById("gender").value;
-  var activity = document.getElementById("activity").value;
+  var weight = document.getElementById("weight_calories").value;
+  var height = document.getElementById("height_calories").value;
+  var age = document.getElementById("age_calories").value;
+  var gender = document.getElementById("gender_calories").value;
+  var activity = document.getElementById("activity_calories").value;
 
   // Konwersja pól input na liczby
   weight = parseFloat(weight);
@@ -124,7 +124,7 @@ function calculateCaloricRequirement() {
 
   // Sprawdzanie, czy wprowadzono prawidłowe dane
   if (isNaN(weight) || isNaN(height) || isNaN(age) || height <= 0) {
-    document.getElementById("result").innerHTML =
+    document.getElementById("result_calories").innerHTML =
       "Incorrect data has been entered.";
     return;
   }
@@ -149,19 +149,19 @@ function calculateCaloricRequirement() {
   }
 
   // Wyświetlenie wyniku
-  document.getElementById("result").innerHTML =
+  document.getElementById("result_calories").innerHTML =
     "Your Basal Metabolic Rate is approx: " +
     PPM.toFixed(2) +
     " calories. <br><br>";
-  document.getElementById("result").innerHTML +=
+  document.getElementById("result_calories").innerHTML +=
     "Your daily caloric requirement is approx: " +
     BMR.toFixed(2) +
     " calories. <br><br>";
-  document.getElementById("result").innerHTML +=
+  document.getElementById("result_calories").innerHTML +=
     "Your daily caloric requirement to gain weight is approx: " +
     BMR_Masa.toFixed(2) +
     " calories. <br><br>";
-  document.getElementById("result").innerHTML +=
+  document.getElementById("result_calories").innerHTML +=
     "Your daily caloric requirement to lose weight is approx: " +
     BMR_Redukcja.toFixed(2) +
     " calories. <br><br>";
@@ -169,20 +169,20 @@ function calculateCaloricRequirement() {
 
 function loadFFMICalculator() {
   var FFMICalculator = `<br><br><h4><b>FFMI Calculator</b></h4><br><br>
-  <input type="text" id="weight" placeholder="Weight"><br><br>
-  <input type="text" id="height" placeholder="Height"><br><br>
-  <input type="text" id="fat" placeholder="Fat level (%)"><br><br>
+  <input type="text" id="weight_ffmi" placeholder="Weight"><br><br>
+  <input type="text" id="height_ffmi" placeholder="Height"><br><br>
+  <input type="text" id="fat_ffmi" placeholder="Fat level (%)"><br><br>
   <button onclick="calculateFFMI()">Calculate FFMI</button><br><br>
-  <div id="result"></div>`;
+  <div id="result_ffmi"></div>`;
   let target = document.getElementById("empty_place_for_divs");
   document.getElementById("empty_place_for_divs").innerHTML = FFMICalculator;
 }
 
 function calculateFFMI() {
   // Pobieranie wartości wagi, wzrostu i poziomu tkanki tłuszczowej z pól input
-  var weight = document.getElementById("weight").value;
-  var height = document.getElementById("height").value;
-  var fat = document.getElementById("fat").value;
+  var weight = document.getElementById("weight_ffmi").value;
+  var height = document.getElementById("height_ffmi").value;
+  var fat = document.getElementById("fat_ffmi").value;
 
   // Konwersja pól input na liczby
   weight = parseFloat(weight);
@@ -198,7 +198,7 @@ function calculateFFMI() {
     fat < 0 ||
     fat > 100
   ) {
-    document.getElementById("result").innerHTML =
+    document.getElementById("result_ffmi").innerHTML =
       "Incorrect data has been entered.";
     return;
   }
@@ -212,7 +212,7 @@ function calculateFFMI() {
   var normalized_ffmi = ffmi + 6.1 * (1.8 - height / 100);
 
   // Wyświetlenie wyniku
-  document.getElementById("result").innerHTML =
+  document.getElementById("result_ffmi").innerHTML =
     "Your FFMI is: " +
     ffmi.toFixed(2) +
     "<br> Your Normalized FFMI is: " +
@@ -432,18 +432,21 @@ function createTrainingElement(
 function createRegisterElement() {
   var registerForm = `
     <strong>Register now and start tracking your progress.<br></strong>
-    <form action="php_functions/registration.php" method="post">
-      <input type="text" id="username" placeholder="Username" name="username" required><br>
-      <input type="email" id="email" placeholder="Email" name="email" required><br>
-      <input type="password" id="password" placeholder="Password" name="password" required><br>
-      <input type="checkbox" id="accept-terms" name="accept-terms" required>
+    <form id="registration" action="php_functions/registration.php" method="post">
+      <input type="text" id="register_username" placeholder="Username" name="username" required><br>
+      <input type="email" id="register_email" placeholder="Email" name="email" required><br>
+      <input type="password" id="register_password" placeholder="Password" name="password" required><br>
+      <input type="checkbox" id="register_accept-terms" name="accept-terms" required>
       <label for="accept-terms" style="letter-spacing: 1px;">I have read and accept the terms of service.</label><br>
       <input type="submit" name="submitRegistration" value="Register">
     </form><br>
   `;
 
   if (error_registration) {
-    registerForm += "<p style='color:red;'>" + error_registration + "</p><br>";
+    registerForm +=
+      "<p id='register_error' style='color:red;'>" +
+      error_registration +
+      "</p><br>";
   }
 
   const emptyPlaceDiv = document.getElementById("empty_place_for_divs");
