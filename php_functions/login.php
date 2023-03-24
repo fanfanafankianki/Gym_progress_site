@@ -14,11 +14,8 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
 
         if (is_array($profiles)) {
             $_SESSION['profiles'] = count($profiles);
-            echo $user_id;
-            echo "Pustak";
         } else {
             $_SESSION['profiles'] = 0;
-            echo "Pustal2";
         }
         if ($profiles) {
             for($i = 0; $i < count($profiles); $i++){
@@ -29,7 +26,6 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
     } else {
         $error = 'Nieprawidłowe dane logowania';
         $_SESSION['error_login'] = $error;  
-        echo $error;
         header("Location: http://localhost/Gym_Site/welcome.php");
     }
 }

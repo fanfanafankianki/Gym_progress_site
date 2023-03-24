@@ -8,14 +8,19 @@ function selectTrainingsByProfileId($profile_id) {
   FROM Trainings
   INNER JOIN UserProfiles ON Trainings.profile_id = UserProfiles.profile_id
   INNER JOIN Users ON Userprofiles.user_id = Users.user_id
-  WHERE UserProfiles.profile_id = $profile_id AND Users.user_id = $user_id ";
-  $result = mysqli_query($conn, $query);
+  WHERE UserProfiles.profile_id = ? AND Users.user_id = ? ";
+  
+  $stmt = mysqli_prepare($conn, $query);
+  mysqli_stmt_bind_param($stmt, "ii", $profile_id, $user_id);
+  mysqli_stmt_execute($stmt);
+  $result = mysqli_stmt_get_result($stmt);
 
   while ($record = mysqli_fetch_assoc($result)) {
     $training_id = $record["training_id"];
     $training_name = $record["training_name"];
     echo "<a onclick='showTrainingWithExercisesDetails(" . $training_id . ")' href='#' class='css-bar-item css-button'>" . $training_name . "</a><br>";
   }
+  mysqli_stmt_close($stmt);
   mysqli_close($conn);
 
 }

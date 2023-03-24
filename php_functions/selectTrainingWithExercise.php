@@ -28,10 +28,13 @@ LEFT JOIN Exercises AS Exercises6 ON TrainingWithExercises.exercise_6 = Exercise
 LEFT JOIN Exercises AS Exercises7 ON TrainingWithExercises.exercise_7 = Exercises7.exercise_id
 LEFT JOIN Exercises AS Exercises8 ON TrainingWithExercises.exercise_8 = Exercises8.exercise_id
 LEFT JOIN Exercises AS Exercises9 ON TrainingWithExercises.exercise_9 = Exercises9.exercise_id
-WHERE Trainings.training_id = $training_id AND users.user_id = $user_id
+WHERE Trainings.training_id = ? AND users.user_id = ?
 ";
 
-$result = mysqli_query($conn, $query);
+$stmt = mysqli_prepare($conn, $query);
+mysqli_stmt_bind_param($stmt, "ii", $training_id, $user_id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 $records = [];
 while ($record = mysqli_fetch_assoc($result)) {
     $training = [
@@ -53,5 +56,6 @@ while ($record = mysqli_fetch_assoc($result)) {
 
 echo json_encode($records);
 
+mysqli_stmt_close($stmt);
 $conn->close();
 ?>

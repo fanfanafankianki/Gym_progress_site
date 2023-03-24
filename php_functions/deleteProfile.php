@@ -59,9 +59,9 @@ function deleteProfile($profile_id) {
     $stmt->execute();
 
     // Delete records from the exercises table
-    $exercise_ids_str = implode(',', $exercise_ids);
-    if (!empty($exercise_ids_str)) {
-        $stmt = $conn->prepare("DELETE FROM exercises WHERE exercise_id IN (" . $exercise_ids_str . ")");
+    if (!empty($exercise_ids)) {
+        $stmt = $conn->prepare("DELETE FROM exercises WHERE exercise_id IN (" . implode(',', array_fill(0, count($exercise_ids), '?')) . ")");
+        $stmt->bind_param(str_repeat('i', count($exercise_ids)), ...$exercise_ids);
         $stmt->execute();
     }
 
@@ -84,8 +84,9 @@ function deleteProfile($profile_id) {
         echo $conn;
     }
 
-    $stmt->close();
-    $conn->close();
+$stmt->close();
+$conn->close();
+
 }
 
 $profile_id = $_POST["profile_id"];
