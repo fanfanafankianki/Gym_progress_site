@@ -1,32 +1,36 @@
-# Pobierz obraz Ubuntu
+# Use official Ubuntu image as the base
 FROM ubuntu:latest
-LABEL "Project"="PwrTrckr"
-LABEL "Author"="fanfan"
 
+# Update packages and install required dependencies
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:ondrej/php && \
+    apt-get update -y && \
+    apt-get install -y apache2 && \
+    apt-get install -y php7.4 libapache2-mod-php7.4 && \
+    apt-get install -y php7.4-cli php7.4-common php7.4-json php7.4-opcache php7.4-mysql php7.4-zip php7.4-gd php7.4-mbstring php7.4-curl php7.4-xml php7.4-bcmath && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+# Enable Apache modules and set the default virtual host
+RUN a2enmod rewrite && \
+    a2enmod headers && \
+    a2enmod expires && \
+    a2enmod proxy && \
+    a2enmod proxy_http && \
+    a2enmod proxy_balancer && \
+    a2enmod lbmethod_byrequests && \
+    a2enmod ssl
 
-# Aktualizacja indeksów pakietów i instalacja Apache HTTPD
-RUN apt-get update && \
-    apt-get install -y apache2
+# Set the Apache server name (to avoid warnings)
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Ustawienie zmiennej środowiskowej
-ENV APACHE_RUN_USER www-data
-ENV APACHE_RUN_GROUP www-data
-ENV APACHE_LOG_DIR /var/log/apache2
-ENV APACHE_PID_FILE /var/run/apache2/apache2.pid
-ENV APACHE_RUN_DIR /var/run/apache2
-ENV APACHE_LOCK_DIR /var/lock/apache2
-ENV APACHE_SERVERADMIN admin@localhost
-ENV APACHE_SERVERNAME localhost
-ENV APACHE_SERVERALIAS docker.localhost
-ENV APACHE_DOCUMENTROOT /var/www
+# Set the working directory
+WORKDIR /var/www/html
 
-# Tworzenie katalogów wymaganych przez Apache HTTPD
-RUN mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
+# Expose the necessary ports
+EXPOSE 80 443
 
-# Ustawienie portu nasłuchiwania Apache HTTPD
-EXPOSE 80
-
-# Uruchamianie Apache HTTPD w tle
-CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
-
+# Start the Apache service
+CMD ["apachectl", "-D", "FOREGROUND"]
