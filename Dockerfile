@@ -1,6 +1,9 @@
 # Use official Ubuntu image as the base
 FROM ubuntu:latest
 
+# Set up a noninteractive environment for package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Update packages and install required dependencies
 RUN apt-get update -y && \
     apt-get upgrade -y && \
