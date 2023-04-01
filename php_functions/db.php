@@ -7,7 +7,6 @@ function connectToDbUsers() {
 
     // Tworzenie połączenia
     $conn = mysqli_connect($servername, $username, $password, $dbname);
-	echo "Tworze";
     if (!$conn) {
         die("Połączenie z bazą danych nie powiodło się: " . mysqli_connect_error());
     }
