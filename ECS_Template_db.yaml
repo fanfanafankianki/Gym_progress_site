@@ -45,7 +45,7 @@ Resources:
       LaunchTemplateData:
         ImageId:
           Ref: LatestECSOptimizedAMI
-        InstanceType: t2.micro
+        InstanceType: t2.small
         IamInstanceProfile:
           Arn: !Ref IamRoleInstanceProfile
         UserData:

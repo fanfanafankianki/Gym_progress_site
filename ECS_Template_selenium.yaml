@@ -6,7 +6,7 @@ Resources:
       RequiresCompatibilities:
         - EC2    
       Cpu: 1024
-      Memory: 970
+      Memory: 1970
       NetworkMode: bridge
       ContainerDefinitions:
         - Name: SeleniumChromeContainer
