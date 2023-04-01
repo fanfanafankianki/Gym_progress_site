@@ -1,8 +1,8 @@
 <?php
 function connectToDbUsers() {
     $servername = "my_mysql_container";
-    $username = "root";
-    $password = "dbpass";
+    $username = "bartek";
+    $password = "dbpass2";
     $dbname = "pwrtrckr_users";
 
     // Tworzenie połączenia
@@ -18,9 +18,9 @@ function connectToDbUsers() {
 
 function connectToDb() {
     $servername = "pwrtrckr_profiles";
-    $username = "root";
-    $password = "dbpass";
-    $dbname = "pwrtrckr_users";
+    $username = "bartek";
+    $password = "dbpass2";
+    $dbname = "pwrtrckr_profiles";
 
     // Tworzenie połączenia
     $conn = mysqli_connect($servername, $username, $password, $dbname);
