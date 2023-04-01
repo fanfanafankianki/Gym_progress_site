@@ -1,0 +1,36 @@
+Resources:
+  SeleniumChromeTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: SeleniumChromeContainer
+      RequiresCompatibilities:
+        - EC2    
+      Cpu: 1024
+      Memory: 970
+      NetworkMode: bridge
+      ContainerDefinitions:
+        - Name: SeleniumChromeContainer
+          Image: 320442627588.dkr.ecr.eu-west-1.amazonaws.com/jenkins_repo:selenium
+          PortMappings:
+            - ContainerPort: 4444
+              HostPort: 4444
+            - ContainerPort: 5900
+              HostPort: 5900            
+          Essential: true
+
+  SeleniumChromeService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: SeleniumChromeService
+      Cluster: !ImportValue AppCluster
+      LaunchType: EC2
+      TaskDefinition: !Ref SeleniumChromeTaskDefinition
+      DesiredCount: 1
+
+Outputs:
+
+  SeleniumChromeService:
+    Description: The ID of the created SeleniumChrome Service
+    Value: !Ref SeleniumChromeService
+    Export:
+      Name: SeleniumChromeService

@@ -1,0 +1,145 @@
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: production
+    Description: "A friendly environment name that will be used for namespacing all cluster resources. Example: staging, qa, or production"
+    
+
+  LatestECSOptimizedAMI:
+    Description: AMI ID
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
+    
+  UserData:
+    Type: String
+    Description: User data required for Launch Template and Spot Fleet
+    Default: "#!/bin/bash \necho ECS_CLUSTER=production >> /etc/ecs/ecs.config;"
+    
+  IamRoleInstanceProfile:
+    Type: String
+    Description: Specifies the Name or the Amazon Resource Name (ARN) of the instance
+      profile associated with the IAM role for the instance
+    Default: arn:aws:iam::320442627588:instance-profile/ecsInstanceRole
+
+Resources:
+
+  AppCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Ref EnvironmentName
+      ClusterSettings:
+      - Name: containerInsights
+        Value: enabled      
+      Configuration:
+        ExecuteCommandConfiguration:
+          Logging: DEFAULT
+      ServiceConnectDefaults:
+        Namespace: production
+      Tags: []
+
+  ECSLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    DependsOn: AppCluster
+    Properties:
+      LaunchTemplateName: ECSLaunchTemplate
+      LaunchTemplateData:
+        ImageId:
+          Ref: LatestECSOptimizedAMI
+        InstanceType: t2.micro
+        IamInstanceProfile:
+          Arn: !Ref IamRoleInstanceProfile
+        UserData:
+          Fn::Base64:
+            Ref: UserData
+        KeyName: CloudStackKey
+        NetworkInterfaces:
+          - DeviceIndex: 0
+            SubnetId: !ImportValue MyPublicSubnet1Id
+            Groups:
+              - !ImportValue MySecurityGroupId
+            AssociatePublicIpAddress: true
+
+  MariaDBTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: MariaDBContainer
+      RequiresCompatibilities:
+        - EC2 
+      Cpu: 1024
+      Memory: 970
+      NetworkMode: bridge
+      ContainerDefinitions:
+        - Name: MariaDBContainer
+          Image: 320442627588.dkr.ecr.eu-west-1.amazonaws.com/jenkins_repo:database
+          PortMappings:
+            - ContainerPort: 3306    
+              HostPort: 3306                          
+          Environment:
+            - Name: MYSQL_ROOT_PASSWORD
+              Value: root
+            - Name: MYSQL_DATABASE
+              Value: passwd
+          Essential: true
+          
+  MariaDBService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: MariaDBService
+      Cluster: !Ref AppCluster
+      LaunchType: EC2
+      TaskDefinition: !Ref MariaDBTaskDefinition
+      DesiredCount: 1
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier:
+        - Fn::ImportValue: MyPublicSubnet1Id
+      LaunchTemplate:
+        LaunchTemplateId:
+          Ref: ECSLaunchTemplate
+        Version:
+          Fn::GetAtt:
+          - ECSLaunchTemplate
+          - LatestVersionNumber
+      MinSize: 1
+      MaxSize: 3
+      DesiredCapacity: 3
+    UpdatePolicy:
+      AutoScalingReplacingUpdate:
+        WillReplace: true
+
+  MyCapacityProvider:
+    Type: "AWS::ECS::CapacityProvider"
+    Properties:
+      Name: MyCustomCapacityProvider    
+      AutoScalingGroupProvider:
+        AutoScalingGroupArn: !Ref AutoScalingGroup
+        ManagedScaling:
+          Status: ENABLED
+        ManagedTerminationProtection: DISABLED
+
+  ECSUpdateCapacityProvider:
+    Type: AWS::ECS::ClusterCapacityProviderAssociations
+    Properties:
+      Cluster: !Ref AppCluster
+      CapacityProviders:
+        - !Ref MyCapacityProvider
+      DefaultCapacityProviderStrategy:
+        - Base: 1
+          Weight: 3
+          CapacityProvider: !Ref MyCapacityProvider
+
+
+Outputs:
+  ClusterName:
+    Description: The name of the ECS cluster
+    Value: !Ref AppCluster
+    Export:
+      Name: AppCluster
+
+  MariaDBService:
+    Description: The ID of the created MariaDB Service
+    Value: !Ref MariaDBService
+    Export:
+      Name: MariaDBService
