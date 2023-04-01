@@ -45,8 +45,8 @@ if(isset($_POST['submitRegistration'])) {
         $_SESSION['error_registration'] = $error_registration;  
         echo $error_registration;
     }
-
+	echo "Błąd podczas rejestracji: ";
     mysqli_close($conn);
 }
-header("Location: http://localhost/Gym_Site/welcome.php");    
+header("Location: http://localhost:8082/Gym_Site/welcome.php");    
 ?>

@@ -1,25 +1,26 @@
 <?php
 function connectToDbUsers() {
-    $servername = "127.0.0.1";
-    $username = "bartek";
-    $password = "gymsitedb321";
-    $dbname = "gymsite_users";
+    $servername = "my_mysql_container";
+    $username = "root";
+    $password = "dbpass";
+    $dbname = "pwrtrckr_users";
 
     // Tworzenie połączenia
     $conn = mysqli_connect($servername, $username, $password, $dbname);
-
+	echo "Tworze";
     if (!$conn) {
         die("Połączenie z bazą danych nie powiodło się: " . mysqli_connect_error());
     }
+
     return $conn;
 }
 
 
 function connectToDb() {
-    $servername = "127.0.0.1";
-    $username = "bartek";
-    $password = "gymsitedb321";
-    $dbname = "gymsitedatabase_final3";
+    $servername = "pwrtrckr_profiles";
+    $username = "root";
+    $password = "dbpass";
+    $dbname = "pwrtrckr_users";
 
     // Tworzenie połączenia
     $conn = mysqli_connect($servername, $username, $password, $dbname);

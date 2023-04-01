@@ -15,5 +15,7 @@ EXPOSE 80
 # Set the working directory
 WORKDIR /var/www/html
 
+RUN rm /var/www/html/index.html
+COPY . /var/www/html
 # Start the Apache service
 CMD ["apachectl", "-D", "FOREGROUND"]
