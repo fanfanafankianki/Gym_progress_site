@@ -1,6 +1,6 @@
-
 <?php
 require('db.php');
+require('redirection.php');
 
 session_start();
 
@@ -22,11 +22,11 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
                 $_SESSION["profile_id_" . $i] = $profiles[$i];
             }
         }
-        header("Location: http://localhost/Gym_Site/logged.php");
+        redirectToLoggedPage();
     } else {
         $error = 'Nieprawidłowe dane logowania';
         $_SESSION['error_login'] = $error;  
-        header("Location: http://localhost/Gym_Site/welcome.php");
+        redirectToWelcomePage();
     }
 }
 

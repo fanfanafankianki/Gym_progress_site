@@ -1,6 +1,5 @@
 <?php
 require('db.php');
-logowanie => user
 function getTrainingHistoryByUserId($profile_id) {
   $conn = connectToDb();
   $query = "SELECT TrainingHistory.*, UserProfiles.profile_id,  FROM TrainingHistory INNER JOIN TrainingWithExercises ON TrainingHistory.training_with_exercises_id = TrainingWithExercises.training_with_exercises_id INNER JOIN Trainings ON TrainingWithExercises.training_id = Trainings.training_id INNER JOIN UserProfiles ON Trainings.profile_id = UserProfiles.profile_id WHERE UserProfiles.profile_id = $profile_id and user= ten cos sie zalogował";

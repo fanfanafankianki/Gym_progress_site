@@ -143,7 +143,6 @@ function getExercisesByTrainingId($training_history_id) {
 	}
 	echo json_encode($records);
 	mysqli_close($conn);
-	tuple= 
 }
 
 $training_history_id = $_POST["training_history_id"];

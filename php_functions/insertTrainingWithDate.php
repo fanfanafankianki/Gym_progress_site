@@ -1,5 +1,6 @@
 <?php
 require('db.php');
+require('redirection.php');
 session_start();
 
 if (isset($_POST['SendTrainingWithExercises'])) {
@@ -43,6 +44,6 @@ if (isset($_POST['SendTrainingWithExercises'])) {
 
   $stmt->close();
   $conn->close();
-  header("Location: http://localhost/Gym_Site/logged.php");
+  redirectToLoggedPage();
 }
 ?>

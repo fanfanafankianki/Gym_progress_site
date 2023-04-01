@@ -1,5 +1,6 @@
 <?php
 require('db.php');
+require('redirection.php');
 session_start();
 $user_id = $_SESSION['user_id'];
 if (isset($_POST['insertTrainingWithExercises'])) {
@@ -106,7 +107,7 @@ if (isset($_POST['insertTrainingWithExercises'])) {
 }
 
 mysqli_close($conn);
-header("Location: http://localhost/Gym_Site/logged.php");
+redirectToLoggedPage();
 }
 
 

@@ -1,5 +1,6 @@
 <?php
 require('db.php');
+require('redirection.php');
 session_start();
 if(isset($_POST['submitRegistration'])) {
     $_SESSION['error_registration']="";
@@ -48,5 +49,5 @@ if(isset($_POST['submitRegistration'])) {
 	echo "Błąd podczas rejestracji: ";
     mysqli_close($conn);
 }
-header("Location: http://localhost:8082/Gym_Site/welcome.php");    
+redirectToWelcomePage();    
 ?>
