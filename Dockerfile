@@ -8,8 +8,7 @@ RUN apt-get update && \
     apt-get install -y apache2 && \
     apt-get install -y apache2-utils && \
     apt-get install -y php libapache2-mod-php php-mysql && \
-    apt-get clean && \
-	sudo ufw allow in "Apache Full"
+    apt-get clean
 
 EXPOSE 80
 
