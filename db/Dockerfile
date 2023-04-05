@@ -1,4 +1,4 @@
-FROM mysql:5.7.25
+FROM mysql:latest
 LABEL "Project"="PwrTrckr"
 LABEL "Author"="fanfan"
 

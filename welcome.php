@@ -22,7 +22,7 @@
       Here you can configure your training routine, track your trainings and your progress! <br><br>
       Add your everyday trainings and your exercise routine.<br><br>
       You can also use BMI, FFMI and Calorie calculator!<br><br>
-        <img src="images/Gym_photo2.png" alt="Gym photo" width="300" height="250" style="border: 5px solid black;"><br><br><br>
+        <img src="images/gym_photo2.png" alt="Gym photo" width="300" height="250" style="border: 5px solid black;"><br><br><br>
         <div id="welcome_site2" style="font-weight: bold; font-size: 18px; letter-spacing:3px; line-height: 35px;">
         </div>
     </div>
