@@ -1,12 +1,12 @@
 <?php
 function redirectToWelcomePage() {
-    header("Location: /welcome.php");
+    header("Location: /php_functions/welcome.php");
     exit;
 }
 
 
 function redirectToLoggedPage() {
-    header("Location: /logged.php");
+    header("Location: /php_functions/logged.php");
     exit;
 }
 ?>
