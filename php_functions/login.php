@@ -5,16 +5,16 @@ require('redirection.php');
 session_start();
 
 if (!empty($_POST['login']) && !empty($_POST['password'])) {
-    echo "Coś tu nie trybi1: " . $user_id
+    echo "Coś tu nie trybi1: ";
     $user_id = checkUserExists($_POST['login'], $_POST['password']);
     if ($user_id) {
-        echo "Coś tu nie trybi2: " . $user_id
+        echo "Coś tu nie trybi2: " . $user_id;
         $_SESSION['user_id'] = $user_id;  
-        echo "Coś tu nie trybi3: " . $_SESSION['user_id']
+        echo "Coś tu nie trybi3: " . $_SESSION['user_id'];
         $_SESSION['profile_id'] = htmlspecialchars($_POST['login']);  
         $profiles = returnUserProfiles($user_id);
         $_SESSION['profiles_list'] = $profiles;
-        echo "Coś tu nie trybi4: " . $_SESSION['user_id']
+        echo "Coś tu nie trybi4: " . $_SESSION['user_id'];
         if (is_array($profiles)) {
             $_SESSION['profiles'] = count($profiles);
         } else {
