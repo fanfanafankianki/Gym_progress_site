@@ -1,6 +1,6 @@
 <?php
 function connectToDbUsers() {
-    $servername = "my_mysql_container";
+    $servername = "a8deb6bd07ece40f4bf671a23b79a6db-1396431802.eu-west-1.elb.amazonaws.com:3306";
     $username = "bartek";
     $password = "dbpass2";
     $dbname = "pwrtrckr_users";
@@ -16,7 +16,7 @@ function connectToDbUsers() {
 
 
 function connectToDb() {
-    $servername = "pwrtrckr_profiles";
+    $servername = "a8deb6bd07ece40f4bf671a23b79a6db-1396431802.eu-west-1.elb.amazonaws.com:3306";
     $username = "bartek";
     $password = "dbpass2";
     $dbname = "pwrtrckr_profiles";
