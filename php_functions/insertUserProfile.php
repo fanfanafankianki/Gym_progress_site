@@ -3,7 +3,7 @@ function insertUserProfile($profile_name_to_add, $user_id) {
   $conn = connectToDb();
 
   // Zapytanie SQL
-  $sql = "INSERT INTO userProfiles(profile_name, user_id) VALUES (?, ?)";
+  $sql = "INSERT INTO userprofiles(profile_name, user_id) VALUES (?, ?)";
 
   // Prepare the statement
   $stmt = mysqli_prepare($conn, $sql);
