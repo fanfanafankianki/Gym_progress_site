@@ -1,12 +1,12 @@
 <?php
 function select_user_training_info($profile_id) {
   $conn = connectToDb();
-  $query = "SELECT UserProfiles.profile_id, UserProfiles.profile_name, Trainings.training_id, Trainings.training_name
-  FROM UserProfiles
-  JOIN Trainings ON UserProfiles.profile_id = Trainings.profile_id
-  WHERE UserProfiles.profile_id = $profile_id";
+  $query = "SELECT userprofiles.profile_id, userprofiles.profile_name, trainings.training_id, trainings.training_name
+  FROM userprofiles
+  JOIN trainings ON userprofiles.profile_id = trainings.profile_id
+  WHERE userprofiles.profile_id = $profile_id";
 
-  $query2="SELECT UserProfiles.profile_id, UserProfiles.profile_name FROM UserProfiles WHERE UserProfiles.profile_id = $profile_id";
+  $query2="SELECT userprofiles.profile_id, userprofiles.profile_name FROM userprofiles WHERE userprofiles.profile_id = $profile_id";
   $result = mysqli_query($conn, $query);
   if (mysqli_num_rows(mysqli_query($conn, $query)) == 0) {
     $result = mysqli_query($conn, $query2);

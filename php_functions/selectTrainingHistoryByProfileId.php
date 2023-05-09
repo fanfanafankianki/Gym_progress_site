@@ -5,13 +5,13 @@ require('db.php');
 function selectTrainingHistoryByProfileId($profile_id, $training_id) {
     $conn = connectToDb();
     $user_id = $_SESSION['user_id'];
-    $query = "SELECT TrainingHistory.*, UserProfiles.profile_id 
-    FROM TrainingHistory 
-    INNER JOIN TrainingWithExercises ON TrainingHistory.training_with_exercises_id = TrainingWithExercises.training_with_exercises_id 
-    INNER JOIN Trainings ON TrainingWithExercises.training_id = Trainings.training_id 
-    INNER JOIN UserProfiles ON Trainings.profile_id = UserProfiles.profile_id 
-    JOIN Users ON userprofiles.user_id = users.user_id 
-    WHERE UserProfiles.profile_id = ? AND users.user_id = ? AND Trainings.training_id = ?";
+    $query = "SELECT traininghistory.*, userprofiles.profile_id 
+    FROM traininghistory 
+    INNER JOIN trainingwithexercises ON traininghistory.training_with_exercises_id = trainingwithexercises.training_with_exercises_id 
+    INNER JOIN trainings ON trainingwithexercises.training_id = trainings.training_id 
+    INNER JOIN userprofiles ON trainings.profile_id = userprofiles.profile_id 
+    JOIN users ON userprofiles.user_id = users.user_id 
+    WHERE userprofiles.profile_id = ? AND users.user_id = ? AND trainings.training_id = ?";
 
     $stmt = $conn->prepare($query);
     $stmt->bind_param("iii", $profile_id, $user_id, $training_id);
@@ -23,7 +23,7 @@ function selectTrainingHistoryByProfileId($profile_id, $training_id) {
         $training_with_exercises_id = $record["training_with_exercises_id"];
         $training_date = $record["training_date"];
         $profile_id = $record["profile_id"];
-        echo "<a onclick='showTrainingHistoryDetails(" . $training_history_id . ")' href='#' class='css-bar-item css-button'>Training with date: " . $training_date . "</a><br>";
+        echo "<a onclick='showtraininghistoryDetails(" . $training_history_id . ")' href='#' class='css-bar-item css-button'>Training with date: " . $training_date . "</a><br>";
     }
 
     $stmt->close();
@@ -32,5 +32,5 @@ function selectTrainingHistoryByProfileId($profile_id, $training_id) {
 
 $profile_id = $_POST["profile_id"];
 $training_id = $_POST["training_id"];
-selectTrainingHistoryByProfileId($profile_id, $training_id);
+selecttraininghistoryByProfileId($profile_id, $training_id);
 ?>

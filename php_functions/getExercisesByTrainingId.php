@@ -2,18 +2,18 @@
 require('db.php');
 function getExercisesByTrainingId($training_id) {
   $conn = connectToDb();
-  $query = "SELECT Exercises.exercise_name, Exercises.exercise_id
-	FROM Exercises
-	JOIN TrainingWithExercises ON TrainingWithExercises.exercise_1 = Exercises.exercise_id
-	 OR TrainingWithExercises.exercise_2 = Exercises.exercise_id
-	 OR TrainingWithExercises.exercise_3 = Exercises.exercise_id
-	 OR TrainingWithExercises.exercise_4 = Exercises.exercise_id
-	 OR TrainingWithExercises.exercise_5 = Exercises.exercise_id
-	 OR TrainingWithExercises.exercise_6 = Exercises.exercise_id
-	 OR TrainingWithExercises.exercise_7 = Exercises.exercise_id
-	 OR TrainingWithExercises.exercise_8 = Exercises.exercise_id
-	 OR TrainingWithExercises.exercise_9 = Exercises.exercise_id
-	WHERE TrainingWithExercises.training_id = $training_id
+  $query = "SELECT exercises.exercise_name, exercises.exercise_id
+	FROM exercises
+	JOIN trainingwithexercises ON trainingwithexercises.exercise_1 = exercises.exercise_id
+	 OR trainingwithexercises.exercise_2 = exercises.exercise_id
+	 OR trainingwithexercises.exercise_3 = exercises.exercise_id
+	 OR trainingwithexercises.exercise_4 = exercises.exercise_id
+	 OR trainingwithexercises.exercise_5 = exercises.exercise_id
+	 OR trainingwithexercises.exercise_6 = exercises.exercise_id
+	 OR trainingwithexercises.exercise_7 = exercises.exercise_id
+	 OR trainingwithexercises.exercise_8 = exercises.exercise_id
+	 OR trainingwithexercises.exercise_9 = exercises.exercise_id
+	WHERE trainingwithexercises.training_id = $training_id
 	";
   $result = mysqli_query($conn, $query);
   $trainingData = "";  
@@ -27,6 +27,6 @@ function getExercisesByTrainingId($training_id) {
 }
 
 $training_id = $_POST["training_id"];
-getExercisesByTrainingId($training_id);
+getexercisesByTrainingId($training_id);
 ?>
 

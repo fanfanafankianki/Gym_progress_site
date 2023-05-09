@@ -3,7 +3,7 @@ require('db.php');
 require('redirection.php');
 session_start();
 $user_id = $_SESSION['user_id'];
-if (isset($_POST['insertTrainingWithExercises'])) {
+if (isset($_POST['inserttrainingwithexercises'])) {
   $training_name = (!empty($_POST['text1'])) ? $_POST['text1'] : null;
   $exercise_1 = (!empty($_POST['text2'])) ? $_POST['text2'] : null;
   $exercise_2 = (!empty($_POST['text3'])) ? $_POST['text3'] : null;
@@ -18,10 +18,10 @@ if (isset($_POST['insertTrainingWithExercises'])) {
 
   $conn = connectToDb();
 
-  $stmt = $conn->prepare("SELECT UserProfiles.profile_id, Users.user_name 
-  FROM UserProfiles 
-  JOIN Users ON Userprofiles.user_id = Users.user_id  
-  WHERE UserProfiles.profile_id = ? AND Users.user_id = ?");
+  $stmt = $conn->prepare("SELECT userprofiles.profile_id, users.user_name 
+  FROM userprofiles 
+  JOIN users ON userprofiles.user_id = users.user_id  
+  WHERE userprofiles.profile_id = ? AND users.user_id = ?");
   $stmt->bind_param("ii", $profile_id, $user_id);
   $stmt->execute();
   $check_result = $stmt->get_result();
@@ -82,7 +82,7 @@ if (isset($_POST['insertTrainingWithExercises'])) {
     
     $num_of_exercises = count($exercise_array);
 
-    $sql3 = "INSERT INTO TrainingWithExercises (training_id";
+    $sql3 = "INSERT INTO trainingwithexercises (training_id)";
     
     for ($i = 1; $i <= $num_of_exercises; $i++) {
         $sql3 .= ", exercise_{$i}";

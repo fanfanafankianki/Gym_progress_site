@@ -5,21 +5,21 @@ require('db.php');
 function selectExercisesByTrainingId($training_id) {
     $conn = connectToDb();
     $user_id = $_SESSION['user_id'];
-    $query = "SELECT Exercises.exercise_name, Exercises.exercise_id
-    FROM Exercises
-    JOIN TrainingWithExercises ON TrainingWithExercises.exercise_1 = Exercises.exercise_id
-     OR TrainingWithExercises.exercise_2 = Exercises.exercise_id
-     OR TrainingWithExercises.exercise_3 = Exercises.exercise_id
-     OR TrainingWithExercises.exercise_4 = Exercises.exercise_id
-     OR TrainingWithExercises.exercise_5 = Exercises.exercise_id
-     OR TrainingWithExercises.exercise_6 = Exercises.exercise_id
-     OR TrainingWithExercises.exercise_7 = Exercises.exercise_id
-     OR TrainingWithExercises.exercise_8 = Exercises.exercise_id
-     OR TrainingWithExercises.exercise_9 = Exercises.exercise_id
-    JOIN Trainings ON TrainingWithExercises.training_id = trainings.training_id
-    JOIN userprofiles ON Trainings.profile_id = userprofiles.profile_id
-    JOIN Users ON userprofiles.user_id = users.user_id
-    WHERE TrainingWithExercises.training_id = ? AND users.user_id = ?";
+    $query = "SELECT exercises.exercise_name, exercises.exercise_id
+    FROM exercises
+    JOIN trainingwithexercises ON trainingwithexercises.exercise_1 = exercises.exercise_id
+     OR trainingwithexercises.exercise_2 = exercises.exercise_id
+     OR trainingwithexercises.exercise_3 = exercises.exercise_id
+     OR trainingwithexercises.exercise_4 = exercises.exercise_id
+     OR trainingwithexercises.exercise_5 = exercises.exercise_id
+     OR trainingwithexercises.exercise_6 = exercises.exercise_id
+     OR trainingwithexercises.exercise_7 = exercises.exercise_id
+     OR trainingwithexercises.exercise_8 = exercises.exercise_id
+     OR trainingwithexercises.exercise_9 = exercises.exercise_id
+    JOIN trainings ON trainingwithexercises.training_id = trainings.training_id
+    JOIN userprofiles ON trainings.profile_id = userprofiles.profile_id
+    JOIN users ON userprofiles.user_id = users.user_id
+    WHERE trainingwithexercises.training_id = ? AND users.user_id = ?";
 
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ii", $training_id, $user_id);

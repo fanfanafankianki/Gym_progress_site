@@ -6,15 +6,15 @@ $training_id = $_GET["training_id"];
 $conn = connectToDb();
 $user_id = $_SESSION['user_id'];
 
-$query = "SELECT Exercises.exercise_id, Exercises.exercise_name, TrainingHistory.training_date, TrainingHistory.training_history_id, TrainingDetails.weight, TrainingDetails.reps
-FROM TrainingDetails
-JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
-JOIN TrainingHistory ON TrainingDetails.training_history_id = TrainingHistory.training_history_id
-JOIN TrainingWithExercises ON TrainingHistory.training_with_exercises_id = TrainingWithExercises.training_with_exercises_id
-JOIN Trainings ON TrainingWithExercises.training_id = trainings.training_id
-JOIN userprofiles ON Trainings.profile_id = userprofiles.profile_id
-JOIN Users ON userprofiles.user_id = users.user_id
-WHERE Exercises.exercise_id = ? AND TrainingWithExercises.training_id = ? AND users.user_id = ?";
+$query = "SELECT exercises.exercise_id, exercises.exercise_name, traininghistory.training_date, traininghistory.training_history_id, trainingdetails.weight, trainingdetails.reps
+FROM trainingdetails
+JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
+JOIN traininghistory ON trainingdetails.training_history_id = traininghistory.training_history_id
+JOIN trainingwithexercises ON traininghistory.training_with_exercises_id = trainingwithexercises.training_with_exercises_id
+JOIN trainings ON trainingwithexercises.training_id = trainings.training_id
+JOIN userprofiles ON trainings.profile_id = userprofiles.profile_id
+JOIN users ON userprofiles.user_id = users.user_id
+WHERE exercises.exercise_id = ? AND trainingwithexercises.training_id = ? AND users.user_id = ?";
 
 $stmt = $conn->prepare($query);
 $stmt->bind_param("iii", $exercise_id, $training_id, $user_id);

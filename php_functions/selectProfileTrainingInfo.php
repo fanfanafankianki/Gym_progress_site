@@ -2,13 +2,13 @@
 function select_profile_training_info($profile_id) {
   $conn = connectToDb();
   $user_id = $_SESSION['user_id'];
-  $query = "SELECT UserProfiles.profile_id, UserProfiles.profile_name, Trainings.training_id, Trainings.training_name
-  FROM UserProfiles
-  JOIN Trainings ON UserProfiles.profile_id = Trainings.profile_id
-  JOIN Users ON UserProfiles.user_id = Users.user_id
-  WHERE UserProfiles.profile_id = ? AND Users.user_id = ?";
+  $query = "SELECT userprofiles.profile_id, userprofiles.profile_name, trainings.training_id, trainings.training_name
+  FROM userprofiles
+  JOIN trainings ON userprofiles.profile_id = trainings.profile_id
+  JOIN users ON userprofiles.user_id = users.user_id
+  WHERE userprofiles.profile_id = ? AND users.user_id = ?";
 
-  $query2="SELECT UserProfiles.profile_id, UserProfiles.profile_name FROM UserProfiles WHERE UserProfiles.profile_id = ?";
+  $query2="SELECT userprofiles.profile_id, userprofiles.profile_name FROM userprofiles WHERE userprofiles.profile_id = ?";
   
   $stmt = mysqli_prepare($conn, $query);
   mysqli_stmt_bind_param($stmt, "ii", $profile_id, $user_id);
