@@ -6,7 +6,7 @@ function redirectToWelcomePage() {
 
 
 function redirectToLoggedPage() {
-    header("Location: /logged.php");
+    header("Location: /slogged.php");
     exit;
 }
 ?>
