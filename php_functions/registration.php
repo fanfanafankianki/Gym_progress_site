@@ -49,5 +49,5 @@ if(isset($_POST['submitRegistration'])) {
 	echo "Błąd podczas rejestracji: ";
     mysqli_close($conn);
 }
-redirectToWelcomePage();    
+header("Location: /welcome.php");      
 ?>

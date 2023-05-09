@@ -22,11 +22,11 @@ if (!empty($_POST['login']) && !empty($_POST['password'])) {
                 $_SESSION["profile_id_" . $i] = $profiles[$i];
             }
         }
-        redirectToLoggedPage();
+        header("Location: /logged.php");   
     } else {
         $error = 'Nieprawidłowe dane logowania';
         $_SESSION['error_login'] = $error;  
-        redirectToWelcomePage();
+        header("Location: /welcome.php");   
     }
 }
 
