@@ -74,7 +74,7 @@ function returnUserProfiles($user_id) {
     }
 
     // Użycie instrukcji przygotowanych do zabezpieczenia zapytania SQL
-    $query = "SELECT profile_id FROM UserProfiles WHERE user_id = ?";
+    $query = "SELECT profile_id FROM userprofiles WHERE user_id = ?";
     $stmt = mysqli_prepare($conn, $query);
 
     if ($stmt) {

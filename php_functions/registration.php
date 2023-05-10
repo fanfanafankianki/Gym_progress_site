@@ -22,12 +22,15 @@ if(isset($_POST['submitRegistration'])) {
     if (mysqli_query($conn, $sql)) {
         echo "Użytkownik zarejestrowany pomyślnie";
         
+        // Pobranie ostatniego ID z tabeli accounts
+        $last_id = mysqli_insert_id($conn);
+        
         // Tworzenie połączenia
         $conn2 = connectToDb();
 
         // Wstawianie danych do bazy danych
-        $sql = "INSERT INTO users (user_name)
-        VALUES ('$username')";
+        $sql = "INSERT INTO users (user_id, user_name)
+        VALUES ('$last_id', '$username')";
 
         if (mysqli_query($conn2, $sql)) {
             echo "Użytkownik dodany pomyślnie";
@@ -46,8 +49,9 @@ if(isset($_POST['submitRegistration'])) {
         $_SESSION['error_registration'] = $error_registration;  
         echo $error_registration;
     }
-	echo "Błąd podczas rejestracji: ";
+
     mysqli_close($conn);
 }
+
 header("Location: /welcome.php");      
 ?>

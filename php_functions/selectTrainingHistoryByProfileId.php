@@ -23,7 +23,7 @@ function selectTrainingHistoryByProfileId($profile_id, $training_id) {
         $training_with_exercises_id = $record["training_with_exercises_id"];
         $training_date = $record["training_date"];
         $profile_id = $record["profile_id"];
-        echo "<a onclick='showtraininghistoryDetails(" . $training_history_id . ")' href='#' class='css-bar-item css-button'>Training with date: " . $training_date . "</a><br>";
+        echo "<a onclick='showTrainingHistoryDetails(" . $training_history_id . ")' href='#' class='css-bar-item css-button'>Training with date: " . $training_date . "</a><br>";
     }
 
     $stmt->close();

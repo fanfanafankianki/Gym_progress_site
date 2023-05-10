@@ -3,7 +3,7 @@ require('db.php');
 require('redirection.php');
 session_start();
 $user_id = $_SESSION['user_id'];
-if (isset($_POST['inserttrainingwithexercises'])) {
+if (isset($_POST['insertTrainingWithExercises'])) {
   $training_name = (!empty($_POST['text1'])) ? $_POST['text1'] : null;
   $exercise_1 = (!empty($_POST['text2'])) ? $_POST['text2'] : null;
   $exercise_2 = (!empty($_POST['text3'])) ? $_POST['text3'] : null;
@@ -82,7 +82,7 @@ if (isset($_POST['inserttrainingwithexercises'])) {
     
     $num_of_exercises = count($exercise_array);
 
-    $sql3 = "INSERT INTO trainingwithexercises (training_id)";
+    $sql3 = "INSERT INTO trainingwithexercises (training_id";
     
     for ($i = 1; $i <= $num_of_exercises; $i++) {
         $sql3 .= ", exercise_{$i}";
