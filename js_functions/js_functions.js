@@ -329,13 +329,13 @@ function confirmProfileDeletion(profile_id) {
         if (this.readyState === 4 && this.status === 200) {
           console.log("Received response from server:");
           console.log(xhr.responseText);
+          goToCurrentPage();
         } else if (this.readyState === 4) {
           console.log("Error: Received status " + this.status + " from server");
         }
       };
       xhr.send("profile_id=" + encodeURIComponent(profile_id));
       console.log("XHR request sent");
-      goToCurrentPage();
     } else {
       console.log("Second confirmation failed");
     }
@@ -363,13 +363,13 @@ function confirmTrainingDeletion(training_id) {
         if (this.readyState === 4 && this.status === 200) {
           console.log("Received response from server:");
           console.log(xhr.responseText);
+          goToCurrentPage();
         } else if (this.readyState === 4) {
           console.log("Error: Received status " + this.status + " from server");
         }
       };
       xhr.send("training_id=" + encodeURIComponent(training_id));
       console.log("XHR request sent");
-      goToCurrentPage();
     } else {
       console.log("Second confirmation failed");
     }
@@ -397,6 +397,7 @@ function confirmTrainingHistoryDeletion(training_history_id) {
         if (this.readyState === 4 && this.status === 200) {
           console.log("Received response from server:");
           console.log(xhr.responseText);
+          goToCurrentPage();
         } else if (this.readyState === 4) {
           console.log("Error: Received status " + this.status + " from server");
         }
@@ -405,7 +406,6 @@ function confirmTrainingHistoryDeletion(training_history_id) {
         "training_history_id=" + encodeURIComponent(training_history_id)
       );
       console.log("XHR request sent");
-      goToCurrentPage();
     } else {
       console.log("Second confirmation failed");
     }
