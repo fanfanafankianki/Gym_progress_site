@@ -1,6 +1,6 @@
 <?php
 function connectToDbUsers() {
-    $servername = "a8deb6bd07ece40f4bf671a23b79a6db-1396431802.eu-west-1.elb.amazonaws.com:3306";
+    $servername = "database.powertrckr.com:3306";
     $username = "bartek";
     $password = "dbpass2";
     $dbname = "pwrtrckr_users";
@@ -16,7 +16,7 @@ function connectToDbUsers() {
 
 
 function connectToDb() {
-    $servername = "a8deb6bd07ece40f4bf671a23b79a6db-1396431802.eu-west-1.elb.amazonaws.com:3306";
+    $servername = "database.powertrckr.com:3306";
     $username = "bartek";
     $password = "dbpass2";
     $dbname = "pwrtrckr_profiles";
