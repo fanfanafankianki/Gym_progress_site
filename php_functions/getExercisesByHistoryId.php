@@ -5,130 +5,130 @@ function getExercisesByTrainingId($training_history_id) {
   $conn = connectToDb();
   $query = "
 	SELECT
-	Exercises.exercise_name,
-	TrainingDetails.exercise_id,
-	TrainingDetails.weight,
-	TrainingDetails.reps
+	exercises.exercise_name,
+	trainingdetails.exercise_id,
+	trainingdetails.weight,
+	trainingdetails.reps
 	FROM
-	TrainingWithExercises
-	JOIN TrainingHistory ON TrainingWithExercises.training_with_exercises_id = TrainingHistory.training_with_exercises_id
-	JOIN TrainingDetails ON TrainingHistory.training_history_id = TrainingDetails.training_history_id
-	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
+	trainingwithexercises
+	JOIN traininghistory ON trainingwithexercises.training_with_exercises_id = traininghistory.training_with_exercises_id
+	JOIN trainingdetails ON traininghistory.training_history_id = trainingdetails.training_history_id
+	JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
 	WHERE
-	TrainingDetails.exercise_id = TrainingWithExercises.exercise_1
-	AND TrainingHistory.training_history_id = $training_history_id
+	trainingdetails.exercise_id = trainingwithexercises.exercise_1
+	AND traininghistory.training_history_id = $training_history_id
 	UNION
 	SELECT
-	Exercises.exercise_name,
-	TrainingDetails.exercise_id,
-	TrainingDetails.weight,
-	TrainingDetails.reps
+	exercises.exercise_name,
+	trainingdetails.exercise_id,
+	trainingdetails.weight,
+	trainingdetails.reps
 	FROM
-	TrainingWithExercises
-	JOIN TrainingHistory ON TrainingWithExercises.training_with_exercises_id = TrainingHistory.training_history_id
-	JOIN TrainingDetails ON TrainingHistory.training_history_id = TrainingDetails.training_history_id
-	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
+	trainingwithexercises
+	JOIN traininghistory ON trainingwithexercises.training_with_exercises_id = traininghistory.training_history_id
+	JOIN trainingdetails ON traininghistory.training_history_id = trainingdetails.training_history_id
+	JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
 	WHERE
-	TrainingDetails.exercise_id = TrainingWithExercises.exercise_2
-	AND TrainingHistory.training_history_id = $training_history_id
+	trainingdetails.exercise_id = trainingwithexercises.exercise_2
+	AND traininghistory.training_history_id = $training_history_id
 	UNION
 	SELECT
-	Exercises.exercise_name,
-	TrainingDetails.exercise_id,
-	TrainingDetails.weight,
-	TrainingDetails.reps
+	exercises.exercise_name,
+	trainingdetails.exercise_id,
+	trainingdetails.weight,
+	trainingdetails.reps
 	FROM
-	TrainingWithExercises
-	JOIN TrainingHistory ON TrainingWithExercises.training_with_exercises_id = TrainingHistory.training_history_id
-	JOIN TrainingDetails ON TrainingHistory.training_history_id = TrainingDetails.training_history_id
-	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
+	trainingwithexercises
+	JOIN traininghistory ON trainingwithexercises.training_with_exercises_id = traininghistory.training_history_id
+	JOIN trainingdetails ON traininghistory.training_history_id = trainingdetails.training_history_id
+	JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
 	WHERE
-	TrainingDetails.exercise_id = TrainingWithExercises.exercise_3
-	AND TrainingHistory.training_history_id = $training_history_id
+	trainingdetails.exercise_id = trainingwithexercises.exercise_3
+	AND traininghistory.training_history_id = $training_history_id
 	UNION
 	SELECT
-	Exercises.exercise_name,
-	TrainingDetails.exercise_id,
-	TrainingDetails.weight,
-	TrainingDetails.reps
+	exercises.exercise_name,
+	trainingdetails.exercise_id,
+	trainingdetails.weight,
+	trainingdetails.reps
 	FROM
-	TrainingWithExercises
-	JOIN TrainingHistory ON TrainingWithExercises.training_with_exercises_id = TrainingHistory.training_history_id
-	JOIN TrainingDetails ON TrainingHistory.training_history_id = TrainingDetails.training_history_id
-	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
+	trainingwithexercises
+	JOIN traininghistory ON trainingwithexercises.training_with_exercises_id = traininghistory.training_history_id
+	JOIN trainingdetails ON traininghistory.training_history_id = trainingdetails.training_history_id
+	JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
 	WHERE
-	TrainingDetails.exercise_id = TrainingWithExercises.exercise_4
-	AND TrainingHistory.training_history_id = $training_history_id
+	trainingdetails.exercise_id = trainingwithexercises.exercise_4
+	AND traininghistory.training_history_id = $training_history_id
 	UNION
 	SELECT
-	Exercises.exercise_name,
-	TrainingDetails.exercise_id,
-	TrainingDetails.weight,
-	TrainingDetails.reps
+	exercises.exercise_name,
+	trainingdetails.exercise_id,
+	trainingdetails.weight,
+	trainingdetails.reps
 	FROM
-	TrainingWithExercises
-	JOIN TrainingHistory ON TrainingWithExercises.training_with_exercises_id = TrainingHistory.training_history_id
-	JOIN TrainingDetails ON TrainingHistory.training_history_id = TrainingDetails.training_history_id
-	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
+	trainingwithexercises
+	JOIN traininghistory ON trainingwithexercises.training_with_exercises_id = traininghistory.training_history_id
+	JOIN trainingdetails ON traininghistory.training_history_id = trainingdetails.training_history_id
+	JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
 	WHERE
-	TrainingDetails.exercise_id = TrainingWithExercises.exercise_5
-	AND TrainingHistory.training_history_id = $training_history_id
+	trainingdetails.exercise_id = trainingwithexercises.exercise_5
+	AND traininghistory.training_history_id = $training_history_id
 	UNION
 	SELECT
-	Exercises.exercise_name,
-	TrainingDetails.exercise_id,
-	TrainingDetails.weight,
-	TrainingDetails.reps
+	exercises.exercise_name,
+	trainingdetails.exercise_id,
+	trainingdetails.weight,
+	trainingdetails.reps
 	FROM
-	TrainingWithExercises
-	JOIN TrainingHistory ON TrainingWithExercises.training_with_exercises_id = TrainingHistory.training_history_id
-	JOIN TrainingDetails ON TrainingHistory.training_history_id = TrainingDetails.training_history_id
-	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
+	trainingwithexercises
+	JOIN traininghistory ON trainingwithexercises.training_with_exercises_id = traininghistory.training_history_id
+	JOIN trainingdetails ON traininghistory.training_history_id = trainingdetails.training_history_id
+	JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
 	WHERE
-	TrainingDetails.exercise_id = TrainingWithExercises.exercise_6
-	AND TrainingHistory.training_history_id = $training_history_id
+	trainingdetails.exercise_id = trainingwithexercises.exercise_6
+	AND traininghistory.training_history_id = $training_history_id
 	UNION
 	SELECT
-	Exercises.exercise_name,
-	TrainingDetails.exercise_id,
-	TrainingDetails.weight,
-	TrainingDetails.reps
+	exercises.exercise_name,
+	trainingdetails.exercise_id,
+	trainingdetails.weight,
+	trainingdetails.reps
 	FROM
-	TrainingWithExercises
-	JOIN TrainingHistory ON TrainingWithExercises.training_with_exercises_id = TrainingHistory.training_history_id
-	JOIN TrainingDetails ON TrainingHistory.training_history_id = TrainingDetails.training_history_id
-	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
+	trainingwithexercises
+	JOIN traininghistory ON trainingwithexercises.training_with_exercises_id = traininghistory.training_history_id
+	JOIN trainingdetails ON traininghistory.training_history_id = trainingdetails.training_history_id
+	JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
 	WHERE
-	TrainingDetails.exercise_id = TrainingWithExercises.exercise_7
-	AND TrainingHistory.training_history_id = $training_history_id
+	trainingdetails.exercise_id = trainingwithexercises.exercise_7
+	AND traininghistory.training_history_id = $training_history_id
 	UNION
 	SELECT
-	Exercises.exercise_name,
-	TrainingDetails.exercise_id,
-	TrainingDetails.weight,
-	TrainingDetails.reps
+	exercises.exercise_name,
+	trainingdetails.exercise_id,
+	trainingdetails.weight,
+	trainingdetails.reps
 	FROM
-	TrainingWithExercises
-	JOIN TrainingHistory ON TrainingWithExercises.training_with_exercises_id = TrainingHistory.training_history_id
-	JOIN TrainingDetails ON TrainingHistory.training_history_id = TrainingDetails.training_history_id
-	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
+	trainingwithexercises
+	JOIN traininghistory ON trainingwithexercises.training_with_exercises_id = traininghistory.training_history_id
+	JOIN trainingdetails ON traininghistory.training_history_id = trainingdetails.training_history_id
+	JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
 	WHERE
-	TrainingDetails.exercise_id = TrainingWithExercises.exercise_8
-	AND TrainingHistory.training_history_id = $training_history_id
+	trainingdetails.exercise_id = trainingwithexercises.exercise_8
+	AND traininghistory.training_history_id = $training_history_id
 	UNION
 	SELECT
-	Exercises.exercise_name,
-	TrainingDetails.exercise_id,
-	TrainingDetails.weight,
-	TrainingDetails.reps
+	exercises.exercise_name,
+	trainingdetails.exercise_id,
+	trainingdetails.weight,
+	trainingdetails.reps
 	FROM
-	TrainingWithExercises
-	JOIN TrainingHistory ON TrainingWithExercises.training_with_exercises_id = TrainingHistory.training_history_id
-	JOIN TrainingDetails ON TrainingHistory.training_history_id = TrainingDetails.training_history_id
-	JOIN Exercises ON TrainingDetails.exercise_id = Exercises.exercise_id
+	trainingwithexercises
+	JOIN traininghistory ON trainingwithexercises.training_with_exercises_id = traininghistory.training_history_id
+	JOIN trainingdetails ON traininghistory.training_history_id = trainingdetails.training_history_id
+	JOIN exercises ON trainingdetails.exercise_id = exercises.exercise_id
 	WHERE
-	TrainingDetails.exercise_id = TrainingWithExercises.exercise_9
-	AND TrainingHistory.training_history_id = $training_history_id;
+	trainingdetails.exercise_id = trainingwithexercises.exercise_9
+	AND traininghistory.training_history_id = $training_history_id;
 	";
 	$result = mysqli_query($conn, $query);
 	$records = [];
@@ -143,10 +143,9 @@ function getExercisesByTrainingId($training_history_id) {
 	}
 	echo json_encode($records);
 	mysqli_close($conn);
-	tuple= 
 }
 
 $training_history_id = $_POST["training_history_id"];
-getExercisesByTrainingId(1);
+getexercisesByTrainingId(1);
 ?>
 

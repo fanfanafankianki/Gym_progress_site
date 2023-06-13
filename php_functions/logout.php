@@ -1,7 +1,7 @@
 <?php
-echo "weszlem";
 session_start();
+require('redirection.php');
 unset($_SESSION['user']);
 session_destroy();
-header("Location: http://localhost/Gym_Site/index.php");
+redirectToWelcomePage();
 ?>

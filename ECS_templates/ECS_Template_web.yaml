@@ -1,0 +1,38 @@
+Resources:
+  UbuntuTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: UbuntuContainer
+      RequiresCompatibilities:
+        - EC2 
+      Cpu: 1024
+      Memory: 970
+      NetworkMode: bridge
+      ContainerDefinitions:
+        - Name: UbuntuContainer
+          Image: 320442627588.dkr.ecr.eu-west-1.amazonaws.com/jenkins_repo:webapp
+          PortMappings:
+            - ContainerPort: 80    
+              HostPort: 80            
+          Environment:
+            - Name: MARIADB_PORT
+              Value: "3306"
+            - Name: SELENIUM_PORT
+              Value: "4444"
+          Essential: true
+
+  UbuntuService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: UbuntuService
+      Cluster: !ImportValue AppCluster
+      LaunchType: EC2
+      TaskDefinition: !Ref UbuntuTaskDefinition
+      DesiredCount: 1
+
+Outputs:
+  UbuntuService:
+    Description: The ID of the created Ubuntu Service
+    Value: !Ref UbuntuService
+    Export:
+      Name: UbuntuService

@@ -3,21 +3,34 @@ function insertUserProfile($profile_name_to_add, $user_id) {
   $conn = connectToDb();
 
   // Zapytanie SQL
-  $sql = "INSERT INTO userProfiles(profile_name, user_id) VALUES ('$profile_name_to_add', '$user_id')";
+  $sql = "INSERT INTO userprofiles(profile_name, user_id) VALUES (?, ?)";
 
-  if (mysqli_query($conn, $sql)) {
-    $counter = 0;
-    for($i = 0; $i < $_SESSION['profiles']; $i++){ 
-        $counter++;
+  // Prepare the statement
+  $stmt = mysqli_prepare($conn, $sql);
+
+  if ($stmt) {
+    // Bind the parameters
+    mysqli_stmt_bind_param($stmt, "si", $profile_name_to_add, $user_id);
+
+    // Execute the statement
+    if (mysqli_stmt_execute($stmt)) {
+      $counter = 0;
+      for($i = 0; $i < $_SESSION['profiles']; $i++){ 
+          $counter++;
+      }
+      $profile_id = mysqli_stmt_insert_id($stmt);
+      $_SESSION["profile_id_" . $counter] = $profile_id;
+      $_SESSION['profiles']++;
+      $counter++;
+    } else {
+      echo "Błąd podczas dodawania rekordu: " . mysqli_stmt_error($stmt);
     }
-    $profile_id = mysqli_insert_id($conn);
-    $_SESSION["profile_id_" . $counter] = $profile_id;
-    $_SESSION['profiles']++;
-    $counter++;
-    echo "<p>Liczba profili: ".$counter."</p>";
-    echo "<p>Ostatnio dodane profile_id: ".$profile_id."</p>";
+
+    // Close the prepared statement
+    mysqli_stmt_close($stmt);
+
   } else {
-    echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
+    echo "Błąd podczas przygotowania zapytania: " . mysqli_error($conn);
   }
 
   // Zamykanie połączenia
@@ -27,7 +40,6 @@ function insertUserProfile($profile_name_to_add, $user_id) {
 
 if (isset($_POST['add_profile'])) {
   $profile_name = $_POST['text'];
-  echo $_SESSION['user_id'];
   insertUserProfile($profile_name, $_SESSION['user_id']);
 
 }

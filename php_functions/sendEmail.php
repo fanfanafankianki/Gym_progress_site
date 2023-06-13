@@ -1,4 +1,5 @@
 <?php
+require('redirection.php');
 if(isset($_POST['submitEmail'])) {
     // odbierz dane z formularza
     $name = $_POST['Name'];
@@ -27,5 +28,5 @@ if(isset($_POST['submitEmail'])) {
 
 
 }
-header("Location: http://localhost/Gym_Site/index.php");
+redirectToWelcomePage();
 ?>

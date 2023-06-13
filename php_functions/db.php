@@ -1,43 +1,25 @@
 <?php
 function connectToDbUsers() {
-    $servername = "127.0.0.1";
+    $servername = "database.powertrckr.com:3306";
     $username = "bartek";
-    $password = "gymsitedb321";
-    $dbname = "gymsite_users";
+    $password = "dbpass2";
+    $dbname = "pwrtrckr_users";
 
     // Tworzenie połączenia
     $conn = mysqli_connect($servername, $username, $password, $dbname);
-
     if (!$conn) {
         die("Połączenie z bazą danych nie powiodło się: " . mysqli_connect_error());
     }
+
     return $conn;
 }
 
-function checkUserExists($username, $password) {
-
-    $conn=connectToDbUsers();
-
-    $username_check = mysqli_real_escape_string($conn, $username);
-    $password_check = mysqli_real_escape_string($conn, $password);
-
-    $query = "SELECT id, username, password FROM accounts WHERE username = '$username_check' AND password = '$password_check'";
-    $result = mysqli_query($conn, $query);
-    if (mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $id = $row["id"];
-        echo $id;
-        return $id;
-    } else {
-        return false;
-    }    
-}
 
 function connectToDb() {
-    $servername = "127.0.0.1";
+    $servername = "database.powertrckr.com:3306";
     $username = "bartek";
-    $password = "gymsitedb321";
-    $dbname = "gymsitedatabase_final3";
+    $password = "dbpass2";
+    $dbname = "pwrtrckr_profiles";
 
     // Tworzenie połączenia
     $conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -48,27 +30,74 @@ function connectToDb() {
     return $conn;
 }
 
-function returnUserProfiles($user_id) {
+function checkUserExists($username, $password) {
+    $conn = connectToDbUsers();
 
+    // Hashowanie nazwy użytkownika
+    $hashed_username = hash('sha256', $username);
+
+    // Using prepared statements to protect against SQL injection
+    $query = "SELECT id, username, password FROM accounts WHERE username = ?";
+    $stmt = mysqli_prepare($conn, $query);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "s", $hashed_username);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $db_username, $db_password);
+
+        if (mysqli_stmt_fetch($stmt)) {
+            // Weryfikacja hasła za pomocą funkcji password_verify()
+            if (password_verify($password, $db_password)) {
+                mysqli_stmt_close($stmt);
+                return $id;
+            } else {
+                mysqli_stmt_close($stmt);
+                return false;
+            }
+        } else {
+            mysqli_stmt_close($stmt);
+            return false;
+        }
+    } else {
+        echo "Błąd przygotowania zapytania: " . mysqli_error($conn);
+        return false;
+    }
+
+    mysqli_close($conn);
+}
+
+function returnUserProfiles($user_id) {
     $conn = connectToDb();
 
     if (!$conn) {
         die("Połączenie z bazą danych nie powiodło się: " . mysqli_connect_error());
     }
 
-    $query = "SELECT profile_id
-    FROM UserProfiles
-    WHERE user_id = '$user_id';";
-    $result = mysqli_query($conn, $query);
-    $profiles = array();
-    if (mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $profiles[] = $row["profile_id"];
+    // Użycie instrukcji przygotowanych do zabezpieczenia zapytania SQL
+    $query = "SELECT profile_id FROM userprofiles WHERE user_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "i", $user_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $profiles = array();
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $profiles[] = $row["profile_id"];
+            }
+            mysqli_stmt_close($stmt);
+            return $profiles;
+        } else {
+            mysqli_stmt_close($stmt);
+            return false;
         }
-        return $profiles;
     } else {
+        echo "Błąd przygotowania zapytania: " . mysqli_error($conn);
         return false;
     }
-    
+
+    mysqli_close($conn);
 }
 ?>

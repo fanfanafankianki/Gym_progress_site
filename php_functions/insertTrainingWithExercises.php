@@ -1,8 +1,8 @@
 <?php
 require('db.php');
+require('redirection.php');
 session_start();
 $user_id = $_SESSION['user_id'];
-
 if (isset($_POST['insertTrainingWithExercises'])) {
   $training_name = (!empty($_POST['text1'])) ? $_POST['text1'] : null;
   $exercise_1 = (!empty($_POST['text2'])) ? $_POST['text2'] : null;
@@ -15,96 +15,99 @@ if (isset($_POST['insertTrainingWithExercises'])) {
   $exercise_8 = (!empty($_POST['text9'])) ? $_POST['text9'] : null;
   $exercise_9 = (!empty($_POST['text10'])) ? $_POST['text10'] : null;
   $profile_id = (!empty($_POST['profile_id'])) ? $_POST['profile_id'] : null;
-  
-
 
   $conn = connectToDb();
 
-  // Zapytanie SQL
-  $sqlcheck = "SELECT UserProfiles.profile_id, Users.user_name 
-  FROM UserProfiles 
-  JOIN Users ON Userprofiles.user_id = Users.user_id  
-  WHERE UserProfiles.profile_id = $profile_id AND Users.user_id = $user_id;";
-  $check_result = mysqli_query($conn, $sqlcheck);
-  if (mysqli_num_rows($check_result) > 0) {
-    $sql1 = "INSERT INTO trainings (training_name, profile_id)
-    VALUES ('$training_name', '$profile_id');";
+  $stmt = $conn->prepare("SELECT userprofiles.profile_id, users.user_name 
+  FROM userprofiles 
+  JOIN users ON userprofiles.user_id = users.user_id  
+  WHERE userprofiles.profile_id = ? AND users.user_id = ?");
+  $stmt->bind_param("ii", $profile_id, $user_id);
+  $stmt->execute();
+  $check_result = $stmt->get_result();
 
-    if (mysqli_query($conn, $sql1)) {
-      echo "Rekord został dodany";
-      $training_added_id = mysqli_insert_id($conn);
-      echo "Ostatnio dodane ID to: " . $training_added_id;
-      echo "<script>document.addEventListener('DOMContentLoaded', function() {createTrainingElement('$training_name');});</script>";
-    } else {
-      echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
-    }
+  if ($check_result->num_rows > 0) {
+      $stmt1 = $conn->prepare("INSERT INTO trainings (training_name, profile_id) VALUES (?, ?)");
+      $stmt1->bind_param("si", $training_name, $profile_id);
 
-    $exercise_id = array();
+      if ($stmt1->execute()) {
+          echo "Rekord został dodany";
+          $training_added_id = $stmt1->insert_id;
+          echo "Ostatnio dodane ID to: " . $training_added_id;
+          echo "<script>document.addEventListener('DOMContentLoaded', function() {createTrainingElement('$training_name');});</script>";
+      } else {
+          echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
+      }
 
-    $exercise_array = array();
+      $exercise_id = array();
+      $exercise_array = array();
 
-    if (!is_null($exercise_1)) {
-      $exercise_array[] = $exercise_1;
-    }
-    if (!is_null($exercise_2)) {
-      $exercise_array[] = $exercise_2;
-    }
-    if (!is_null($exercise_3)) {
-      $exercise_array[] = $exercise_3;
-    }
-    if (!is_null($exercise_4)) {
-      $exercise_array[] = $exercise_4;
-    }
-    if (!is_null($exercise_5)) {
-      $exercise_array[] = $exercise_5;
-    }
-    if (!is_null($exercise_6)) {
-      $exercise_array[] = $exercise_6;
-    }
-    if (!is_null($exercise_7)) {
-      $exercise_array[] = $exercise_7;
-    }
-    if (!is_null($exercise_8)) {
-      $exercise_array[] = $exercise_8;
-    }
-    if (!is_null($exercise_9)) {
-      $exercise_array[] = $exercise_9;
+      if (!is_null($exercise_1)) {
+          $exercise_array[] = $exercise_1;
+      }
+      if (!is_null($exercise_2)) {
+          $exercise_array[] = $exercise_2;
+      }
+      if (!is_null($exercise_3)) {
+          $exercise_array[] = $exercise_3;
+      }
+      if (!is_null($exercise_4)) {
+          $exercise_array[] = $exercise_4;
+      }
+      if (!is_null($exercise_5)) {
+          $exercise_array[] = $exercise_5;
+      }
+      if (!is_null($exercise_6)) {
+          $exercise_array[] = $exercise_6;
+      }
+      if (!is_null($exercise_7)) {
+          $exercise_array[] = $exercise_7;
+      }
+      if (!is_null($exercise_8)) {
+          $exercise_array[] = $exercise_8;
+      }
+      if (!is_null($exercise_9)) {
+        $exercise_array[] = $exercise_9;
     }
     
     foreach ($exercise_array as $exercise_name) {
-      $sql2 = "INSERT INTO exercises (exercise_name) VALUES ('$exercise_name')";
-      if (mysqli_query($conn, $sql2)) {
-        $exercise_id[] = mysqli_insert_id($conn);
-      } else {
-        echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
-      }
-    }    
-  
-  
+        $stmt2 = $conn->prepare("INSERT INTO exercises (exercise_name) VALUES (?)");
+        $stmt2->bind_param("s", $exercise_name);
+        if ($stmt2->execute()) {
+            $exercise_id[] = $stmt2->insert_id;
+        } else {
+            echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
+        }
+    }
+    
     $num_of_exercises = count($exercise_array);
 
-    $sql3 = "INSERT INTO TrainingWithExercises (training_id";
+    $sql3 = "INSERT INTO trainingwithexercises (training_id";
     
     for ($i = 1; $i <= $num_of_exercises; $i++) {
-      $sql3 .= ", exercise_{$i}";
+        $sql3 .= ", exercise_{$i}";
     }
     
-    $sql3 .= ") VALUES ($training_added_id";
+    $sql3 .= ") VALUES (?,";
     
-    for ($i = 0; $i < $num_of_exercises; $i++) {
-      $sql3 .= ", {$exercise_id[$i]}";
+    for ($i = 1; $i < $num_of_exercises; $i++) {
+        $sql3 .= "?,";
     }
     
-    $sql3 .= ");";
+    $sql3 .= "?);";
     
-    if (mysqli_query($conn, $sql3)) {
-      echo "Rekord został dodany3";
+    $stmt3 = $conn->prepare($sql3);
+    $stmt3->bind_param(str_repeat('i', $num_of_exercises + 1), $training_added_id, ...$exercise_id);
+    
+    if ($stmt3->execute()) {
+        echo "Rekord został dodany";
     } else {
-      echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
+        echo "Błąd podczas dodawania rekordu: " . mysqli_error($conn);
     }
-  }
-  
-  mysqli_close($conn);
-  
 }
-?>
+
+mysqli_close($conn);
+redirectToLoggedPage();
+}
+
+

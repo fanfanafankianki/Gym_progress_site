@@ -2,10 +2,10 @@
 require('db.php');
 function getTrainingsByUserId($profile_id) {
   $conn = connectToDb();
-  $query = "SELECT Trainings.training_id, Trainings.training_name
-  FROM Trainings
-  INNER JOIN UserProfiles ON Trainings.profile_id = UserProfiles.profile_id
-  WHERE UserProfiles.profile_id = $profile_id";
+  $query = "SELECT trainings.training_id, trainings.training_name
+  FROM trainings
+  INNER JOIN userprofiles ON trainings.profile_id = userprofiles.profile_id
+  WHERE userprofiles.profile_id = $profile_id";
   $result = mysqli_query($conn, $query);
 
   while ($record = mysqli_fetch_assoc($result)) {
@@ -18,5 +18,5 @@ function getTrainingsByUserId($profile_id) {
 }
 
 $profile_id = $_POST["profile_id"];
-getTrainingsByUserId($profile_id);
+gettrainingsByUserId($profile_id);
 ?>

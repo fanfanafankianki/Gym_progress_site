@@ -34,16 +34,13 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
     <i onclick="sidebar_close()" class="fa fa-remove css-hide-large css-button css-display-topright"></i>
     <h4 onclick="reloadSite()" class="css-wide css-button"><b>
       <div style="width: 140; height: 130; border: 10px solid black;">
-        <img src="images/Gym_icon_rdy.png" alt="Gym icon" width="140" height="130">
+        <img id="logo" src="images/Gym_icon_rdy.png" alt="Gym icon" width="140" height="130">
       </div>
     </b></h4>
   </div>
 
   <div id='target' class="css-padding-16 css-large css-text-grey" style="font-weight:bold;">
-      <a onclick="loadBMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">Witaj!</a>
-      <a onclick="loadBMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">BMI Calculator</a>
-      <a onclick="loadCaloriesCalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">Calories Calculator</a>
-      <a onclick="loadFFMICalculator()" href="javascript:void(0)" class="css-button css-block2 css-left-align" id="object_one">FFMI Calculator</a>
+    <?= $sidebar_target; ?>
   </div>
 </nav>
 
@@ -68,9 +65,9 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
     <p class="css-right">
     <div style="display: flex; justify-content: space-between; line-height: 25px; padding: 5px; align-items: center;">
 
-      <?php if (isset($error)) {
+      <?php if (isset($error_login)) {
          ?>
-        <p><?php echo $error; ?></p>
+        <p><?php echo $error_login; ?></p>
       <?php } ?>
       <?php if (empty($_SESSION['profile_id'])) :?>
         <div style="float: left; text-align: left;  align-items: center;">
@@ -79,23 +76,23 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
         <div style="float: right; text-align: right; align-items: center; line-height: 25px;">
           <form action="php_functions/login.php" method="post" class="css-right">
             <label for="text" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;">Username:</label>
-            <input type="text" name="login" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;"/> 
+            <input id="login_login" type="text" name="login" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;"/> 
             <label for="password" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;">Password:</label>
-            <input type="password" name="password" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;"/>
-            <button type="submit" style="width: 100px; height: 35px; font-size: 15px; padding: 5px;">Log in</button>
+            <input id="login_password" type="password" name="password" style="width: 100px; height: 20px; font-size: 15px; padding: 5px;"/>
+            <button id="login_submit" type="submit" style="width: 100px; height: 35px; font-size: 15px; padding: 5px;">Log in</button>
           </form>
           <script> var error_registration = <?php echo json_encode($_SESSION['error_registration'] ?? ''); ?>; </script>
           <script>document.addEventListener('DOMContentLoaded', function() {createRegisterElement();});</script>
-        <?php if (!empty($_SESSION['error'])) : ?><br><div style="font-size: 12px; color: #F08080;">
+        <?php if (!empty($_SESSION['error_login'])) : ?><br><div id="login_error" style="font-size: 12px; color: #F08080;">
           <?php
-          echo $_SESSION['error'];
+          echo $_SESSION['error_login'];
           ?>...        
           </div>       
         <?php endif; ?>
         </div>
       <?php else : ?>
       <div style="float: right; text-align: right; align-items: center; line-height: 25px;">
-      <p>Hi, <?=$_SESSION['profile_id']?> <a href="php_functions/logout.php">logout</a> </p>
+      <p>Hi, <?=$_SESSION['profile_id']?> <a id=logout href="php_functions/logout.php">logout</a> </p>
       <?php 
         $counter = 0;
         echo "<script>document.addEventListener('DOMContentLoaded', function() {createAddUserElement();});</script>";
@@ -113,21 +110,8 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
 
   </header>
 
-  <div class="parent">
-    <p></p>
-    <div id="empty_place_for_divs" class="css-mainframecolor" style="text-align: center; align-items: center; min-height: 500px;">
-      <div id="welcome_site" style="font-weight: bold; font-size: 17px; letter-spacing:3px;">
-        <br><br>
-        Welcome to PowerTrckr! <br><br>
-        Here you can configure your training routine, track your trainings and your progress! <br><br>
-        Add your everyday trainings and your exercise routine.<br><br>
-        You can also use BMI, FFMI and Calorie calculator!<br><br>
-          <img src="images/gym_photo2.png" alt="Gym photo" width="300" height="250" style="border: 5px solid black;"><br><br><br><br>
-          <div id="welcome_site2" style="font-weight: bold; font-size: 17px; letter-spacing:3px; line-height: 35px;">
-          </div>
-      </div>
-    </div>
-    <p></p>
+  <div class="parent" style="word-wrap: break-word; padding: 0 2px">
+    <?= $main_target; ?>
   </div> 
 
   <!-- Footer -->
@@ -138,18 +122,18 @@ body,h1,h2,h3,h4,h5,h6,.css-wide {font-family: "Roboto", sans-serif;}
         <p>Do you have a question? Ask it here!</p>
         
         <form action="php_functions/sendEmail.php" method="POST">
-          <p><input class="css-input css-border" type="text" placeholder="Name" id="Name" name="Name" required></p>
-          <p><input class="css-input css-border" type="email" placeholder="Email" id="Email" name="Email" required></p>
-          <p><input class="css-input css-border" type="text" placeholder="Subject" id="Subject" name="Subject" required></p>
-          <p><textarea class="css-input css-border" placeholder="Message" id="Message" name="Message" required></textarea></p>
-          <button type="submit" name="submitEmail" class="css-button css-block css-black">Wyślij</button>
+          <p><input class="css-input css-border" type="text" placeholder="Name" id="Name_footer" name="Name" required></p>
+          <p><input class="css-input css-border" type="email" placeholder="Email" id="Email_footer" name="Email" required></p>
+          <p><input class="css-input css-border" type="text" placeholder="Subject" id="Subject_footer" name="Subject" required></p>
+          <p><textarea class="css-input css-border" placeholder="Message" id="Message_footer" name="Message" required></textarea></p>
+          <button id="Submit_footer" type="submit" name="submitEmail" class="css-button css-block css-black">Wyślij</button>
         </form>
 
       </div>
     </div>
   </footer>
 
-  <div class="css-black css-center css-padding-24">Powered by <a href="https://github.com/fanfanafankianki" title="fanfanafankianki" target="_blank" class="css-hover-opacity">fanfanafankianki</a></div>
+  <div class="css-black css-center css-padding-24">Powered by <a href="https://github.com/fanfanafankianki" id="github" title="fanfanafankianki" target="_blank" class="css-hover-opacity">fanfanafankianki</a></div>
 
 </div>
 <script> 
