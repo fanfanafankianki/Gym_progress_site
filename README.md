@@ -40,5 +40,9 @@ Email: kudlatyicss@gmail.com
 
 GitHub: [https://github.com/fanfanafankianki]
 
-Project link: [https://github.com/fanfanafankianki/gym_progress_site]
+Website Project link: [https://github.com/fanfanafankianki/gym_progress_site]
+
+Tests for site Project link: [https://github.com/fanfanafankianki/Tests_Gym_Progress_Site]
+
+Jenkins CI/CD Project link: [https://github.com/fanfanafankianki/Jenkins_CICD_Website]
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
