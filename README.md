@@ -33,10 +33,6 @@ Technologies used to create this site:
 * Configure the database connection in the db.php file by entering the appropriate login details.
 * Launch the page in your browser by visiting http://localhost/path/to/project.
 
-<!-- LICENSE -->
-## License
-Distributed under the CC BY-NC-SA License. See `LICENSE.txt` for more information.
-
 <!-- AUTHOR -->
 ## Author
 
