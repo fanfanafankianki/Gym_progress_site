@@ -3,7 +3,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project is a website created to track your progress in the gym. It uses technologies such as PHP, MySQL, HTML, CSS and Docker to allow users to save and monitor their workouts and exercise progress.
+This project is a website created to monitor progress in strength training.
+
+It uses technologies such as PHP, MySQL, HTML, CSS and Docker to easily run and manage the application on different environments.
+
+The main features of the project include the ability to create a user profile, manage training history, and track progress. Thanks to this website, users can track their training progress, manage training and have access to the history of their achievements. 
+
+The site provides friendly and intuitive user interfaces, facilitating the use of its functionalities.
 
 <!-- FUNCTIONS -->
 ## Functions
