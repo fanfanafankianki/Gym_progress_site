@@ -1,58 +1,48 @@
-# gym_progress_site
-Site for tracking gym progress with sql database.
-
+# Powertrckr - site for tracking your gym progress
+<a name="readme-top"></a>
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+This project is a website created to track your progress in the gym. It uses technologies such as PHP, MySQL, HTML, CSS and Docker to allow users to save and monitor their workouts and exercise progress.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- FUNCTIONS -->
+## Functions
 
+* Users can create accounts, log in and manage their training data.
+* They can add new exercises, set goals, enter training results and track their progress.
+* The site allows you to create personalized training plans and view training history.
+* Users can view statistics about their development and monitor their progress.
 
+<!-- TECHNOLOGIES -->
+## Technologies
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+Technologies used to create this site:
 * ![HTML](https://img.shields.io/badge/HTML-239120?style=for-the-badge&logo=html5&logoColor=white)
 * ![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 * ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 * ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+* ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
+<!-- INSTALLATION -->
+## Installation
 
-
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+* To run this page locally, follow these steps:
+* Clone the repository to your local computer.
+* Set up a PHP server (e.g. XAMPP, WAMP) and a MySQL database.
+* Import the database.sql file into the database to create the tables you need.
+* Configure the database connection in the db.php file by entering the appropriate login details.
+* Launch the page in your browser by visiting http://localhost/path/to/project.
 
 <!-- LICENSE -->
 ## License
+Distributed under the CC BY-NC-SA License. See `LICENSE.txt` for more information.
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+<!-- AUTHOR -->
+## Author
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Email: kudlatyicss@gmail.com
 
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+GitHub: [https://github.com/fanfanafankianki]
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
-
+Project link: [https://github.com/fanfanafankianki/gym_progress_site]
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
